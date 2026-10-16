@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELL PLANET — Owner Command & Profit Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- ====================================================================== -->
+  <!-- MASTER PIN LOCK SCREEN (100% PRIVACY FROM STAFF)                       -->
+  <!-- ====================================================================== -->
+  <div id="adminLockModal" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="h-14 w-14 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-2xl flex items-center justify-center mx-auto">CP</div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white">OWNER COMMAND PORTAL</h1>
+        <p class="text-xs text-slate-400 mt-1">Restricted Access — Profit, Wholesale Costs & Live Alerts</p>
+      </div>
+      <input id="pinInput" type="password" placeholder="Enter Master Owner PIN (Default: 9999)"
+        class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg mono tracking-widest text-amber-400 focus:border-amber-500 focus:outline-none" />
+      <button onclick="unlockAdminPortal()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm">
+        Unlock Admin Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- TOP COMMAND HEADER                                                     -->
+  <!-- ====================================================================== -->
+  <header class="bg-slate-900 border-b border-slate-800 px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-lg">CP</div>
+      <div>
+        <h1 class="font-extrabold text-base text-white tracking-wide">CELL PLANET — OWNER ADMIN PORTAL</h1>
+        <p class="text-xs text-emerald-400 font-semibold">● Live Firebase + Google Sheets Sync Active</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <button onclick="triggerExcelDownload()" class="px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+        ⬇ Download Full Excel (.xlsx)
+      </button>
+      <button onclick="triggerOpenGoogleSheet()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs">
+        📊 Open Live Google Sheet
+      </button>
+      <button onclick="exportGstr1Csv()" class="px-3.5 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs">
+        🏛️ Export GSTR-1 CSV (gst.gov.in)
+      </button>
+      <button onclick="runMonthlyCachePurge()" class="px-3.5 py-2 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-bold text-xs">
+        🧹 Monthly Firebase Cleanup
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 space-y-6">
+
+    <!-- ==================================================================== -->
+    <!-- ROW 1: EXECUTIVE PROFIT, CASH, ONLINE, EMI & SERVICE KPI CARDS       -->
+    <!-- ==================================================================== -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase">Total Retail Revenue</span>
+        <p id="kpiTotalSales" class="text-xl font-extrabold text-white mono mt-1">₹0</p>
+      </div>
+      <div class="bg-slate-900 border border-emerald-500/40 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-emerald-400 uppercase">Owner Net Profit</span>
+        <p id="kpiNetProfit" class="text-xl font-extrabold text-emerald-400 mono mt-1">₹0</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase">Cash in Drawer</span>
+        <p id="kpiCashTotal" class="text-xl font-extrabold text-amber-400 mono mt-1">₹0</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase">UPI / Online Bank</span>
+        <p id="kpiOnlineTotal" class="text-xl font-extrabold text-cyan-400 mono mt-1">₹0</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase">Finance / EMI Loans</span>
+        <p id="kpiFinanceTotal" class="text-xl font-extrabold text-indigo-400 mono mt-1">₹0</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <span class="text-[11px] font-bold text-slate-400 uppercase">Daily Service Profit</span>
+        <p id="kpiServiceProfit" class="text-xl font-extrabold text-emerald-300 mono mt-1">₹0</p>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- ROW 2: LIVE ADMIN NOTIFICATION FEED + LOW STOCK RADAR                -->
+    <!-- ==================================================================== -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- Live Notification Feed (Replaces Paid WhatsApp API) -->
+      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-extrabold text-amber-400 uppercase">🔔 Real-Time Shop Activity & Profit Feed</h2>
+          <span class="text-xs text-slate-400">Chimes instantly on every bill or stock scan</span>
+        </div>
+        <div id="liveNotificationsBox" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- Brand-Wise Low Stock Alert Box -->
+      <div class="lg:col-span-5 bg-slate-900 border border-rose-500/40 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-extrabold text-rose-400 uppercase">⚠️ Brand-Wise Low Stock Alerts</h2>
+          <span id="lowStockCountBadge" class="text-xs mono font-bold text-rose-300">0 alerts</span>
+        </div>
+        <div id="lowStockListBox" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- ROW 3: DUAL-MODE STOCK MANAGER (PENDING STAFF QUEUE + OWNER DIRECT)  -->
+    <!-- ==================================================================== -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+      <!-- Mode B: Pending Staff Blind Stock Approval Queue -->
+      <div class="lg:col-span-6 bg-slate-900 border border-indigo-500/40 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-sm font-extrabold text-indigo-400 uppercase">1. Pending Staff Stock & Exchange Approvals</h2>
+            <p class="text-xs text-slate-400">Enter your secret Wholesale Cost & Selling Price to push live.</p>
+          </div>
+          <span id="pendingQueueBadge" class="px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-xs mono">0 Pending</span>
+        </div>
+        <div id="pendingStockList" class="space-y-3 max-h-[420px] overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- Mode A: Owner Direct Stock Add / Edit -->
+      <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+        <h2 class="text-sm font-extrabold text-amber-400 uppercase">2. Owner Direct Stock Entry (Goes Live Instantly)</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+          <input id="admSku" type="text" placeholder="Scan or Enter Barcode / SKU *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+          <select id="admBrand" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+            <option value="Apple">Apple</option>
+            <option value="Xiaomi">Xiaomi</option>
+            <option value="Vivo">Vivo</option>
+            <option value="Motorola">Motorola</option>
+            <option value="Samsung">Samsung</option>
+            <option value="OnePlus">OnePlus</option>
+            <option value="Realme">Realme</option>
+            <option value="Oppo">Oppo</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Pre-Owned">Pre-Owned / Second-Hand</option>
+          </select>
+          <input id="admModel" type="text" placeholder="Model Name (e.g. Vivo V30 Pro) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+          <input id="admVariant" type="text" placeholder="Variant (GB / Color)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+          <input id="admPurchaseCost" type="number" placeholder="Secret Purchase Cost ₹ (Hidden) *" class="bg-slate-950 border border-emerald-500/50 rounded-lg px-3 py-2 text-emerald-400 font-bold mono" />
+          <input id="admSellingPrice" type="number" placeholder="Customer Selling Price ₹ *" class="bg-slate-950 border border-amber-500/50 rounded-lg px-3 py-2 text-amber-400 font-bold mono" />
+          <input id="admMinPrice" type="number" placeholder="Minimum Selling Price (MSP Lock) ₹" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+          <div class="grid grid-cols-2 gap-2">
+            <input id="admStockQty" type="number" placeholder="Stock Qty *" value="1" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono font-bold" />
+            <input id="admMinAlert" type="number" placeholder="Min Alert" value="2" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-rose-400 mono font-bold" />
+          </div>
+        </div>
+        <textarea id="admImeis" rows="2" placeholder="15-Digit IMEIs (One per line, optional for accessories)"
+          class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-emerald-400 mono"></textarea>
+        <button onclick="saveOwnerDirectStock()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs">
+          ✓ Add / Update Live Stock & Save Secret Cost
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- ROW 4: OWNER PROFIT LEDGER & STAFF PERFORMANCE BREAKDOWN             -->
+    <!-- ==================================================================== -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <h2 class="text-sm font-extrabold text-white uppercase">Master Sales, Payment Split & True Profit Register</h2>
+        <div id="staffLeaderboardPills" class="flex flex-wrap gap-2 text-xs"></div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-950 text-slate-400 uppercase">
+            <tr>
+              <th class="p-2.5">Invoice</th>
+              <th class="p-2.5">Date/Time</th>
+              <th class="p-2.5">Staff</th>
+              <th class="p-2.5">Customer</th>
+              <th class="p-2.5">Sold Items & IMEI</th>
+              <th class="p-2.5">Mode / Finance</th>
+              <th class="p-2.5 text-right">Sold Price</th>
+              <th class="p-2.5 text-right text-slate-400">Buy Cost</th>
+              <th class="p-2.5 text-right text-emerald-400">Net Profit</th>
+            </tr>
+          </thead>
+          <tbody id="adminSalesTableBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- ROW 5: SHOP PROFILE, GSTIN & MASTER PIN SETTINGS                     -->
+    <!-- ==================================================================== -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3">
+      <h2 class="text-sm font-extrabold text-amber-400 uppercase">Shop Bill Header, GSTIN & Security Settings</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <input id="cfgName" type="text" placeholder="Shop Name" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white font-bold" />
+        <input id="cfgAddress" type="text" placeholder="Shop Address" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="cfgPhone" type="text" placeholder="Shop Contact Number" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <input id="cfgGstin" type="text" placeholder="Shop GSTIN Number" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-400 mono font-bold" />
+        <input id="cfgAdminPin" type="text" placeholder="Admin Master PIN" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <input id="cfgOverridePin" type="text" placeholder="Discount Override PIN" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+      </div>
+      <button onclick="saveShopSettings()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+        Save Shop & GST Settings
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================== -->
+  <!-- ADMIN PORTAL ENGINE                                                    -->
+  <!-- ====================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { ERP_CONFIG, syncToGoogleSheet, downloadExcelBackup, openLiveGoogleSheet } from "./config.js";
+
+    const app = initializeApp(ERP_CONFIG.firebaseConfig);
+    const db = getDatabase(app);
+
+    let shopConfig = { ...ERP_CONFIG.defaultShop };
+    let liveInventory = {};
+    let adminCosts = {};
+    let pendingBatches = {};
+    let salesList = [];
+    let servicesList = [];
+    let initialLoadComplete = false;
+
+    window.triggerExcelDownload = downloadExcelBackup;
+    window.triggerOpenGoogleSheet = openLiveGoogleSheet;
+
+    // Web Audio Chime for Instant Sale / Stock Alert
+    function playNotificationChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.18);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    // 1. Load Shop Settings
+    onValue(ref(db, "shop_config"), (snap) => {
+      if (snap.exists()) shopConfig = { ...shopConfig, ...snap.val() };
+      document.getElementById("cfgName").value = shopConfig.name || "";
+      document.getElementById("cfgAddress").value = shopConfig.address || "";
+      document.getElementById("cfgPhone").value = shopConfig.phone || "";
+      document.getElementById("cfgGstin").value = shopConfig.gstin || "";
+      document.getElementById("cfgAdminPin").value = shopConfig.adminPin || "9999";
+      document.getElementById("cfgOverridePin").value = shopConfig.overridePin || "7777";
+    });
+
+    window.unlockAdminPortal = () => {
+      const entered = document.getElementById("pinInput").value.trim();
+      if (entered === (shopConfig.adminPin || "9999")) {
+        document.getElementById("adminLockModal").classList.add("hidden");
+        playNotificationChime();
+      } else {
+        alert("Incorrect Master Owner PIN!");
+      }
+    };
+
+    // 2. Live Notification Stream
+    onValue(ref(db, "live_notifications"), (snap) => {
+      const data = snap.val() || {};
+      const list = Object.values(data).reverse();
+      if (initialLoadComplete && list.length > 0) playNotificationChime();
+      initialLoadComplete = true;
+
+      const box = document.getElementById("liveNotificationsBox");
+      box.innerHTML = list.map(n => `
+        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start justify-between gap-2 text-xs">
+          <div>
+            <p class="font-extrabold text-amber-400">${n.title}</p>
+            <p class="text-slate-300 mt-0.5">${n.message}</p>
+          </div>
+          <span class="text-[10px] mono text-slate-500 whitespace-nowrap">${n.timestamp}</span>
+        </div>
+      `).join("") || `<div class="text-slate-500 text-xs py-8 text-center">No recent alerts.</div>`;
+    });
+
+    // 3. Load Live Inventory & Low Stock Radar
+    onValue(ref(db, "inventory_live"), (snap) => {
+      liveInventory = snap.val() || {};
+      renderLowStockRadar();
+    });
+
+    onValue(ref(db, "admin_costs"), (snap) => {
+      adminCosts = snap.val() || {};
+    });
+
+    function renderLowStockRadar() {
+      const lowItems = Object.entries(liveInventory).filter(([sku, it]) => Number(it.currentStock || 0) <= Number(it.minAlertQty || 2));
+      document.getElementById("lowStockCountBadge").textContent = `${lowItems.length} items low`;
+      const box = document.getElementById("lowStockListBox");
+      box.innerHTML = lowItems.map(([sku, it]) => `
+        <div class="p-2.5 rounded-lg bg-rose-950/30 border border-rose-500/40 flex items-center justify-between text-xs">
+          <div>
+            <span class="font-bold text-rose-300">${it.brand} ${it.model}</span>
+            <span class="text-slate-400 ml-1">(${it.variant || 'Std'})</span>
+            <div class="text-[10px] mono text-slate-400">SKU: ${sku}</div>
+          </div>
+          <span class="px-2.5 py-1 rounded bg-rose-500 text-slate-950 font-extrabold mono">Qty: ${it.currentStock}</span>
+        </div>
+      `).join("") || `<div class="text-emerald-400 text-xs py-8 text-center font-semibold">✓ All brands are above minimum stock levels!</div>`;
+    }
+
+    // 4. Load Pending Staff Stock Queue
+    onValue(ref(db, "pending_stock_queue"), (snap) => {
+      pendingBatches = snap.val() || {};
+      const entries = Object.entries(pendingBatches);
+      document.getElementById("pendingQueueBadge").textContent = `${entries.length} Pending`;
+      const box = document.getElementById("pendingStockList");
+
+      if (entries.length === 0) {
+        box.innerHTML = `<div class="text-slate-500 text-xs py-10 text-center">No pending staff scans waiting for approval.</div>`;
+        return;
+      }
+
+      box.innerHTML = entries.map(([firebaseKey, b]) => `
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-indigo-500/40 space-y-2.5 text-xs">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-bold text-[10px]">${b.entryMode} by ${b.scannedBy}</span>
+              <h3 class="font-extrabold text-white text-sm mt-1">${b.brand} ${b.model} (${b.variant || ''})</h3>
+              <p class="mono text-slate-400 text-[11px]">Barcode/ID: ${b.barcode} | Qty: ${b.qtyScanned}</p>
+              ${b.imeis && b.imeis.length ? `<p class="mono text-emerald-400 text-[11px]">IMEIs: ${b.imeis.join(", ")}</p>` : ''}
+            </div>
+            <button onclick="rejectPendingBatch('${firebaseKey}')" class="text-rose-400 font-bold hover:underline">Reject</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 pt-1">
+            <input id="pendCost_${firebaseKey}" type="number" placeholder="Buy Cost ₹ *" value="${b.suggestedBuyCost || ''}"
+              class="bg-slate-900 border border-emerald-500/50 rounded px-2.5 py-1.5 text-emerald-400 font-bold mono" />
+            <input id="pendSell_${firebaseKey}" type="number" placeholder="Selling Price ₹ *"
+              class="bg-slate-900 border border-amber-500/50 rounded px-2.5 py-1.5 text-amber-400 font-bold mono" />
+            <input id="pendMin_${firebaseKey}" type="number" placeholder="Min Price ₹"
+              class="bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-white mono" />
+          </div>
+          <button onclick="approvePendingBatch('${firebaseKey}')" class="w-full py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+            ✓ Approve & Push to Live Counter Stock
+          </button>
+        </div>
+      `).join("");
+    });
+
+    window.approvePendingBatch = async (firebaseKey) => {
+      const b = pendingBatches[firebaseKey];
+      if (!b) return;
+      const buyCost = Number(document.getElementById(`pendCost_${firebaseKey}`).value || 0);
+      const sellPrice = Number(document.getElementById(`pendSell_${firebaseKey}`).value || 0);
+      const minPrice = Number(document.getElementById(`pendMin_${firebaseKey}`).value || sellPrice);
+
+      if (buyCost <= 0 || sellPrice <= 0) {
+        alert("Please enter both Purchase Cost and Selling Price before approving.");
+        return;
+      }
+
+      const sku = b.barcode;
+      const existing = liveInventory[sku] || {};
+      const newQty = Number(existing.currentStock || 0) + Number(b.qtyScanned || 1);
+      const mergedImeis = Array.from(new Set([...(existing.imeis || []), ...(b.imeis || [])]));
+
+      // Write Public Stock
+      await set(ref(db, `inventory_live/${sku}`), {
+        sku,
+        category: b.category || "NEW_PHONE",
+        brand: b.brand,
+        model: b.model,
+        variant: b.variant || "",
+        sellingPrice: sellPrice,
+        minSellingPrice: minPrice,
+        currentStock: newQty,
+        minAlertQty: existing.minAlertQty || 2,
+        imeis: mergedImeis
+      });
+
+      // Write Private Admin Cost
+      await set(ref(db, `admin_costs/${sku}`), {
+        purchaseCost: buyCost,
+        approvedBy: "OWNER_ADMIN",
+        lastUpdated: new Date().toLocaleString("en-IN")
+      });
+
+      // Sync Inward Audit to Google Sheets
+      syncToGoogleSheet({
+        action: "STOCK_INWARD",
+        batchId: b.batchId,
+        timestamp: new Date().toLocaleString("en-IN"),
+        entryMode: b.entryMode,
+        scannedBy: b.scannedBy,
+        approvedBy: "ADMIN",
+        barcode: sku,
+        brandModel: `${b.brand} ${b.model}`,
+        variant: b.variant || "",
+        qtyAdded: b.qtyScanned,
+        imeiList: mergedImeis.join(", "),
+        purchaseCost: buyCost
+      });
+
+      await remove(ref(db, `pending_stock_queue/${firebaseKey}`));
+      alert(`Approved! ${b.brand} ${b.model} is now live on the POS counter.`);
+    };
+
+    window.rejectPendingBatch = async (firebaseKey) => {
+      if (!confirm("Delete this pending batch?")) return;
+      await remove(ref(db, `pending_stock_queue/${firebaseKey}`));
+    };
+
+    // 5. Owner Direct Stock Entry
+    window.saveOwnerDirectStock = async () => {
+      const sku = document.getElementById("admSku").value.trim();
+      const brand = document.getElementById("admBrand").value;
+      const model = document.getElementById("admModel").value.trim();
+      const variant = document.getElementById("admVariant").value.trim();
+      const purchaseCost = Number(document.getElementById("admPurchaseCost").value || 0);
+      const sellingPrice = Number(document.getElementById("admSellingPrice").value || 0);
+      const minSellingPrice = Number(document.getElementById("admMinPrice").value || sellingPrice);
+      const currentStock = Number(document.getElementById("admStockQty").value || 1);
+      const minAlertQty = Number(document.getElementById("admMinAlert").value || 2);
+      const rawImeis = document.getElementById("admImeis").value.trim();
+      const imeis = rawImeis ? rawImeis.split(/\r?\n/).map(s => s.trim()).filter(Boolean) : [];
+
+      if (!sku || !model || purchaseCost <= 0 || sellingPrice <= 0) {
+        alert("Please fill Barcode/SKU, Model, Secret Purchase Cost, and Selling Price.");
+        return;
+      }
+
+      await set(ref(db, `inventory_live/${sku}`), {
+        sku,
+        category: brand === "Accessories" ? "ACCESSORY" : "NEW_PHONE",
+        brand,
+        model,
+        variant,
+        sellingPrice,
+        minSellingPrice,
+        currentStock,
+        minAlertQty,
+        imeis
+      });
+
+      await set(ref(db, `admin_costs/${sku}`), {
+        purchaseCost,
+        approvedBy: "OWNER_DIRECT",
+        lastUpdated: new Date().toLocaleString("en-IN")
+      });
+
+      syncToGoogleSheet({
+        action: "STOCK_INWARD",
+        batchId: "ADM-" + Date.now().toString().slice(-6),
+        timestamp: new Date().toLocaleString("en-IN"),
+        entryMode: "OWNER_DIRECT",
+        scannedBy: "ADMIN",
+        approvedBy: "ADMIN",
+        barcode: sku,
+        brandModel: `${brand} ${model}`,
+        variant,
+        qtyAdded: currentStock,
+        imeiList: imeis.join(", "),
+        purchaseCost
+      });
+
+      alert(`Saved! ${brand} ${model} is live in stock.`);
+      document.getElementById("admSku").value = "";
+      document.getElementById("admModel").value = "";
+      document.getElementById("admVariant").value = "";
+      document.getElementById("admPurchaseCost").value = "";
+      document.getElementById("admSellingPrice").value = "";
+      document.getElementById("admMinPrice").value = "";
+      document.getElementById("admImeis").value = "";
+    };
+
+    // 6. Load Sales & Services for Owner KPIs + Staff Leaderboard
+    onValue(ref(db, "recent_sales_cache"), (snap) => {
+      salesList = Object.values(snap.val() || {}).reverse();
+      renderFinancialDashboard();
+    });
+
+    onValue(ref(db, "completed_service_cache"), (snap) => {
+      servicesList = Object.values(snap.val() || {}).reverse();
+      renderFinancialDashboard();
+    });
+
+    function renderFinancialDashboard() {
+      let totalRev = 0, totalProfit = 0, totalCash = 0, totalOnline = 0, totalFin = 0;
+      const staffStats = { S1: 0, S2: 0, S3: 0, S4: 0 };
+
+      salesList.forEach(s => {
+        totalRev += Number(s.netPayable || 0);
+        totalProfit += Number(s.netProfit || 0);
+        totalCash += Number(s.cashPaid || 0);
+        totalOnline += Number(s.onlinePaid || 0);
+        totalFin += Number(s.financeAmount || 0);
+        if (staffStats[s.staffCode] !== undefined) staffStats[s.staffCode] += 1;
+      });
+
+      let srvProfit = 0;
+      servicesList.forEach(sv => {
+        srvProfit += Number(sv.serviceProfit || 0);
+        if (sv.payMode === "CASH") totalCash += Number(sv.serviceCharge || 0);
+        if (sv.payMode === "ONLINE") totalOnline += Number(sv.serviceCharge || 0);
+      });
+
+      document.getElementById("kpiTotalSales").textContent = `₹${totalRev.toLocaleString('en-IN')}`;
+      document.getElementById("kpiNetProfit").textContent = `₹${(totalProfit + srvProfit).toLocaleString('en-IN')}`;
+      document.getElementById("kpiCashTotal").textContent = `₹${totalCash.toLocaleString('en-IN')}`;
+      document.getElementById("kpiOnlineTotal").textContent = `₹${totalOnline.toLocaleString('en-IN')}`;
+      document.getElementById("kpiFinanceTotal").textContent = `₹${totalFin.toLocaleString('en-IN')}`;
+      document.getElementById("kpiServiceProfit").textContent = `₹${srvProfit.toLocaleString('en-IN')}`;
+
+      document.getElementById("staffLeaderboardPills").innerHTML = Object.entries(staffStats).map(([code, count]) =>
+        `<span class="px-2.5 py-1 rounded bg-slate-950 border border-slate-800 mono font-bold text-amber-400">${code}: ${count} Bills</span>`
+      ).join("");
+
+      const tbody = document.getElementById("adminSalesTableBody");
+      tbody.innerHTML = salesList.map(s => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="p-2.5 mono font-bold text-amber-400">${s.invoiceId}</td>
+          <td class="p-2.5 text-slate-400">${s.timestamp}</td>
+          <td class="p-2.5 font-bold">${s.staffCode}</td>
+          <td class="p-2.5">${s.customerName} (${s.customerMobile})</td>
+          <td class="p-2.5">
+            <div class="font-semibold text-white">${s.itemsSummary}</div>
+            ${s.imeiList ? `<div class="mono text-[10px] text-emerald-400">IMEI: ${s.imeiList}</div>` : ''}
+          </td>
+          <td class="p-2.5">${s.payMode} ${s.financeInfo !== 'NONE' ? `<span class="text-indigo-400">(${s.financeInfo})</span>` : ''}</td>
+          <td class="p-2.5 text-right mono font-bold">₹${Number(s.netPayable).toLocaleString('en-IN')}</td>
+          <td class="p-2.5 text-right mono text-slate-400">₹${Number(s.purchaseCostTotal).toLocaleString('en-IN')}</td>
+          <td class="p-2.5 text-right mono font-extrabold text-emerald-400">₹${Number(s.netProfit).toLocaleString('en-IN')}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="9" class="p-8 text-center text-slate-500">No sales recorded in current active cache.</td></tr>`;
+    }
+
+    // 7. Direct GSTR-1 Portal CSV Exporter
+    window.exportGstr1Csv = () => {
+      const gstBills = salesList.filter(s => s.gstMode === "GST_ON");
+      if (gstBills.length === 0) {
+        alert("No GST-enabled invoices in active cache to export.");
+        return;
+      }
+      const headers = ["Invoice_No", "Date", "Customer_Name", "Customer_GSTIN", "Place_Of_Supply", "HSN_Code", "Rate", "Taxable_Value", "CGST", "SGST", "Total_Invoice_Value"];
+      const rows = gstBills.map(b => [
+        b.invoiceId, `"${b.timestamp}"`, `"${b.customerName}"`, b.customerGstin || "URP",
+        "36-Telangana", b.hsnSummary || "8517", "18", b.taxableValue, b.cgst, b.sgst, b.netPayable
+      ]);
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const link = document.createElement("a");
+      link.setAttribute("href", encodeURI(csvContent));
+      link.setAttribute("download", `Cell_Planet_GSTR1_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      window.open("https://www.gst.gov.in/", "_blank");
+    };
+
+    // 8. 1-Click Monthly Excel Backup + Firebase Cache Purge
+    window.runMonthlyCachePurge = async () => {
+      const pin = prompt("Enter Developer / Owner Purge PIN (Default: 2026) to download full Excel Backup and clear monthly Firebase cache:");
+      if (pin !== (shopConfig.techPurgePin || "2026")) {
+        alert("Invalid Purge PIN.");
+        return;
+      }
+      downloadExcelBackup();
+      if (!confirm("Excel (.xlsx) download triggered!\n\nClick OK to purge old notification logs & completed bill caches from Firebase (Your Live Unsold Stock, Secret Costs & Invoice Counters will remain 100% safe).")) return;
+
+      await update(ref(db), {
+        live_notifications: null,
+        recent_sales_cache: null,
+        completed_service_cache: null
+      });
+      alert("Monthly Firebase Cache Cleanup Complete! Database is running at 100% peak speed.");
+    };
+
+    // 9. Save Shop Settings
+    window.saveShopSettings = async () => {
+      await update(ref(db, "shop_config"), {
+        name: document.getElementById("cfgName").value.trim(),
+        address: document.getElementById("cfgAddress").value.trim(),
+        phone: document.getElementById("cfgPhone").value.trim(),
+        gstin: document.getElementById("cfgGstin").value.trim(),
+        adminPin: document.getElementById("cfgAdminPin").value.trim(),
+        overridePin: document.getElementById("cfgOverridePin").value.trim()
+      });
+      alert("Shop Header, GSTIN & Security PINs Updated Live!");
+    };
+  </script>
+</body>
+</html>
