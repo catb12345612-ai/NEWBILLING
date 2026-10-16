@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CELL PLANET — Smart POS & Service Terminal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ULTRA-SHARP PRINT STYLESHEET (A4 & 80mm Thermal Ready) */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printInvoiceArea, #printInvoiceArea * { visibility: visible !important; }
+      #printInvoiceArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+      }
+      @page { margin: 6mm; }
+    }
+    .thermal-80mm { max-width: 78mm !important; margin: 0 auto !important; font-size: 11px !important; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 no-print">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-amber-500/20">CP</div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 id="uiShopName" class="font-extrabold text-lg tracking-wide text-white">CELL PLANET</h1>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">LIVE POS</span>
+        </div>
+        <p class="text-xs text-slate-400">Hardware Barcode / 15-Digit IMEI Ready — Just Scan Anywhere</p>
+      </div>
+    </div>
+
+    <!-- Staff Selector & Mode Tabs -->
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5">
+        <span class="text-xs text-slate-400 mr-2 font-semibold">ACTIVE STAFF:</span>
+        <select id="activeStaffSelect" class="bg-transparent text-amber-400 font-bold text-sm focus:outline-none">
+          <option value="S1">Staff #1 (S1)</option>
+          <option value="S2">Staff #2 (S2)</option>
+          <option value="S3">Staff #3 (S3)</option>
+          <option value="S4">Staff #4 (S4)</option>
+        </select>
+      </div>
+
+      <button onclick="switchTab('pos')" id="tabBtn_pos" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition">1. Billing Counter</button>
+      <button onclick="switchTab('service')" id="tabBtn_service" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">2. Daily Repairs / Service</button>
+      <button onclick="switchTab('inward')" id="tabBtn_inward" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">3. Staff Blind Stock Scan</button>
+      <button onclick="switchTab('warranty')" id="tabBtn_warranty" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">4. Warranty / Bill Lookup</button>
+    </div>
+  </header>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 1: MAIN RETAIL POS & EXCHANGE BILLING                              -->
+  <!-- ====================================================================== -->
+  <main id="tab_pos" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 no-print">
+
+    <!-- LEFT 7 COLS: SCANNER, BRAND FILTER & PRODUCT CATALOG -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+      <!-- Instant Scan & Search Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
+        <div class="flex flex-wrap gap-2 items-center">
+          <div class="relative flex-1 min-w-[240px]">
+            <input id="manualScanInput" type="text" placeholder="Scan Box Barcode, 15-Digit IMEI, or search model (e.g., iPhone 15, Vivo)..."
+              class="scan-ready w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none mono" />
+          </div>
+          <button onclick="triggerManualScan()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-lg transition">Add / Scan</button>
+          <button onclick="openCustomItemModal()" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-sm rounded-lg transition">+ Quick Custom Item</button>
+        </div>
+
+        <!-- Brand Filter Pills -->
+        <div id="brandFilterBar" class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-800">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Live Approved Stock Grid (Zero Buying Cost Shown to Staff) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Live Approved Stock Catalog</h2>
+          <span id="catalogCountBadge" class="text-xs mono text-slate-400">0 items available</span>
+        </div>
+        <div id="stockGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 overflow-y-auto max-h-[540px] pr-1">
+          <!-- Populated from /inventory_live/ -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT 5 COLS: ACTIVE BILL, GST TOGGLE, EXCHANGE, FINANCE & CHECKOUT -->
+    <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between shadow-xl">
+      <div>
+        <!-- Top Row: GST Toggle + Print Size Switch -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-bold text-slate-400 uppercase">BILL MODE:</label>
+            <button id="gstToggleBtn" onclick="toggleGstMode()" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+              GST ON (Tax Invoice)
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs text-slate-400">Paper:</label>
+            <select id="printSizeSelect" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200">
+              <option value="A4">A4 Luxury Sheet</option>
+              <option value="80MM">80mm Thermal Roll</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Customer Details Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 my-3">
+          <input id="custMobile" type="tel" maxlength="10" placeholder="Customer Mobile *" oninput="lookupReturningCustomer(this.value)"
+            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white mono focus:border-amber-500 focus:outline-none" />
+          <input id="custName" type="text" placeholder="Customer Full Name *"
+            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 focus:outline-none" />
+          <input id="custGstin" type="text" placeholder="Customer GSTIN (Opt)"
+            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white mono uppercase focus:border-amber-500 focus:outline-none" />
+        </div>
+        <div id="crmStatusBanner" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold"></div>
+
+        <!-- Cart Line Items Table -->
+        <div class="border border-slate-800 rounded-lg overflow-hidden bg-slate-950 my-2">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-900 text-slate-400 uppercase">
+              <tr>
+                <th class="py-2 px-2.5">Item / Variant / 15-Digit IMEI</th>
+                <th class="py-2 px-2 text-center">Qty</th>
+                <th class="py-2 px-2 text-right">Amount</th>
+                <th class="py-2 px-1.5"></th>
+              </tr>
+            </thead>
+            <tbody id="cartTableBody" class="divide-y divide-slate-800">
+              <tr><td colspan="4" class="py-8 text-center text-slate-500">Scan a barcode or click any item from stock to begin billing</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Second-Hand Exchange & Insurance Quick Bar -->
+        <div class="grid grid-cols-2 gap-2 my-2">
+          <button onclick="openExchangeModal()" class="py-2 px-3 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/40 text-indigo-300 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+            <span>⇄ Add Old Phone Exchange</span>
+          </button>
+          <button onclick="toggleInsuranceBox()" class="py-2 px-3 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+            <span>🛡️ Add Insurance / Protection</span>
+          </button>
+        </div>
+
+        <!-- Active Exchange Badge -->
+        <div id="exchangeSummaryBox" class="hidden my-2 p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-700/60 text-xs flex items-center justify-between">
+          <div>
+            <span class="font-bold text-indigo-300">EXCHANGE APPLIED:</span>
+            <span id="exchangeSummaryText" class="text-slate-200 ml-1"></span>
+          </div>
+          <button onclick="clearExchangeData()" class="text-rose-400 hover:underline font-bold ml-2">Remove</button>
+        </div>
+
+        <!-- Insurance Input Box -->
+        <div id="insuranceInputBox" class="hidden my-2 p-2.5 rounded-lg bg-cyan-950/50 border border-cyan-800/60 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+          <input id="insProvider" type="text" placeholder="Provider (e.g. AppleCare / OnsiteGo)" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white" />
+          <input id="insPolicyNo" type="text" placeholder="Policy / Kit No." class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono" />
+          <input id="insAmount" type="number" placeholder="Insurance Fee ₹ (0 if incl)" oninput="renderCart()" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono" />
+        </div>
+      </div>
+
+      <!-- BILL TOTALS & PAYMENT SPLIT SECTION -->
+      <div class="pt-3 border-t border-slate-800 space-y-2.5">
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="flex items-center justify-between bg-slate-950 px-3 py-1.5 rounded border border-slate-800">
+            <span class="text-slate-400">Discount (₹):</span>
+            <input id="billDiscountInput" type="number" value="0" min="0" oninput="renderCart()"
+              class="w-20 bg-transparent text-right font-bold text-amber-400 mono focus:outline-none" />
+          </div>
+          <div class="flex items-center justify-between bg-slate-950 px-3 py-1.5 rounded border border-slate-800">
+            <span class="text-slate-400">GST Breakup:</span>
+            <span id="uiTaxSummary" class="mono text-slate-300 font-semibold">₹0.00</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 border border-amber-500/40 rounded-xl p-3 flex items-center justify-between">
+          <div>
+            <span class="text-xs uppercase font-bold text-slate-400 block">NET PAYABLE AMOUNT</span>
+            <span id="uiExchangeSubtext" class="text-[11px] text-indigo-400"></span>
+          </div>
+          <span id="uiNetPayable" class="text-2xl font-extrabold text-amber-400 mono">₹0.00</span>
+        </div>
+
+        <!-- Payment Mode & Split Amounts -->
+        <div class="space-y-2">
+          <div class="grid grid-cols-4 gap-1.5">
+            <button onclick="setPaymentMode('CASH')" id="payBtn_CASH" class="py-1.5 rounded text-xs font-bold bg-emerald-500 text-slate-950">CASH</button>
+            <button onclick="setPaymentMode('ONLINE')" id="payBtn_ONLINE" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">UPI / ONLINE</button>
+            <button onclick="setPaymentMode('FINANCE')" id="payBtn_FINANCE" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">FINANCE / EMI</button>
+            <button onclick="setPaymentMode('SPLIT')" id="payBtn_SPLIT" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">SPLIT PAY</button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <div>
+              <label class="text-[10px] text-slate-400 uppercase">Cash Paid ₹</label>
+              <input id="payCashAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 uppercase">UPI / Online ₹</label>
+              <input id="payOnlineAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 uppercase">Finance Loan ₹</label>
+              <input id="payFinanceAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+            </div>
+          </div>
+
+          <!-- Finance Provider & DO Box -->
+          <div id="financeDetailsBox" class="hidden grid grid-cols-2 gap-2 pt-1">
+            <select id="financeProvider" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
+              <option value="Bajaj Finserv">Bajaj Finserv</option>
+              <option value="IDFC First">IDFC First Bank</option>
+              <option value="HDB Financial">HDB Financial</option>
+              <option value="Home Credit">Home Credit</option>
+              <option value="TVS Credit">TVS Credit</option>
+              <option value="Credit Card EMI">Credit Card EMI</option>
+            </select>
+            <input id="financeDoNumber" type="text" placeholder="Finance DO / Approval ID" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white mono" />
+          </div>
+        </div>
+
+        <button onclick="completeAndPrintSale()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-extrabold text-sm tracking-wide shadow-lg shadow-amber-500/20 transition">
+          ✓ CLEAR BILL, NOTIFY ADMIN & PRINT INVOICE
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 2: DAILY MOBILE REPAIR & SERVICES PORTFOLIO                        -->
+  <!-- ====================================================================== -->
+  <section id="tab_service" class="hidden flex-1 p-4 max-w-6xl mx-auto w-full no-print space-y-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <h2 class="text-base font-extrabold text-amber-400 mb-1">Log Daily Mobile Service / Repair Ticket</h2>
+      <p class="text-xs text-slate-400 mb-4">Logs directly to Google Sheets, prints a customer service token, and updates the Owner's live service portfolio.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+        <input id="srvCustName" type="text" placeholder="Customer Name *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
+        <input id="srvCustMobile" type="tel" maxlength="10" placeholder="Customer Mobile *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
+        <input id="srvDeviceModel" type="text" placeholder="Mobile Brand & Model (e.g. Vivo V29) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
+        <input id="srvImeiOrLock" type="text" placeholder="IMEI or Screen Lock PIN/Pattern" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
+        <input id="srvIssue" type="text" placeholder="Service / Repair Done (e.g. Original Combo Display) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
+        <select id="srvStatus" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white">
+          <option value="COMPLETED & DELIVERED">COMPLETED & DELIVERED (Paid)</option>
+          <option value="RECEIVED - IN REPAIR">RECEIVED - IN REPAIR (Job Sheet)</option>
+        </select>
+        <input id="srvSpareCost" type="number" placeholder="Spare Part Cost ₹ (For Admin Ledger)" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
+        <input id="srvChargeTotal" type="number" placeholder="Customer Service Charge ₹ *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-amber-400 font-bold mono" />
+        <select id="srvPayMode" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white">
+          <option value="CASH">Paid via CASH</option>
+          <option value="ONLINE">Paid via UPI / ONLINE</option>
+          <option value="PENDING">Payment Pending on Delivery</option>
+        </select>
+      </div>
+      <button onclick="submitServiceTicket()" class="mt-4 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm">
+        + Save Service Entry & Print Service Receipt
+      </button>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <h3 class="text-sm font-bold text-slate-300 uppercase mb-3">Today's Logged Services</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-950 text-slate-400 uppercase">
+            <tr>
+              <th class="p-2.5">Job ID</th>
+              <th class="p-2.5">Time</th>
+              <th class="p-2.5">Staff</th>
+              <th class="p-2.5">Customer</th>
+              <th class="p-2.5">Device & Service</th>
+              <th class="p-2.5">Status</th>
+              <th class="p-2.5 text-right">Amount</th>
+              <th class="p-2.5">Mode</th>
+            </tr>
+          </thead>
+          <tbody id="todayServicesBody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 3: STAFF "BLIND STOCK INWARD" (GOES TO OWNER APPROVAL QUEUE)       -->
+  <!-- ====================================================================== -->
+  <section id="tab_inward" class="hidden flex-1 p-4 max-w-4xl mx-auto w-full no-print">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-base font-extrabold text-amber-400">Staff Blind Stock Inward Scanner</h2>
+          <p class="text-xs text-slate-400">Scan new box arrivals here. Batch will be sent to Owner Admin Portal for Purchase Cost entry & instant approval.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-xs font-bold">WAITING FOR ADMIN APPROVAL</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Box Barcode / EAN / SKU *</label>
+          <input id="inwBarcode" type="text" placeholder="Scan or type Box Barcode" class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white mono" />
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Category *</label>
+          <select id="inwCategory" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white">
+            <option value="NEW_PHONE">New Smartphone</option>
+            <option value="ACCESSORY">Mobile Accessory</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Brand *</label>
+          <select id="inwBrand" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white">
+            <option value="Apple">Apple</option>
+            <option value="Xiaomi">Xiaomi</option>
+            <option value="Vivo">Vivo</option>
+            <option value="Motorola">Motorola</option>
+            <option value="Samsung">Samsung</option>
+            <option value="OnePlus">OnePlus</option>
+            <option value="Realme">Realme</option>
+            <option value="Oppo">Oppo</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Model Name *</label>
+          <input id="inwModel" type="text" placeholder="e.g. iPhone 15 / Vivo V30 / 20W Adapter" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white" />
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Variant (RAM / Storage / Color) *</label>
+          <input id="inwVariant" type="text" placeholder="e.g. 8GB / 128GB | Titanium Blue" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white" />
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Quantity Scanned *</label>
+          <input id="inwQty" type="number" value="1" min="1" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white mono font-bold" />
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs text-slate-400 block mb-1">Scan 15-Digit IMEIs (One per line — auto-updates Quantity if scanned)</label>
+        <textarea id="inwImeiList" rows="4" placeholder="Scan IMEI-1 barcodes here (press Enter after each scan)..."
+          oninput="syncInwardQtyFromImeis()"
+          class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-emerald-400 mono"></textarea>
+      </div>
+
+      <button onclick="submitStaffBlindStock()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm">
+        📤 Submit Batch to Owner Admin Portal for Approval
+      </button>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- TAB 4: 365-DAY WARRANTY & PAST BILL LOOKUP                             -->
+  <!-- ====================================================================== -->
+  <section id="tab_warranty" class="hidden flex-1 p-4 max-w-5xl mx-auto w-full no-print">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+      <h2 class="text-base font-extrabold text-amber-400">365-Day Warranty & Customer Bill Verification</h2>
+      <div class="flex gap-2">
+        <input id="warrantySearchInput" type="text" placeholder="Enter Customer 10-Digit Mobile, Invoice No, or Scan 15-Digit IMEI..."
+          oninput="searchWarrantyRecords(this.value)"
+          class="scan-ready flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white mono" />
+      </div>
+      <div id="warrantyResultsBox" class="space-y-2 max-h-[500px] overflow-y-auto"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL 1: SECOND-HAND PHONE BUY-BACK / EXCHANGE VAULT                   -->
+  <!-- ====================================================================== -->
+  <div id="exchangeModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 no-print">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-3 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+        <h3 class="font-extrabold text-base text-indigo-400">Second-Hand Exchange / Buy-Back Intake</h3>
+        <button onclick="closeExchangeModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
+      </div>
+      <p class="text-xs text-slate-400">Deducts from the customer's new bill AND adds this phone into Pre-Owned Stock + Owner's KYC Vault.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+        <input id="exBrandModel" type="text" placeholder="Old Phone Brand & Model *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="exVariant" type="text" placeholder="GB / Color & Condition (A+/A/B) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="exImei1" type="text" maxlength="15" placeholder="Old Phone 15-Digit IMEI-1 *" class="scan-ready bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <input id="exImei2" type="text" maxlength="15" placeholder="IMEI-2 (Optional)" class="scan-ready bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <input id="exGovtId" type="text" placeholder="Seller Govt ID / KYC Ref No. *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <select id="exBoxBill" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
+          <option value="Original Box + Bill Verified">Original Box + Bill Verified</option>
+          <option value="Only Box Provided">Only Box Provided</option>
+          <option value="Device Only (KYC Verified)">Device Only (KYC Verified)</option>
+        </select>
+        <input id="exBuyPrice" type="number" placeholder="Agreed Exchange Value ₹ *" class="bg-slate-950 border border-indigo-500 rounded-lg px-3 py-2 text-amber-400 font-bold mono sm:col-span-2 text-sm" />
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="saveStandaloneBuyback()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">Direct Cash Buy-Back (No New Bill)</button>
+        <button onclick="applyExchangeToCurrentBill()" class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-xs font-extrabold text-white">Apply Exchange to Current Bill</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL 2: QUICK CUSTOM ITEM / ACCESSORY ADDER                           -->
+  <!-- ====================================================================== -->
+  <div id="customItemModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 no-print">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <h3 class="font-extrabold text-sm text-amber-400">Add Unlisted / Custom Item to Bill</h3>
+        <button onclick="closeCustomItemModal()" class="text-slate-400 hover:text-white">✕</button>
+      </div>
+      <div class="space-y-2.5 text-xs">
+        <input id="custItemBrand" type="text" placeholder="Brand (e.g. Apple / Vivo / Accessory)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="custItemModel" type="text" placeholder="Model / Item Description *" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="custItemVariant" type="text" placeholder="Variant (GB / Color / Specs)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
+        <input id="custItemImei" type="text" placeholder="15-Digit IMEI / Serial No. (If Phone)" class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
+        <input id="custItemPrice" type="number" placeholder="Selling Price ₹ *" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-400 font-bold mono text-sm" />
+      </div>
+      <button onclick="addCustomItemToCart()" class="w-full py-2.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold text-xs">Add to Bill</button>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- LUXURY HIGH-CONTRAST PRINTABLE INVOICE CONTAINER                       -->
+  <!-- ====================================================================== -->
+  <div id="printInvoiceArea" class="hidden bg-white text-black p-6 max-w-3xl mx-auto">
+    <div class="border-2 border-black p-4">
+      <!-- Shop Header -->
+      <div class="text-center border-b-2 border-black pb-3">
+        <h1 id="prShopName" class="text-2xl font-extrabold tracking-wider uppercase">CELL PLANET</h1>
+        <p id="prShopTagline" class="text-xs font-semibold">Multi-Brand Smartphones, Original Accessories & Express Service Hub</p>
+        <p id="prShopAddress" class="text-xs">Main Road, Khammam, Telangana - 507001</p>
+        <div class="flex justify-center gap-4 text-xs font-bold mt-1 mono">
+          <span id="prShopPhone">Phone: +91 98765 43210</span>
+          <span id="prShopGstin">GSTIN: 36XXXXX1234X1Z5</span>
+        </div>
+        <div id="prInvoiceTypeBadge" class="inline-block mt-1.5 px-3 py-0.5 border border-black text-xs font-extrabold uppercase">TAX INVOICE</div>
+      </div>
+
+      <!-- Invoice & Customer Meta -->
+      <div class="grid grid-cols-2 gap-2 py-2.5 border-b border-black text-xs">
+        <div>
+          <p><span class="font-bold">INVOICE NO:</span> <span id="prInvoiceNo" class="mono font-extrabold"></span></p>
+          <p><span class="font-bold">DATE & TIME:</span> <span id="prDateTime" class="mono"></span></p>
+          <p><span class="font-bold">SOLD BY STAFF:</span> <span id="prStaffCode" class="mono font-bold"></span></p>
+        </div>
+        <div class="text-right">
+          <p><span class="font-bold">CUSTOMER:</span> <span id="prCustName" class="font-extrabold"></span></p>
+          <p><span class="font-bold">MOBILE NO:</span> <span id="prCustMobile" class="mono font-bold"></span></p>
+          <p id="prCustGstinRow" class="hidden"><span class="font-bold">CUST GSTIN:</span> <span id="prCustGstin" class="mono"></span></p>
+        </div>
+      </div>
+
+      <!-- Line Items Table -->
+      <table class="w-full text-left border-collapse my-2 text-xs">
+        <thead>
+          <tr class="border-b-2 border-black uppercase">
+            <th class="py-1.5 px-1">#</th>
+            <th class="py-1.5 px-1">Item, Variant & 15-Digit IMEI / Serial</th>
+            <th id="prHsnHeader" class="py-1.5 px-1 text-center">HSN</th>
+            <th class="py-1.5 px-1 text-center">Qty</th>
+            <th class="py-1.5 px-1 text-right">Rate</th>
+            <th class="py-1.5 px-1 text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody id="prItemsBody" class="divide-y divide-gray-300"></tbody>
+      </table>
+
+      <!-- Exchange & Totals Block -->
+      <div class="border-t-2 border-black pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="space-y-1">
+          <p class="font-bold">PAYMENT & FINANCE BREAKDOWN:</p>
+          <p id="prPaymentBreakdown" class="mono text-[11px]"></p>
+          <p id="prExchangePrintRow" class="hidden font-bold text-[11px] border border-black p-1.5 mt-1"></p>
+          <p id="prInsurancePrintRow" class="hidden text-[11px] border border-black p-1.5 mt-1"></p>
+        </div>
+        <div class="space-y-1 text-right mono">
+          <div id="prTaxableRow" class="flex justify-between"><span>Taxable Value:</span><span id="prTaxableVal"></span></div>
+          <div id="prCgstRow" class="flex justify-between"><span>CGST (9%):</span><span id="prCgstVal"></span></div>
+          <div id="prSgstRow" class="flex justify-between"><span>SGST (9%):</span><span id="prSgstVal"></span></div>
+          <div id="prDiscountRow" class="hidden flex justify-between"><span>Special Discount:</span><span id="prDiscountVal"></span></div>
+          <div id="prExchangeDedRow" class="hidden flex justify-between font-bold"><span>Less: Exchange Credit:</span><span id="prExchangeDedVal"></span></div>
+          <div class="flex justify-between text-base font-extrabold border-t-2 border-black pt-1 mt-1">
+            <span>NET PAYABLE:</span>
+            <span id="prNetPayableVal"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terms & Signatures -->
+      <div class="border-t border-black mt-3 pt-2 text-[10px] leading-snug">
+        <p class="font-bold">TERMS & WARRANTY DECLARATIONS:</p>
+        <p>1. Goods once sold will not be taken back or exchanged without valid invoice.</p>
+        <p id="prInsuranceTermsText">2. Brand warranty is provided strictly by the respective Authorized Service Center.</p>
+        <div class="flex justify-between items-end mt-8 pt-2 font-bold text-xs">
+          <span>Customer Signature</span>
+          <span>For <span id="prSignShopName">CELL PLANET</span> (Authorized Signatory)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- POS APPLICATION ENGINE (FIREBASE + BARCODE SCANNER + SHEETS SYNC)      -->
+  <!-- ====================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, get, set, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { ERP_CONFIG, syncToGoogleSheet } from "./config.js";
+
+    const app = initializeApp(ERP_CONFIG.firebaseConfig);
+    const db = getDatabase(app);
+
+    // State
+    let shopConfig = { ...ERP_CONFIG.defaultShop };
+    let liveInventory = {};
+    let adminCostsMap = {}; // Fetched quietly on checkout only to compute accurate Owner notification profit
+    let activeBrandFilter = "ALL";
+    let cart = [];
+    let gstEnabled = true;
+    let paymentMode = "CASH";
+    let activeExchange = null;
+    let allRecentSales = [];
+
+    // 1. Load Shop Profile
+    onValue(ref(db, "shop_config"), (snap) => {
+      if (snap.exists()) {
+        shopConfig = { ...shopConfig, ...snap.val() };
+        document.getElementById("uiShopName").textContent = shopConfig.name;
+      }
+      renderBrandPills();
+    });
+
+    // 2. Load Live Public Stock
+    onValue(ref(db, "inventory_live"), (snap) => {
+      liveInventory = snap.val() || {};
+      renderStockCatalog();
+    });
+
+    // 3. Load Admin Cost Node for silent profit computation on Owner Alert
+    onValue(ref(db, "admin_costs"), (snap) => {
+      adminCostsMap = snap.val() || {};
+    });
+
+    // 4. Load Recent Sales for Returning Customer CRM & 365-Day Warranty Lookup
+    onValue(ref(db, "recent_sales_cache"), (snap) => {
+      const data = snap.val() || {};
+      allRecentSales = Object.values(data).reverse();
+    });
+
+    // 5. Load Today's Services
+    onValue(ref(db, "completed_service_cache"), (snap) => {
+      const data = snap.val() || {};
+      const list = Object.values(data).reverse();
+      const tbody = document.getElementById("todayServicesBody");
+      tbody.innerHTML = list.map(s => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="p-2.5 mono font-bold text-amber-400">${s.jobId}</td>
+          <td class="p-2.5 text-slate-400">${s.timestamp}</td>
+          <td class="p-2.5 font-bold">${s.staffCode}</td>
+          <td class="p-2.5">${s.customerName} (${s.customerMobile})</td>
+          <td class="p-2.5 font-semibold text-white">${s.deviceModel} — <span class="text-emerald-400">${s.issueReported}</span></td>
+          <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">${s.jobStatus}</span></td>
+          <td class="p-2.5 text-right mono font-bold">₹${Number(s.serviceCharge).toLocaleString('en-IN')}</td>
+          <td class="p-2.5 font-bold">${s.payMode}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="8" class="p-6 text-center text-slate-500">No services logged today yet</td></tr>`;
+    });
+
+    // ========================================================================
+    // HARDWARE BARCODE & 15-DIGIT IMEI KEYBOARD-WEDGE LISTENER
+    // ========================================================================
+    let scanBuffer = "";
+    let lastKeyTime = Date.now();
+
+    document.addEventListener("keydown", (e) => {
+      const activeEl = document.activeElement;
+      const isInput = activeEl && ["INPUT", "TEXTAREA", "SELECT"].includes(activeEl.tagName);
+      if (isInput && !activeEl.classList.contains("scan-ready")) return;
+
+      const now = Date.now();
+      if (now - lastKeyTime > 60) scanBuffer = "";
+      lastKeyTime = now;
+
+      if (e.key === "Enter" && scanBuffer.length >= 4) {
+        if (!isInput) {
+          e.preventDefault();
+          processScannedString(scanBuffer.trim());
+        }
+        scanBuffer = "";
+      } else if (e.key.length === 1) {
+        scanBuffer += e.key;
+      }
+    });
+
+    window.triggerManualScan = () => {
+      const input = document.getElementById("manualScanInput");
+      const val = input.value.trim();
+      if (!val) return;
+      processScannedString(val);
+      input.value = "";
+    };
+
+    document.getElementById("manualScanInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        window.triggerManualScan();
+      }
+    });
+
+    function processScannedString(code) {
+      // 1. Check if 15-digit IMEI matches any item in liveInventory
+      if (/^\d{15}$/.test(code)) {
+        for (const [sku, item] of Object.entries(liveInventory)) {
+          const imeiArr = Array.isArray(item.imeis) ? item.imeis : [];
+          if (imeiArr.includes(code)) {
+            addItemToCart(sku, code);
+            return;
+          }
+        }
+        // Otherwise attach IMEI to the last added phone in cart
+        for (let i = cart.length - 1; i >= 0; i--) {
+          if (!cart[i].imei) {
+            cart[i].imei = code;
+            renderCart();
+            return;
+          }
+        }
+        alert(`15-Digit IMEI Scanned (${code}), but not found in stock. Adding via Quick Item modal.`);
+        openCustomItemModal();
+        document.getElementById("custItemImei").value = code;
+        return;
+      }
+
+      // 2. Check exact SKU / Barcode match
+      if (liveInventory[code]) {
+        addItemToCart(code, "");
+        return;
+      }
+
+      // 3. Fuzzy search by model name
+      const foundSku = Object.keys(liveInventory).find(
+        k => (liveInventory[k].model + " " + liveInventory[k].brand).toLowerCase().includes(code.toLowerCase())
+      );
+      if (foundSku) {
+        addItemToCart(foundSku, "");
+      } else {
+        alert(`Barcode "${code}" not found in approved stock. You can add it as a Custom Item or scan it in Blind Stock Inward.`);
+      }
+    }
+
+    // ========================================================================
+    // STOCK CATALOG & CART ENGINE
+    // ========================================================================
+    function renderBrandPills() {
+      const bar = document.getElementById("brandFilterBar");
+      const brands = ["ALL", ...(shopConfig.brands || ERP_CONFIG.defaultShop.brands)];
+      bar.innerHTML = brands.map(b => `
+        <button onclick="setBrandFilter('${b}')"
+          class="px-3 py-1 rounded-lg text-xs font-bold transition ${activeBrandFilter === b ? 'bg-amber-500 text-slate-950' : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'}">
+          ${b}
+        </button>
+      `).join("");
+    }
+
+    window.setBrandFilter = (b) => {
+      activeBrandFilter = b;
+      renderBrandPills();
+      renderStockCatalog();
+    };
+
+    function renderStockCatalog() {
+      const grid = document.getElementById("stockGrid");
+      const items = Object.entries(liveInventory).filter(([sku, it]) => {
+        if (activeBrandFilter !== "ALL" && it.brand !== activeBrandFilter) return false;
+        return true;
+      });
+
+      document.getElementById("catalogCountBadge").textContent = `${items.length} products registered`;
+
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-xs">No live stock in this category yet. Ask Admin to add/approve stock.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(([sku, it]) => {
+        const qty = Number(it.currentStock || 0);
+        const low = qty <= Number(it.minAlertQty || 2);
+        return `
+          <div onclick="selectCatalogItem('${sku}')"
+            class="cursor-pointer bg-slate-950 hover:bg-slate-800/80 border ${low ? 'border-rose-500/50' : 'border-slate-800'} rounded-xl p-3 flex flex-col justify-between transition">
+            <div>
+              <div class="flex items-center justify-between text-[10px] font-bold uppercase">
+                <span class="text-amber-400">${it.brand}</span>
+                <span class="mono ${low ? 'text-rose-400 font-extrabold' : 'text-emerald-400'}">Stock: ${qty}</span>
+              </div>
+              <h3 class="font-bold text-sm text-white mt-1">${it.model}</h3>
+              <p class="text-xs text-slate-400">${it.variant || 'Standard'}</p>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-900">
+              <span class="text-[10px] mono text-slate-500">${sku}</span>
+              <span class="text-sm font-extrabold text-white mono">₹${Number(it.sellingPrice || 0).toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.selectCatalogItem = (sku) => {
+      const it = liveInventory[sku];
+      if (!it) return;
+      if (Number(it.currentStock) <= 0) {
+        alert(`Out of Stock! "${it.brand} ${it.model}" has 0 available quantity.`);
+        return;
+      }
+      let chosenImei = "";
+      const imeiPool = Array.isArray(it.imeis) ? it.imeis : [];
+      if (imeiPool.length > 0) {
+        chosenImei = prompt(`Scan or confirm 15-Digit IMEI for ${it.brand} ${it.model}:\nAvailable: ${imeiPool.join(", ")}`, imeiPool[0]) || "";
+      } else if (it.category === "NEW_PHONE" || it.brand !== "Accessories") {
+        chosenImei = prompt(`Scan/Enter 15-Digit IMEI for ${it.brand} ${it.model} (Leave blank if accessory):`, "") || "";
+      }
+      addItemToCart(sku, chosenImei.trim());
+    };
+
+    function addItemToCart(sku, imei) {
+      const it = liveInventory[sku];
+      if (!it) return;
+
+      // Prevent duplicate IMEI in same bill
+      if (imei && cart.some(c => c.imei === imei)) {
+        alert(`IMEI ${imei} is already added to this bill!`);
+        return;
+      }
+
+      if (!imei) {
+        const existing = cart.find(c => c.sku === sku && !c.imei);
+        if (existing) {
+          existing.qty += 1;
+          renderCart();
+          return;
+        }
+      }
+
+      cart.push({
+        sku,
+        brand: it.brand,
+        model: it.model,
+        variant: it.variant || "",
+        imei: imei || "",
+        hsn: it.brand === "Accessories" ? "8504" : "8517",
+        qty: 1,
+        price: Number(it.sellingPrice || 0),
+        minPrice: Number(it.minSellingPrice || 0)
+      });
+      renderCart();
+    }
+
+    window.removeCartItem = (idx) => {
+      cart.splice(idx, 1);
+      renderCart();
+    };
+
+    window.updateCartItemPrice = (idx, newVal) => {
+      const val = Number(newVal || 0);
+      const item = cart[idx];
+      if (item.minPrice > 0 && val < item.minPrice) {
+        const pin = prompt(`Price ₹${val} is below Minimum Selling Price (₹${item.minPrice}). Enter Owner Override PIN:`);
+        if (pin !== shopConfig.overridePin && pin !== shopConfig.adminPin) {
+          alert("Invalid Override PIN! Price reset.");
+          renderCart();
+          return;
+        }
+      }
+      cart[idx].price = val;
+      renderCart();
+    };
+
+    window.renderCart = () => {
+      const tbody = document.getElementById("cartTableBody");
+      if (cart.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-500">Scan a barcode or click any item from stock to begin billing</td></tr>`;
+      } else {
+        tbody.innerHTML = cart.map((c, idx) => `
+          <tr>
+            <td class="py-2 px-2.5">
+              <div class="font-bold text-white">${c.brand} ${c.model}</div>
+              <div class="text-[11px] text-slate-400">${c.variant}</div>
+              ${c.imei ? `<div class="text-[11px] mono text-emerald-400 font-bold">IMEI: ${c.imei}</div>` : ''}
+            </td>
+            <td class="py-2 px-2 text-center mono font-bold">${c.qty}</td>
+            <td class="py-2 px-2 text-right">
+              <input type="number" value="${c.price}" onchange="updateCartItemPrice(${idx}, this.value)"
+                class="w-24 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-right mono font-bold text-amber-400" />
+            </td>
+            <td class="py-2 px-1.5 text-center">
+              <button onclick="removeCartItem(${idx})" class="text-rose-400 font-bold">✕</button>
+            </td>
+          </tr>
+        `).join("");
+      }
+
+      const grossItems = cart.reduce((s, c) => s + (c.price * c.qty), 0);
+      const insFee = Number(document.getElementById("insAmount").value || 0);
+      const discount = Number(document.getElementById("billDiscountInput").value || 0);
+      const exchangeDed = activeExchange ? Number(activeExchange.buyBackPrice || 0) : 0;
+
+      const subTotalAfterDisc = Math.max(0, grossItems + insFee - discount);
+      let taxable = subTotalAfterDisc;
+      let cgst = 0;
+      let sgst = 0;
+
+      if (gstEnabled) {
+        taxable = subTotalAfterDisc / 1.18;
+        cgst = taxable * 0.09;
+        sgst = taxable * 0.09;
+        document.getElementById("uiTaxSummary").textContent = `CGST ₹${cgst.toFixed(0)} + SGST ₹${sgst.toFixed(0)}`;
+      } else {
+        document.getElementById("uiTaxSummary").textContent = `GST OFF (₹0)`;
+      }
+
+      const netPayable = Math.max(0, subTotalAfterDisc - exchangeDed);
+      document.getElementById("uiNetPayable").textContent = `₹${netPayable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.getElementById("uiExchangeSubtext").textContent = exchangeDed > 0 ? `After ₹${exchangeDed.toLocaleString('en-IN')} Exchange Deduction` : "";
+
+      // Auto-sync payment split boxes unless in SPLIT mode
+      if (paymentMode === "CASH") {
+        document.getElementById("payCashAmt").value = netPayable.toFixed(0);
+        document.getElementById("payOnlineAmt").value = 0;
+        document.getElementById("payFinanceAmt").value = 0;
+      } else if (paymentMode === "ONLINE") {
+        document.getElementById("payCashAmt").value = 0;
+        document.getElementById("payOnlineAmt").value = netPayable.toFixed(0);
+        document.getElementById("payFinanceAmt").value = 0;
+      } else if (paymentMode === "FINANCE") {
+        document.getElementById("payCashAmt").value = 0;
+        document.getElementById("payOnlineAmt").value = 0;
+        document.getElementById("payFinanceAmt").value = netPayable.toFixed(0);
+      }
+    };
+
+    window.toggleGstMode = () => {
+      gstEnabled = !gstEnabled;
+      const btn = document.getElementById("gstToggleBtn");
+      if (gstEnabled) {
+        btn.textContent = "GST ON (Tax Invoice)";
+        btn.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+      } else {
+        btn.textContent = "GST OFF (Retail Bill)";
+        btn.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700";
+      }
+      renderCart();
+    };
+
+    window.setPaymentMode = (mode) => {
+      paymentMode = mode;
+      ["CASH", "ONLINE", "FINANCE", "SPLIT"].forEach(m => {
+        const b = document.getElementById("payBtn_" + m);
+        b.className = m === mode
+          ? "py-1.5 rounded text-xs font-bold bg-emerald-500 text-slate-950"
+          : "py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300";
+      });
+      const finBox = document.getElementById("financeDetailsBox");
+      if (mode === "FINANCE" || mode === "SPLIT") {
+        finBox.classList.remove("hidden");
+      } else {
+        finBox.classList.add("hidden");
+      }
+      renderCart();
+    };
+
+    window.toggleInsuranceBox = () => {
+      document.getElementById("insuranceInputBox").classList.toggle("hidden");
+    };
+
+    // ========================================================================
+    // RETURNING CUSTOMER CRM & 365-DAY WARRANTY SEARCH
+    // ========================================================================
+    window.lookupReturningCustomer = (mob) => {
+      const banner = document.getElementById("crmStatusBanner");
+      if (mob.length !== 10) {
+        banner.classList.add("hidden");
+        return;
+      }
+      const past = allRecentSales.filter(s => s.customerMobile === mob);
+      if (past.length > 0) {
+        document.getElementById("custName").value = past[0].customerName;
+        banner.textContent = `★ Returning VIP Customer! ${past.length} previous purchase(s) at Cell Planet. Last item: ${past[0].itemsSummary}`;
+        banner.classList.remove("hidden");
+      } else {
+        banner.classList.add("hidden");
+      }
+    };
+
+    window.searchWarrantyRecords = (q) => {
+      const box = document.getElementById("warrantyResultsBox");
+      const term = q.trim().toLowerCase();
+      if (!term) {
+        box.innerHTML = "";
+        return;
+      }
+      const matches = allRecentSales.filter(s =>
+        (s.customerMobile && s.customerMobile.includes(term)) ||
+        (s.invoiceId && s.invoiceId.toLowerCase().includes(term)) ||
+        (s.imeiList && s.imeiList.toLowerCase().includes(term)) ||
+        (s.customerName && s.customerName.toLowerCase().includes(term))
+      );
+      box.innerHTML = matches.map(m => `
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex flex-wrap justify-between items-center gap-2 text-xs">
+          <div>
+            <span class="mono font-extrabold text-amber-400">${m.invoiceId}</span>
+            <span class="text-slate-400 ml-2">${m.timestamp} | Sold by ${m.staffCode}</span>
+            <p class="font-bold text-white mt-1">${m.customerName} (+91 ${m.customerMobile})</p>
+            <p class="text-emerald-400 mono mt-0.5">${m.itemsSummary} | IMEI: ${m.imeiList || 'N/A'}</p>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-extrabold mono text-white block">₹${Number(m.netPayable).toLocaleString('en-IN')}</span>
+            <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">Warranty Active</span>
+          </div>
+        </div>
+      `).join("") || `<div class="text-slate-500 text-xs py-6 text-center">No matching invoice or IMEI found.</div>`;
+    };
+
+    // ========================================================================
+    // SECOND-HAND EXCHANGE MODAL LOGIC
+    // ========================================================================
+    window.openExchangeModal = () => {
+      document.getElementById("exchangeModal").classList.remove("hidden");
+      document.getElementById("exchangeModal").classList.add("flex");
+    };
+    window.closeExchangeModal = () => {
+      document.getElementById("exchangeModal").classList.add("hidden");
+      document.getElementById("exchangeModal").classList.remove("flex");
+    };
+
+    window.applyExchangeToCurrentBill = () => {
+      const brandModel = document.getElementById("exBrandModel").value.trim();
+      const conditionGrade = document.getElementById("exVariant").value.trim();
+      const imei1 = document.getElementById("exImei1").value.trim();
+      const imei2 = document.getElementById("exImei2").value.trim();
+      const govtIdRef = document.getElementById("exGovtId").value.trim();
+      const boxBillStatus = document.getElementById("exBoxBill").value;
+      const buyBackPrice = Number(document.getElementById("exBuyPrice").value || 0);
+
+      if (!brandModel || !imei1 || !govtIdRef || buyBackPrice <= 0) {
+        alert("Please fill Old Phone Model, 15-Digit IMEI-1, Customer KYC ID Ref, and Exchange Value.");
+        return;
+      }
+
+      activeExchange = {
+        intakeId: "EX-" + Date.now().toString().slice(-6),
+        brandModel,
+        conditionGrade,
+        imei1,
+        imei2,
+        govtIdRef,
+        boxBillStatus,
+        buyBackPrice
+      };
+
+      document.getElementById("exchangeSummaryBox").classList.remove("hidden");
+      document.getElementById("exchangeSummaryText").textContent = `${brandModel} (${conditionGrade}) | IMEI: ${imei1} | -₹${buyBackPrice.toLocaleString('en-IN')}`;
+      closeExchangeModal();
+      renderCart();
+    };
+
+    window.clearExchangeData = () => {
+      activeExchange = null;
+      document.getElementById("exchangeSummaryBox").classList.add("hidden");
+      renderCart();
+    };
+
+    window.saveStandaloneBuyback = async () => {
+      window.applyExchangeToCurrentBill();
+      if (!activeExchange) return;
+      const sellerName = document.getElementById("custName").value.trim() || prompt("Enter Seller Full Name:") || "Walk-in Seller";
+      const sellerMobile = document.getElementById("custMobile").value.trim() || prompt("Enter Seller 10-Digit Mobile:") || "";
+      const timestamp = new Date().toLocaleString("en-IN");
+
+      // Push to Pending Pre-Owned Queue for Admin Resale Price
+      await push(ref(db, "pending_stock_queue"), {
+        batchId: activeExchange.intakeId,
+        timestamp,
+        entryMode: "SECOND_HAND_BUYBACK",
+        scannedBy: document.getElementById("activeStaffSelect").value,
+        barcode: activeExchange.intakeId,
+        category: "PRE_OWNED",
+        brand: "Pre-Owned",
+        model: activeExchange.brandModel,
+        variant: activeExchange.conditionGrade,
+        qtyScanned: 1,
+        imeis: [activeExchange.imei1],
+        suggestedBuyCost: activeExchange.buyBackPrice,
+        kycDetails: activeExchange
+      });
+
+      await push(ref(db, "live_notifications"), {
+        type: "EXCHANGE_BUYBACK",
+        timestamp,
+        title: `Second-Hand Phone Purchased: ${activeExchange.brandModel}`,
+        message: `Bought by ${document.getElementById("activeStaffSelect").value} from ${sellerName} for ₹${activeExchange.buyBackPrice}. Waiting for your Resale Price in Pending Stock.`
+      });
+
+      syncToGoogleSheet({
+        action: "DIRECT_BUYBACK",
+        intakeId: activeExchange.intakeId,
+        timestamp,
+        sellerName,
+        sellerMobile,
+        ...activeExchange
+      });
+
+      alert(`Pre-Owned Phone (${activeExchange.brandModel}) logged to KYC Vault & sent to Admin Portal for Resale Pricing!`);
+      clearExchangeData();
+    };
+
+    // ========================================================================
+    // CUSTOM ITEM MODAL
+    // ========================================================================
+    window.openCustomItemModal = () => {
+      document.getElementById("customItemModal").classList.remove("hidden");
+      document.getElementById("customItemModal").classList.add("flex");
+    };
+    window.closeCustomItemModal = () => {
+      document.getElementById("customItemModal").classList.add("hidden");
+      document.getElementById("customItemModal").classList.remove("flex");
+    };
+    window.addCustomItemToCart = () => {
+      const brand = document.getElementById("custItemBrand").value.trim() || "Custom";
+      const model = document.getElementById("custItemModel").value.trim();
+      const variant = document.getElementById("custItemVariant").value.trim();
+      const imei = document.getElementById("custItemImei").value.trim();
+      const price = Number(document.getElementById("custItemPrice").value || 0);
+      if (!model || price <= 0) {
+        alert("Enter item model and selling price.");
+        return;
+      }
+      cart.push({
+        sku: "CUSTOM-" + Date.now().toString().slice(-4),
+        brand,
+        model,
+        variant,
+        imei,
+        hsn: imei ? "8517" : "8504",
+        qty: 1,
+        price,
+        minPrice: 0
+      });
+      closeCustomItemModal();
+      renderCart();
+    };
+
+    // ========================================================================
+    // FINAL CHECKOUT, STOCK DEDUCTION, ADMIN NOTIFICATION & PRINT
+    // ========================================================================
+    window.completeAndPrintSale = async () => {
+      if (cart.length === 0) {
+        alert("Cart is empty! Scan or select at least 1 product.");
+        return;
+      }
+      const custName = document.getElementById("custName").value.trim();
+      const custMobile = document.getElementById("custMobile").value.trim();
+      if (!custName || custMobile.length < 10) {
+        alert("Please enter Customer Full Name and 10-Digit Mobile Number.");
+        return;
+      }
+
+      const staffCode = document.getElementById("activeStaffSelect").value;
+      const timestamp = new Date().toLocaleString("en-IN");
+
+      // 1. Generate Sequential Invoice Number
+      const counterKey = gstEnabled ? "gst_seq" : "bill_seq";
+      const seqSnap = await runTransaction(ref(db, `counters/${counterKey}`), (curr) => (curr || 1000) + 1);
+      const seqNum = seqSnap.snapshot.val();
+      const invoiceId = gstEnabled ? `CP/GST/26-27/${seqNum}` : `CP/BILL/${seqNum}`;
+
+      // 2. Calculate Financials & Silent Owner Profit
+      const grossItems = cart.reduce((s, c) => s + (c.price * c.qty), 0);
+      const insFee = Number(document.getElementById("insAmount").value || 0);
+      const discountGiven = Number(document.getElementById("billDiscountInput").value || 0);
+      const exchangeDeduction = activeExchange ? Number(activeExchange.buyBackPrice || 0) : 0;
+      const subTotalAfterDisc = Math.max(0, grossItems + insFee - discountGiven);
+
+      const taxableValue = gstEnabled ? Number((subTotalAfterDisc / 1.18).toFixed(2)) : subTotalAfterDisc;
+      const cgst = gstEnabled ? Number((taxableValue * 0.09).toFixed(2)) : 0;
+      const sgst = gstEnabled ? Number((taxableValue * 0.09).toFixed(2)) : 0;
+      const netPayable = Math.max(0, subTotalAfterDisc - exchangeDeduction);
+
+      // Calculate True Purchase Cost from Admin Vault
+      let purchaseCostTotal = 0;
+      for (const item of cart) {
+        const secretCost = adminCostsMap[item.sku] ? Number(adminCostsMap[item.sku].purchaseCost || 0) : (item.price * 0.88);
+        purchaseCostTotal += secretCost * item.qty;
+      }
+      const netProfit = Number((subTotalAfterDisc - purchaseCostTotal).toFixed(2));
+
+      // 3. Deduct Stock & Remove Sold IMEI from /inventory_live/
+      for (const item of cart) {
+        if (liveInventory[item.sku]) {
+          const itemRef = ref(db, `inventory_live/${item.sku}`);
+          const currentQty = Math.max(0, Number(liveInventory[item.sku].currentStock || 1) - item.qty);
+          let updatedImeis = Array.isArray(liveInventory[item.sku].imeis) ? [...liveInventory[item.sku].imeis] : [];
+          if (item.imei) {
+            updatedImeis = updatedImeis.filter(i => i !== item.imei);
+          }
+          await update(itemRef, { currentStock: currentQty, imeis: updatedImeis });
+
+          // Trigger Low Stock Notification to Admin Portal if threshold reached
+          const minAlert = Number(liveInventory[item.sku].minAlertQty || 2);
+          if (currentQty <= minAlert) {
+            await push(ref(db, "live_notifications"), {
+              type: "LOW_STOCK",
+              timestamp,
+              title: `⚠️ LOW STOCK ALERT: ${item.brand} ${item.model}`,
+              message: `Only ${currentQty} unit(s) left in stock (Min Alert: ${minAlert}). Sold by ${staffCode}.`
+            });
+          }
+        }
+      }
+
+      // 4. If Exchange phone was part of bill, push to Pending Stock Queue for Owner Resale Pricing
+      if (activeExchange) {
+        await push(ref(db, "pending_stock_queue"), {
+          batchId: activeExchange.intakeId,
+          timestamp,
+          entryMode: "EXCHANGE_ON_BILL",
+          scannedBy: staffCode,
+          barcode: activeExchange.intakeId,
+          category: "PRE_OWNED",
+          brand: "Pre-Owned",
+          model: activeExchange.brandModel,
+          variant: activeExchange.conditionGrade,
+          qtyScanned: 1,
+          imeis: [activeExchange.imei1],
+          suggestedBuyCost: activeExchange.buyBackPrice,
+          kycDetails: activeExchange
+        });
+      }
+
+      const cashPaid = Number(document.getElementById("payCashAmt").value || 0);
+      const onlinePaid = Number(document.getElementById("payOnlineAmt").value || 0);
+      const financeAmount = Number(document.getElementById("payFinanceAmt").value || 0);
+      const financeInfo = financeAmount > 0
+        ? `${document.getElementById("financeProvider").value} (DO: ${document.getElementById("financeDoNumber").value || 'N/A'})`
+        : "NONE";
+      const insProvider = document.getElementById("insProvider").value.trim();
+      const insPolicy = document.getElementById("insPolicyNo").value.trim();
+      const insuranceInfo = insProvider ? `${insProvider} (Policy: ${insPolicy} | ₹${insFee})` : "NONE";
+
+      const itemsSummary = cart.map(c => `${c.brand} ${c.model} (${c.variant}) x${c.qty}`).join("; ");
+      const imeiList = cart.map(c => c.imei).filter(Boolean).join(", ");
+
+      const salePayload = {
+        action: "NEW_SALE",
+        invoiceId,
+        timestamp,
+        staffCode,
+        customerName: custName,
+        customerMobile: custMobile,
+        customerGstin: document.getElementById("custGstin").value.trim(),
+        itemsSummary,
+        imeiList,
+        gstMode: gstEnabled ? "GST_ON" : "GST_OFF",
+        hsnSummary: cart.map(c => c.hsn).join(","),
+        taxableValue,
+        cgst,
+        sgst,
+        discountGiven,
+        exchangeDeduction,
+        netPayable,
+        purchaseCostTotal,
+        netProfit,
+        payMode: paymentMode,
+        cashPaid,
+        onlinePaid,
+        financeAmount,
+        financeInfo,
+        insuranceInfo,
+        exchangeData: activeExchange
+      };
+
+      // 5. Save to Firebase Recent Sales Cache & Push Instant Owner Notification
+      await push(ref(db, "recent_sales_cache"), salePayload);
+      await push(ref(db, "live_notifications"), {
+        type: "NEW_SALE",
+        timestamp,
+        title: `🔔 SALE CLEARED: ₹${netPayable.toLocaleString('en-IN')} (${paymentMode})`,
+        message: `${itemsSummary} | Sold by ${staffCode} to ${custName} | Owner Profit: ₹${netProfit.toLocaleString('en-IN')}`
+      });
+
+      // 6. Push to Google Sheets in background
+      syncToGoogleSheet(salePayload);
+
+      // 7. Populate & Trigger Print Layout
+      populatePrintInvoice(salePayload);
+      window.print();
+
+      // 8. Reset Cart for Next Customer
+      cart = [];
+      clearExchangeData();
+      document.getElementById("custName").value = "";
+      document.getElementById("custMobile").value = "";
+      document.getElementById("custGstin").value = "";
+      document.getElementById("billDiscountInput").value = "0";
+      document.getElementById("insProvider").value = "";
+      document.getElementById("insPolicyNo").value = "";
+      document.getElementById("insAmount").value = "";
+      document.getElementById("crmStatusBanner").classList.add("hidden");
+      renderCart();
+    };
+
+    function populatePrintInvoice(d) {
+      const area = document.getElementById("printInvoiceArea");
+      const size = document.getElementById("printSizeSelect").value;
+      if (size === "80MM") {
+        area.classList.add("thermal-80mm");
+      } else {
+        area.classList.remove("thermal-80mm");
+      }
+
+      document.getElementById("prShopName").textContent = shopConfig.name;
+      document.getElementById("prSignShopName").textContent = shopConfig.name;
+      document.getElementById("prShopTagline").textContent = shopConfig.tagline;
+      document.getElementById("prShopAddress").textContent = shopConfig.address;
+      document.getElementById("prShopPhone").textContent = `Ph: ${shopConfig.phone}`;
+
+      const gstEl = document.getElementById("prShopGstin");
+      const badgeEl = document.getElementById("prInvoiceTypeBadge");
+      if (gstEnabled) {
+        gstEl.textContent = `GSTIN: ${shopConfig.gstin}`;
+        gstEl.classList.remove("hidden");
+        badgeEl.textContent = "GST TAX INVOICE";
+        document.getElementById("prHsnHeader").classList.remove("hidden");
+        document.getElementById("prTaxableRow").classList.remove("hidden");
+        document.getElementById("prCgstRow").classList.remove("hidden");
+        document.getElementById("prSgstRow").classList.remove("hidden");
+      } else {
+        gstEl.classList.add("hidden");
+        badgeEl.textContent = "RETAIL WARRANTY INVOICE";
+        document.getElementById("prHsnHeader").classList.add("hidden");
+        document.getElementById("prTaxableRow").classList.add("hidden");
+        document.getElementById("prCgstRow").classList.add("hidden");
+        document.getElementById("prSgstRow").classList.add("hidden");
+      }
+
+      document.getElementById("prInvoiceNo").textContent = d.invoiceId;
+      document.getElementById("prDateTime").textContent = d.timestamp;
+      document.getElementById("prStaffCode").textContent = d.staffCode;
+      document.getElementById("prCustName").textContent = d.customerName;
+      document.getElementById("prCustMobile").textContent = `+91 ${d.customerMobile}`;
+
+      if (d.customerGstin) {
+        document.getElementById("prCustGstinRow").classList.remove("hidden");
+        document.getElementById("prCustGstin").textContent = d.customerGstin;
+      } else {
+        document.getElementById("prCustGstinRow").classList.add("hidden");
+      }
+
+      document.getElementById("prItemsBody").innerHTML = cart.map((c, i) => `
+        <tr>
+          <td class="py-1.5 px-1 mono">${i + 1}</td>
+          <td class="py-1.5 px-1">
+            <div class="font-bold">${c.brand} ${c.model} (${c.variant})</div>
+            ${c.imei ? `<div class="mono text-[11px] font-bold">IMEI/SN: ${c.imei}</div>` : ''}
+          </td>
+          <td class="py-1.5 px-1 text-center mono ${gstEnabled ? '' : 'hidden'}">${c.hsn}</td>
+          <td class="py-1.5 px-1 text-center mono">${c.qty}</td>
+          <td class="py-1.5 px-1 text-right mono">₹${c.price.toLocaleString('en-IN')}</td>
+          <td class="py-1.5 px-1 text-right mono font-bold">₹${(c.price * c.qty).toLocaleString('en-IN')}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("prTaxableVal").textContent = `₹${d.taxableValue.toLocaleString('en-IN')}`;
+      document.getElementById("prCgstVal").textContent = `₹${d.cgst.toLocaleString('en-IN')}`;
+      document.getElementById("prSgstVal").textContent = `₹${d.sgst.toLocaleString('en-IN')}`;
+      document.getElementById("prNetPayableVal").textContent = `₹${d.netPayable.toLocaleString('en-IN')}`;
+
+      if (d.discountGiven > 0) {
+        document.getElementById("prDiscountRow").classList.remove("hidden");
+        document.getElementById("prDiscountVal").textContent = `-₹${d.discountGiven.toLocaleString('en-IN')}`;
+      } else {
+        document.getElementById("prDiscountRow").classList.add("hidden");
+      }
+
+      if (d.exchangeDeduction > 0 && d.exchangeData) {
+        document.getElementById("prExchangeDedRow").classList.remove("hidden");
+        document.getElementById("prExchangeDedVal").textContent = `-₹${d.exchangeDeduction.toLocaleString('en-IN')}`;
+        const exRow = document.getElementById("prExchangePrintRow");
+        exRow.classList.remove("hidden");
+        exRow.textContent = `OLD PHONE EXCHANGE BUY-BACK: ${d.exchangeData.brandModel} (${d.exchangeData.conditionGrade}) | IMEI: ${d.exchangeData.imei1} | Value: ₹${d.exchangeDeduction} | KYC Verified`;
+      } else {
+        document.getElementById("prExchangeDedRow").classList.add("hidden");
+        document.getElementById("prExchangePrintRow").classList.add("hidden");
+      }
+
+      if (d.insuranceInfo !== "NONE") {
+        const insRow = document.getElementById("prInsurancePrintRow");
+        insRow.classList.remove("hidden");
+        insRow.textContent = `DEVICE PROTECTION / INSURANCE: ${d.insuranceInfo}`;
+        document.getElementById("prInsuranceTermsText").textContent = `2. ${shopConfig.insuranceClause}`;
+      } else {
+        document.getElementById("prInsurancePrintRow").classList.add("hidden");
+      }
+
+      document.getElementById("prPaymentBreakdown").textContent =
+        `Mode: ${d.payMode} | Cash: ₹${d.cashPaid} | UPI/Online: ₹${d.onlinePaid} | Finance: ₹${d.financeAmount} (${d.financeInfo})`;
+    }
+
+    // ========================================================================
+    // TAB 2: DAILY SERVICES SUBMISSION
+    // ========================================================================
+    window.submitServiceTicket = async () => {
+      const customerName = document.getElementById("srvCustName").value.trim();
+      const customerMobile = document.getElementById("srvCustMobile").value.trim();
+      const deviceModel = document.getElementById("srvDeviceModel").value.trim();
+      const devicePasscodeOrImei = document.getElementById("srvImeiOrLock").value.trim();
+      const issueReported = document.getElementById("srvIssue").value.trim();
+      const jobStatus = document.getElementById("srvStatus").value;
+      const spareCost = Number(document.getElementById("srvSpareCost").value || 0);
+      const serviceCharge = Number(document.getElementById("srvChargeTotal").value || 0);
+      const payMode = document.getElementById("srvPayMode").value;
+      const staffCode = document.getElementById("activeStaffSelect").value;
+
+      if (!customerName || !customerMobile || !deviceModel || !issueReported || serviceCharge <= 0) {
+        alert("Please fill Customer Name, Mobile, Device Model, Repair Done, and Service Charge.");
+        return;
+      }
+
+      const seqSnap = await runTransaction(ref(db, "counters/service_seq"), (curr) => (curr || 100) + 1);
+      const jobId = `SRV-${seqSnap.snapshot.val()}`;
+      const timestamp = new Date().toLocaleString("en-IN");
+      const serviceProfit = serviceCharge - spareCost;
+
+      const payload = {
+        action: "NEW_SERVICE",
+        jobId,
+        timestamp,
+        staffCode,
+        customerName,
+        customerMobile,
+        deviceModel,
+        devicePasscodeOrImei,
+        issueReported,
+        jobStatus,
+        spareCost,
+        serviceCharge,
+        serviceProfit,
+        payMode
+      };
+
+      await push(ref(db, "completed_service_cache"), payload);
+      await push(ref(db, "live_notifications"), {
+        type: "NEW_SERVICE",
+        timestamp,
+        title: `🛠️ SERVICE LOGGED: ${deviceModel} (₹${serviceCharge})`,
+        message: `${issueReported} by ${staffCode} | Mode: ${payMode} | Net Service Profit: ₹${serviceProfit}`
+      });
+
+      syncToGoogleSheet(payload);
+      alert(`Service Ticket ${jobId} Saved & Synced to Admin Portal + Google Sheets!`);
+
+      document.getElementById("srvCustName").value = "";
+      document.getElementById("srvCustMobile").value = "";
+      document.getElementById("srvDeviceModel").value = "";
+      document.getElementById("srvImeiOrLock").value = "";
+      document.getElementById("srvIssue").value = "";
+      document.getElementById("srvSpareCost").value = "";
+      document.getElementById("srvChargeTotal").value = "";
+    };
+
+    // ========================================================================
+    // TAB 3: STAFF BLIND STOCK INWARD SUBMISSION
+    // ========================================================================
+    window.syncInwardQtyFromImeis = () => {
+      const raw = document.getElementById("inwImeiList").value.trim();
+      if (!raw) return;
+      const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      if (lines.length > 0) {
+        document.getElementById("inwQty").value = lines.length;
+      }
+    };
+
+    window.submitStaffBlindStock = async () => {
+      const barcode = document.getElementById("inwBarcode").value.trim();
+      const category = document.getElementById("inwCategory").value;
+      const brand = document.getElementById("inwBrand").value;
+      const model = document.getElementById("inwModel").value.trim();
+      const variant = document.getElementById("inwVariant").value.trim();
+      const qtyScanned = Number(document.getElementById("inwQty").value || 1);
+      const rawImeis = document.getElementById("inwImeiList").value.trim();
+      const imeis = rawImeis ? rawImeis.split(/\r?\n/).map(s => s.trim()).filter(Boolean) : [];
+      const scannedBy = document.getElementById("activeStaffSelect").value;
+
+      if (!barcode || !model || qtyScanned <= 0) {
+        alert("Please scan Box Barcode and enter Model Name & Quantity.");
+        return;
+      }
+
+      const batchId = "INW-" + Date.now().toString().slice(-6);
+      const timestamp = new Date().toLocaleString("en-IN");
+
+      await push(ref(db, "pending_stock_queue"), {
+        batchId,
+        timestamp,
+        entryMode: "STAFF_BLIND_SCAN",
+        scannedBy,
+        barcode,
+        category,
+        brand,
+        model,
+        variant,
+        qtyScanned,
+        imeis
+      });
+
+      await push(ref(db, "live_notifications"), {
+        type: "STOCK_PENDING",
+        timestamp,
+        title: `📦 NEW STOCK SCANNED BY ${scannedBy}`,
+        message: `${qtyScanned}x ${brand} ${model} (${variant}) waiting in Admin Portal for Purchase Cost & Approval.`
+      });
+
+      alert(`Batch ${batchId} submitted! Owner has been notified to enter cost & approve.`);
+      document.getElementById("inwBarcode").value = "";
+      document.getElementById("inwModel").value = "";
+      document.getElementById("inwVariant").value = "";
+      document.getElementById("inwQty").value = "1";
+      document.getElementById("inwImeiList").value = "";
+    };
+
+    // Tab Switcher
+    window.switchTab = (tab) => {
+      ["pos", "service", "inward", "warranty"].forEach(t => {
+        document.getElementById("tab_" + t).classList.toggle("hidden", t !== tab);
+        const btn = document.getElementById("tabBtn_" + t);
+        btn.className = t === tab
+          ? "px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition"
+          : "px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+      });
+    };
+  </script>
+</body>
+</html>
