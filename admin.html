@@ -28,7 +28,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
         :root {
-            /* Luxury White, Royal Gold & Deep Emerald Accent Variables */
             --bg-light: #f9fafb;
             --box-bg: #ffffff;
             --gold-main: #c5a059;
@@ -64,7 +63,6 @@
             overflow-x: hidden;
         }
 
-        /* Luxury Bento Box */
         .bento-box {
             background: var(--box-bg);
             border: 1px solid var(--gold-border);
@@ -100,9 +98,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 24px rgba(197, 160, 89, 0.42);
             opacity: 0.97;
-        }
-        .btn-gold:active {
-            transform: translateY(0);
         }
 
         .btn-emerald {
@@ -175,7 +170,6 @@
             box-shadow: 0 8px 20px rgba(197, 160, 89, 0.32);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -188,7 +182,6 @@
             border-radius: 999px;
         }
 
-        /* Brand & Dev Logos */
         .brand-logo {
             width: 68px;
             height: 68px;
@@ -219,7 +212,6 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* Toast Notification */
         .toast-notification {
             visibility: hidden;
             min-width: 290px;
@@ -246,7 +238,6 @@
             opacity: 1;
         }
 
-        /* Universal Print Media Engine: Supports Invoices (80mm / A4) AND Barcode Stickers */
         @media print {
             body * {
                 visibility: hidden !important;
@@ -286,7 +277,6 @@
             }
         }
 
-        /* 80mm Thermal Receipt Preview Styling */
         .receipt-80mm {
             width: 310px;
             margin: 0 auto;
@@ -299,7 +289,6 @@
             line-height: 1.35;
         }
 
-        /* A4 Executive Invoice Preview Styling */
         .invoice-a4 {
             width: 100%;
             max-width: 790px;
@@ -311,7 +300,6 @@
             border: 1px solid #e0d5c1;
         }
 
-        /* Barcode Sticker Card Styles */
         .barcode-sticker-card {
             background: #ffffff;
             color: #000000;
@@ -335,13 +323,120 @@
 </head>
 <body class="p-3 md:p-6 printing-invoice">
 
+    <!-- ================================================================= -->
+    <!-- PASSWORD-FIRST FULL-SCREEN SECURITY LOCK GATE (ADMIN & STAFF)     -->
+    <!-- ================================================================= -->
+    <div id="erpAuthLockScreen" class="fixed inset-0 z-[100] bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#111827] flex items-center justify-center p-3 sm:p-6 overflow-y-auto no-print">
+        <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-7 shadow-2xl border-2 border-[#c5a059] my-auto space-y-4">
+            <div class="text-center space-y-1.5">
+                <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23131921'/%3E%3Cstop offset='100%25' stop-color='%231e3a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='58' fill='url(%23g)' stroke='%23c5a059' stroke-width='4'/%3E%3Ctext x='60' y='56' font-family='sans-serif' font-size='28' font-weight='800' fill='%23fbbf24' text-anchor='middle'%3ECP%3C/text%3E%3Ctext x='60' y='78' font-family='sans-serif' font-size='11' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EKHAMMAM%3C/text%3E%3C/svg%3E" data-asset="cell-logo.png.jfif" alt="Cell Planet" class="w-16 h-16 mx-auto rounded-full border-2 border-[#c5a059] p-1 bg-white shadow">
+                <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold uppercase tracking-widest">
+                    <i class="ph-fill ph-lock-key"></i> Protected POS & ERP Suite
+                </div>
+                <h2 class="text-xl font-bold text-neutral-900">CELL PLANET KHAMMAM</h2>
+                <p class="text-xs text-neutral-500">Enter Admin Master PIN or Staff Counter PIN to unlock the showroom console</p>
+            </div>
+
+            <!-- Role Selector Tabs (Desktop & Mobile) -->
+            <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-neutral-100 border border-neutral-200 text-xs font-bold">
+                <button type="button" onclick="selectLockScreenRole('ADMIN')" id="lockRoleBtn-ADMIN" class="py-2.5 px-3 rounded-xl bg-amber-600 text-white shadow flex items-center justify-center gap-1.5">
+                    <i class="ph-bold ph-crown text-base"></i>
+                    <span>Admin Login</span>
+                </button>
+                <button type="button" onclick="selectLockScreenRole('STAFF')" id="lockRoleBtn-STAFF" class="py-2.5 px-3 rounded-xl text-neutral-700 hover:bg-white flex items-center justify-center gap-1.5">
+                    <i class="ph-bold ph-Identification-badge text-base"></i>
+                    <span>Staff Login</span>
+                </button>
+            </div>
+
+            <!-- Password / PIN Form -->
+            <form onsubmit="submitLockScreenLogin(event)" class="space-y-3">
+                <div class="relative">
+                    <input
+                        type="password"
+                        id="lockScreenPinInput"
+                        required
+                        placeholder="Enter Password / PIN (Default: 1234)"
+                        class="input-luxury py-3 px-4 pr-11 text-center text-lg font-mono font-bold tracking-[6px] border-2 border-amber-400"
+                        autocomplete="off"
+                    >
+                    <button type="button" onclick="togglePinInputVisibility('lockScreenPinInput', 'lockEyeIcon')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-900">
+                        <i id="lockEyeIcon" class="ph-bold ph-eye text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile-Friendly Touch Keypad for Smartphones & Tablets -->
+                <div class="grid grid-cols-3 gap-2 pt-1">
+                    <button type="button" onclick="appendLockKeypadDigit('1')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">1</button>
+                    <button type="button" onclick="appendLockKeypadDigit('2')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">2</button>
+                    <button type="button" onclick="appendLockKeypadDigit('3')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">3</button>
+                    <button type="button" onclick="appendLockKeypadDigit('4')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">4</button>
+                    <button type="button" onclick="appendLockKeypadDigit('5')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">5</button>
+                    <button type="button" onclick="appendLockKeypadDigit('6')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">6</button>
+                    <button type="button" onclick="appendLockKeypadDigit('7')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">7</button>
+                    <button type="button" onclick="appendLockKeypadDigit('8')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">8</button>
+                    <button type="button" onclick="appendLockKeypadDigit('9')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">9</button>
+                    <button type="button" onclick="clearLockKeypadInput()" class="py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 font-bold text-xs text-rose-700 border border-rose-200">Clear</button>
+                    <button type="button" onclick="appendLockKeypadDigit('0')" class="py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-100 font-bold text-sm text-neutral-900 border border-neutral-200">0</button>
+                    <button type="button" onclick="backspaceLockKeypad()" class="py-2.5 rounded-xl bg-neutral-200 hover:bg-neutral-300 font-bold text-xs text-neutral-800">⌫ Back</button>
+                </div>
+
+                <div id="lockScreenErrorMsg" class="hidden text-center text-xs font-bold text-rose-600 bg-rose-50 p-2 rounded-xl border border-rose-200">
+                    ❌ Incorrect PIN! Try again or click "Show PIN Hints" below.
+                </div>
+
+                <button type="submit" class="btn-gold w-full py-3.5 text-sm flex items-center justify-center gap-2 shadow-lg">
+                    <i class="ph-bold ph-lock-key-open text-lg"></i>
+                    <span id="lockScreenSubmitText">Unlock Admin Master Suite</span>
+                </button>
+            </form>
+
+            <!-- PIN Hints & Quick Fill for Testing -->
+            <div class="pt-2 border-t border-neutral-200 flex flex-wrap items-center justify-between gap-2 text-[11px] text-neutral-500">
+                <button type="button" onclick="toggleLockScreenPinHintBox()" class="font-bold text-amber-800 underline">
+                    👁️ Show / Auto-Fill Default PINs
+                </button>
+                <span>Station Rd, Khammam • 9550677795</span>
+            </div>
+            <div id="lockScreenPinHintBox" class="hidden p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs flex items-center justify-between">
+                <div>
+                    <div>👑 <strong>Admin PIN:</strong> <code id="lockHintAdminVal" class="font-mono font-bold">1234</code></div>
+                    <div>🧑‍💼 <strong>Staff PIN:</strong> <code id="lockHintStaffVal" class="font-mono font-bold">0000</code></div>
+                </div>
+                <div class="flex gap-1.5">
+                    <button type="button" onclick="quickUnlockWithRole('ADMIN')" class="px-2.5 py-1.5 rounded-lg bg-amber-600 text-white font-bold text-[11px]">1-Tap Admin</button>
+                    <button type="button" onclick="quickUnlockWithRole('STAFF')" class="px-2.5 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-[11px]">1-Tap Staff</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN CONTAINER -->
-    <div class="max-w-[1440px] mx-auto space-y-5 no-print">
+    <div id="erpMainProtectedContainer" class="max-w-[1440px] mx-auto space-y-5 no-print">
+
+        <!-- MOBILE & DESKTOP STICKY ADMIN / STAFF LOGIN-LOGOUT BAR -->
+        <div id="mobileErpSessionBar" class="bg-neutral-900 text-white rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 shadow-md border border-amber-400/40">
+            <div class="flex items-center gap-2 text-xs">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="sessionBarRoleStatus" class="font-bold text-amber-300">👑 Logged In: ADMIN MASTER MODE</span>
+                <span class="hidden sm:inline text-neutral-400">• Full Pricing, Online/Offline Rate Analysis & Profit Unlocked</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="openRoleModal()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1 border border-white/15">
+                    <i class="ph-bold ph-user-switch text-amber-400"></i>
+                    <span>Switch Role / PIN</span>
+                </button>
+                <button type="button" onclick="logoutErpSession()" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1 shadow">
+                    <i class="ph-bold ph-sign-out"></i>
+                    <span>Logout / Lock</span>
+                </button>
+            </div>
+        </div>
 
         <!-- TOP LUXURY HEADER BENTO -->
         <header class="bento-box flex flex-col lg:flex-row items-center justify-between gap-4 py-5 px-6 bg-gradient-to-r from-white via-[#fffdf9] to-[#f8f3e6]">
             <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-                <img src="cell-logo.png.jfif" alt="Cell Planet" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=CP&background=c5a059&color=fff&size=120'">
+                <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23131921'/%3E%3Cstop offset='100%25' stop-color='%231e3a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='58' fill='url(%23g)' stroke='%23c5a059' stroke-width='4'/%3E%3Ctext x='60' y='56' font-family='sans-serif' font-size='28' font-weight='800' fill='%23fbbf24' text-anchor='middle'%3ECP%3C/text%3E%3Ctext x='60' y='78' font-family='sans-serif' font-size='11' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EKHAMMAM%3C/text%3E%3C/svg%3E" data-asset="cell-logo.png.jfif" alt="Cell Planet" class="brand-logo">
                 <div>
                     <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                         <h1 class="text-2xl md:text-3xl font-bold tracking-tight gold-text">CELL PLANET KHAMMAM</h1>
@@ -352,7 +447,7 @@
                             <i class="ph-bold ph-barcode"></i> Rapid Gun Listener ON
                         </span>
                         <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300 flex items-center gap-1">
-                            <i class="ph-bold ph-camera"></i> 20-Photo Bulk Stock-In Ready
+                            <i class="ph-bold ph-magnifying-glass-plus"></i> Click Image/IMEI to Inspect
                         </span>
                     </div>
                     <p class="text-xs md:text-sm text-neutral-600 font-medium mt-0.5">
@@ -373,7 +468,7 @@
             <!-- Right Controls: Quick Stats, Online Orders Badge, 1-Click GST Summary & Role Switcher -->
             <div class="flex flex-wrap items-center justify-center gap-2.5">
                 <div class="bg-[#fcfaf5] border border-[#e6d5b8] rounded-2xl px-3.5 py-2 text-right">
-                    <div class="text-[10px] uppercase tracking-wider text-neutral-500 font-bold">Today's Sales</div>
+                    <div class="text-[10px] uppercase tracking-wider text-neutral-500 font-bold">Counter Sales</div>
                     <div id="headerTodayRevenue" class="text-base font-bold text-neutral-900">₹0</div>
                 </div>
                 <div class="bg-[#fcfaf5] border border-[#e6d5b8] rounded-2xl px-3.5 py-2 text-right">
@@ -388,15 +483,19 @@
                     <div class="text-[10px] uppercase tracking-wider text-indigo-800 font-bold">Online Orders</div>
                     <div id="headerOnlineOrdersCount" class="text-base font-bold text-indigo-900">0</div>
                 </div>
-                <button onclick="sendOneClickGstTotalWhatsApp()" class="btn-emerald px-3.5 py-2.5 text-xs flex items-center gap-1.5" title="Send 1-Click GST & Daily Total Summary on WhatsApp">
+                <button type="button" onclick="sendOneClickGstTotalWhatsApp()" class="btn-emerald px-3.5 py-2.5 text-xs flex items-center gap-1.5" title="Send 1-Click GST & Daily Total Summary on WhatsApp">
                     <i class="ph-bold ph-whatsapp-logo text-base"></i>
                     <span>1-Click GST Total</span>
                 </button>
-                <button onclick="openRoleModal()" class="btn-outline-gold px-3.5 py-2.5 text-xs flex items-center gap-1.5">
+                <button type="button" onclick="openRoleModal()" class="btn-outline-gold px-3.5 py-2.5 text-xs flex items-center gap-1.5">
                     <i class="ph-bold ph-lock-key text-base text-amber-700"></i>
                     <span id="roleSwitchBtnText">PIN / Role</span>
                 </button>
-                <button onclick="openHowItWorksModal()" class="btn-gold px-3.5 py-2.5 text-xs flex items-center gap-1.5">
+                <button type="button" onclick="logoutErpSession()" class="px-3.5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5 shadow">
+                    <i class="ph-bold ph-sign-out text-base"></i>
+                    <span>Logout</span>
+                </button>
+                <button type="button" onclick="openHowItWorksModal()" class="btn-gold px-3.5 py-2.5 text-xs flex items-center gap-1.5">
                     <i class="ph-bold ph-book-open-text text-base"></i>
                     <span>Guide</span>
                 </button>
@@ -406,52 +505,52 @@
         <!-- NAVIGATION TABS -->
         <nav class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2">
-                <button onclick="switchTab('pos')" id="tab-pos" class="tab-btn active">
+                <button type="button" onclick="switchTab('pos')" id="tab-pos" class="tab-btn active">
                     <i class="ph-bold ph-barcode text-lg"></i>
                     <span>1. Fast POS Billing & Scanner</span>
                 </button>
-                <button onclick="switchTab('inventory')" id="tab-inventory" class="tab-btn">
+                <button type="button" onclick="switchTab('inventory')" id="tab-inventory" class="tab-btn">
                     <i class="ph-bold ph-package text-lg"></i>
-                    <span>2. Stock-In, 20-Photo Snap & Labels</span>
+                    <span>2. Stock-In, Online/Offline Rates & Labels</span>
                 </button>
-                <button onclick="switchTab('online')" id="tab-online" class="tab-btn">
+                <button type="button" onclick="switchTab('online')" id="tab-online" class="tab-btn">
                     <i class="ph-bold ph-shopping-bag-open text-lg"></i>
                     <span>3. Online Orders & Storefront Control</span>
                     <span id="navOnlineBadge" class="px-1.5 py-0.5 text-[10px] rounded-full bg-rose-600 text-white font-bold">3</span>
                 </button>
-                <button onclick="switchTab('ledger')" id="tab-ledger" class="tab-btn">
+                <button type="button" onclick="switchTab('ledger')" id="tab-ledger" class="tab-btn">
                     <i class="ph-bold ph-files text-lg"></i>
                     <span>4. Daily Bills, All-Bank Finance & EOD</span>
                 </button>
-                <button onclick="switchTab('ai')" id="tab-ai" class="tab-btn">
-                    <i class="ph-bold ph-sparkle text-lg"></i>
-                    <span>5. AI Executive Insights</span>
+                <button type="button" onclick="switchTab('ai')" id="tab-ai" class="tab-btn">
+                    <i class="ph-bold ph-chart-line-up text-lg"></i>
+                    <span>5. Online vs Offline Rate Analysis & AI</span>
                 </button>
             </div>
 
             <!-- Instant Action Bar -->
             <div class="flex flex-wrap items-center gap-2">
-                <button onclick="openPhotoStockModal()" class="btn-emerald px-3.5 py-2 text-xs flex items-center gap-1.5 shadow-sm" title="Add 1 to 20+ phones to stock just by clicking photos!">
+                <button type="button" onclick="openPhotoStockModal()" class="btn-emerald px-3.5 py-2 text-xs flex items-center gap-1.5 shadow-sm" title="Add 1 to 20+ phones to stock just by clicking photos!">
                     <i class="ph-bold ph-camera-plus text-base"></i>
                     <span>📸 Snap / 20-Photo Stock-In</span>
                 </button>
-                <button onclick="openStickerGeneratorModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-amber-400 text-amber-900 bg-amber-50/70 hover:bg-amber-100">
+                <button type="button" onclick="openStickerGeneratorModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-amber-400 text-amber-900 bg-amber-50/70 hover:bg-amber-100">
                     <i class="ph-bold ph-tag text-base text-amber-700"></i>
                     <span>Print Barcode Labels</span>
                 </button>
-                <button onclick="openRepairQuickModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-indigo-300 text-indigo-800 hover:bg-indigo-50">
+                <button type="button" onclick="openRepairQuickModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-indigo-300 text-indigo-800 hover:bg-indigo-50">
                     <i class="ph-bold ph-wrench text-base"></i>
                     <span>+ Quick Repair Job</span>
                 </button>
-                <button onclick="openOldPhoneModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-emerald-300 text-emerald-800 hover:bg-emerald-50">
+                <button type="button" onclick="openOldPhoneModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-emerald-300 text-emerald-800 hover:bg-emerald-50">
                     <i class="ph-bold ph-arrows-left-right text-base"></i>
                     <span>+ Old Phone Trade-In</span>
                 </button>
-                <button onclick="exportTodayExcel()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5">
+                <button type="button" onclick="exportTodayExcel()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5">
                     <i class="ph-bold ph-file-xls text-emerald-600 text-base"></i>
                     <span>Today's Excel</span>
                 </button>
-                <button onclick="openEodClearModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-rose-300 text-rose-700 hover:bg-rose-50">
+                <button type="button" onclick="openEodClearModal()" class="btn-outline-gold px-3 py-2 text-xs flex items-center gap-1.5 border-rose-300 text-rose-700 hover:bg-rose-50">
                     <i class="ph-bold ph-broom text-base"></i>
                     <span>EOD Clear</span>
                 </button>
@@ -475,7 +574,7 @@
                             </span>
                             <div>
                                 <h2 class="text-base font-bold text-neutral-900">Rapid Barcode / IMEI Laser Scanner & Photo Stock-In</h2>
-                                <p class="text-xs text-neutral-500">Scan box barcode/IMEI, or click <strong>📸 Photo Stock-In</strong> to add 1–20+ phones by photo</p>
+                                <p class="text-xs text-neutral-500">Scan box barcode/IMEI, or click any <strong>Phone Image / IMEI Badge</strong> below to inspect full details</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -495,7 +594,6 @@
                                 class="input-luxury pl-10 pr-4 py-3 text-sm font-semibold"
                                 placeholder="Scan Barcode / IMEI (e.g. 8901001 or 359876104512890) & press Enter..."
                                 autocomplete="off"
-                                autofocus
                             >
                         </div>
                         <button type="submit" class="btn-gold px-4 py-3 text-xs flex items-center justify-center gap-1.5 shrink-0">
@@ -537,12 +635,12 @@
                     </div>
                 </div>
 
-                <!-- LIVE INVENTORY CATALOG GRID FOR POS (WITH PRODUCT PHOTOS) -->
+                <!-- LIVE INVENTORY CATALOG GRID FOR POS (CLICKABLE PHONE PHOTO & IMEI INSPECTOR) -->
                 <div class="bento-box">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                         <div>
                             <h3 class="text-base font-bold text-neutral-900">In-Stock Smartphones, Foldables, Pre-Owned, Repairs & TVs</h3>
-                            <p class="text-xs text-neutral-500">Click any item to verify IMEI / Serial, Color & Variant, or click 📸 to update its photo</p>
+                            <p class="text-xs text-emerald-800 font-semibold">🔍 Click any <strong>Phone Photo</strong> or <strong>IMEI Badge</strong> to see the full un-truncated Name, IMEI, Color, Variant & Online/Offline Rates!</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <select id="posCategoryFilter" onchange="renderPosCatalog()" class="input-luxury py-2 px-3 text-xs w-auto font-semibold">
@@ -563,7 +661,7 @@
                         </div>
                     </div>
 
-                    <div id="posCatalogGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1">
+                    <div id="posCatalogGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[540px] overflow-y-auto pr-1">
                         <!-- Dynamically Populated -->
                     </div>
                 </div>
@@ -575,7 +673,7 @@
                     <!-- Invoice Header & Admin Flexible GST Switch -->
                     <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-neutral-200">
                         <div>
-                            <span class="text-[11px] font-bold uppercase tracking-widest text-amber-700">Active Counter Bill</span>
+                            <span class="text-[11px] font-bold uppercase tracking-widest text-amber-700">Active Counter Bill (Offline Rate)</span>
                             <h2 id="activeInvoiceNumberDisplay" class="text-lg font-bold text-neutral-900">INV-CP-1001</h2>
                         </div>
 
@@ -622,14 +720,14 @@
                         </div>
                     </div>
 
-                    <!-- Cart Items List (With Inline Editable Price & Qty for Last-Minute Changes!) -->
+                    <!-- Cart Items List (With Inline Editable Price, Qty & Clickable IMEI Inspector!) -->
                     <div class="mb-3">
                         <div class="flex items-center justify-between text-xs font-bold text-neutral-500 uppercase tracking-wider mb-1.5">
-                            <span>Scanned Bill Items (Edit Price / Qty Anytime!)</span>
-                            <button onclick="clearCurrentCart()" class="text-rose-600 hover:underline text-[11px]">Clear Cart</button>
+                            <span>Scanned Bill Items (Click IMEI to Inspect • Edit Price Anytime)</span>
+                            <button type="button" onclick="clearCurrentCart()" class="text-rose-600 hover:underline text-[11px]">Clear Cart</button>
                         </div>
                         <div id="posCartItemsContainer" class="space-y-2 max-h-[260px] overflow-y-auto pr-1">
-                            <!-- Dynamically Rendered Cart Items with Live Editable Price Inputs -->
+                            <!-- Dynamically Rendered Cart Items -->
                         </div>
                     </div>
 
@@ -655,7 +753,7 @@
                         </div>
                     </div>
 
-                    <!-- SLEEK MULTI-MODE PAYMENT SELECTOR (Cash, Online/UPI, Card, All-Banks Finance, Split) -->
+                    <!-- SLEEK MULTI-MODE PAYMENT SELECTOR -->
                     <div class="mb-4">
                         <label class="text-[11px] font-bold uppercase tracking-wider text-neutral-500 block mb-1.5">
                             Select Payment / All-Bank Finance Mode (Poonawalla, IDBI, ICICI, Bajaj, IDFC & More)
@@ -684,9 +782,7 @@
                         </div>
 
                         <!-- Dynamic Sub-Fields for Selected Payment Mode -->
-                        <div id="paymentDynamicFields" class="p-3 rounded-xl bg-[#fcfaf5] border border-amber-200 text-xs space-y-2">
-                            <!-- Populated by JS based on CASH / UPI / CARD / FINANCE / SPLIT -->
-                        </div>
+                        <div id="paymentDynamicFields" class="p-3 rounded-xl bg-[#fcfaf5] border border-amber-200 text-xs space-y-2"></div>
                     </div>
 
                     <!-- Live Totals Summary Box -->
@@ -721,15 +817,15 @@
 
                     <!-- Action Buttons: Print 80mm, Print A4, WhatsApp Invoice -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <button onclick="completeSaleAndOpenInvoice('80MM')" class="btn-gold py-3 px-3 text-xs flex items-center justify-center gap-1.5">
+                        <button type="button" onclick="completeSaleAndOpenInvoice('80MM')" class="btn-gold py-3 px-3 text-xs flex items-center justify-center gap-1.5">
                             <i class="ph-bold ph-receipt text-base"></i>
                             <span>80mm Thermal Bill</span>
                         </button>
-                        <button onclick="completeSaleAndOpenInvoice('A4')" class="btn-gold py-3 px-3 text-xs flex items-center justify-center gap-1.5">
+                        <button type="button" onclick="completeSaleAndOpenInvoice('A4')" class="btn-gold py-3 px-3 text-xs flex items-center justify-center gap-1.5">
                             <i class="ph-bold ph-printer text-base"></i>
                             <span>A4 Executive Bill</span>
                         </button>
-                        <button onclick="completeSaleAndOpenInvoice('WHATSAPP')" class="btn-emerald py-3 px-3 text-xs flex items-center justify-center gap-1.5">
+                        <button type="button" onclick="completeSaleAndOpenInvoice('WHATSAPP')" class="btn-emerald py-3 px-3 text-xs flex items-center justify-center gap-1.5">
                             <i class="ph-bold ph-whatsapp-logo text-base"></i>
                             <span>1-Click WhatsApp Bill</span>
                         </button>
@@ -739,7 +835,7 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- TAB 2: RAPID BARCODE STOCK-IN, 20-PHOTO SNAP & IMEI INVENTORY     -->
+        <!-- TAB 2: RAPID BARCODE STOCK-IN, 20-PHOTO SNAP & ONLINE/OFFLINE     -->
         <!-- ================================================================= -->
         <section id="view-inventory" class="hidden space-y-5">
             <!-- Rapid Stock-In Barcode Scanner & 20-Photo Bulk Intake Banner -->
@@ -748,12 +844,12 @@
                     <div>
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-[11px] font-bold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                                ⚡ Rapid Barcode + 📸 20-Photo Bulk Stock-In Active
+                                ⚡ Rapid Barcode + 📸 20-Photo Bulk Stock-In + Separate Online/Offline Rates
                             </span>
                         </div>
                         <h3 class="text-lg font-bold text-neutral-900 mt-1">Instant Barcode Scan OR 1-to-20 Photo Click Stock-In</h3>
                         <p class="text-xs text-neutral-600">
-                            Have 20 boxes of the same smartphone? Click <strong class="text-emerald-800">"📸 Snap / Upload 1–20 Photos"</strong> to snap or select 20 images at once, type the Model Name & Variant once, and all 20 units get stocked in with unique IMEIs & photos automatically!
+                            Click any <strong>Phone Photo</strong> or <strong>IMEI Number</strong> in the table below to open the Full Device & IMEI Inspector, or edit <strong>Offline Counter Rate</strong> and <strong>Online Store Rate</strong> side-by-side!
                         </p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
@@ -781,27 +877,27 @@
             <div class="bento-box">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                     <div>
-                        <h2 class="text-xl font-bold text-neutral-900">Smart Barcode, Photo, IMEI, Old Phones & Repair Master Inventory</h2>
-                        <p class="text-xs text-neutral-500">All items & photos automatically sync with the Customer Online Storefront & POS Counter</p>
+                        <h2 class="text-xl font-bold text-neutral-900">Smart Barcode, Photo, Full IMEI & Dual-Rate (Online vs. Offline) Inventory</h2>
+                        <p class="text-xs text-neutral-500">Click any Photo or IMEI to view full un-truncated details • Edit Offline Counter Rate & Online Store Rate directly</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="openPhotoStockModal()" class="btn-emerald px-4 py-2.5 text-xs flex items-center gap-1.5">
+                        <button type="button" onclick="openPhotoStockModal()" class="btn-emerald px-4 py-2.5 text-xs flex items-center gap-1.5">
                             <i class="ph-bold ph-camera text-base"></i>
                             <span>📸 + Photo / 20-Batch Stock-In</span>
                         </button>
-                        <button onclick="openStickerGeneratorModal()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5 border-amber-400 bg-amber-50/70 text-amber-900">
+                        <button type="button" onclick="openStickerGeneratorModal()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5 border-amber-400 bg-amber-50/70 text-amber-900">
                             <i class="ph-bold ph-tag text-base text-amber-700"></i>
                             <span>🏷️ Print Barcode Labels</span>
                         </button>
-                        <button onclick="openAddInventoryModal()" class="btn-gold px-4 py-2.5 text-xs flex items-center gap-1.5">
+                        <button type="button" onclick="openAddInventoryModal()" class="btn-gold px-4 py-2.5 text-xs flex items-center gap-1.5">
                             <i class="ph-bold ph-plus-circle text-base"></i>
                             <span>+ Add New Device / Barcode</span>
                         </button>
-                        <button onclick="openOldPhoneModal()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5 border-emerald-300 text-emerald-800">
+                        <button type="button" onclick="openOldPhoneModal()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5 border-emerald-300 text-emerald-800">
                             <i class="ph-bold ph-device-mobile text-base"></i>
                             <span>+ Stock-In Old Phone</span>
                         </button>
-                        <button onclick="exportInventoryExcel()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5">
+                        <button type="button" onclick="exportInventoryExcel()" class="btn-outline-gold px-4 py-2.5 text-xs flex items-center gap-1.5">
                             <i class="ph-bold ph-download-simple text-base"></i>
                             <span>Export Stock CSV</span>
                         </button>
@@ -813,13 +909,14 @@
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="border-b-2 border-amber-200 bg-[#fcfaf5] text-neutral-600 uppercase">
-                                <th class="py-3 px-3">Photo & SKU</th>
-                                <th class="py-3 px-3">Brand & Model</th>
+                                <th class="py-3 px-3">Photo & SKU (Click)</th>
+                                <th class="py-3 px-3">Brand & Full Model Name</th>
                                 <th class="py-3 px-3">Color & Variant</th>
-                                <th class="py-3 px-3">IMEI List & Specs</th>
+                                <th class="py-3 px-3">IMEI Number (Click to Inspect)</th>
                                 <th class="py-3 px-3">Stock</th>
-                                <th class="py-3 px-3 admin-only-col">Buy Price</th>
-                                <th class="py-3 px-3">Selling Price</th>
+                                <th class="py-3 px-3 admin-only-col">Buy Cost</th>
+                                <th class="py-3 px-3">Offline Rate (Counter)</th>
+                                <th class="py-3 px-3">Online Rate (Store)</th>
                                 <th class="py-3 px-3 text-right">Actions & Stickers</th>
                             </tr>
                         </thead>
@@ -859,7 +956,7 @@
                 </div>
                 <div class="bento-box p-4 flex flex-col justify-between bg-[#fcf9f2]">
                     <div class="text-xs font-bold text-amber-900 uppercase">Simulate / Test Order</div>
-                    <button onclick="openSimulateOnlineOrderModal()" class="btn-gold py-2 px-3 text-xs mt-1 flex items-center justify-center gap-1">
+                    <button type="button" onclick="openSimulateOnlineOrderModal()" class="btn-gold py-2 px-3 text-xs mt-1 flex items-center justify-center gap-1">
                         <i class="ph-bold ph-plus-circle"></i>
                         <span>+ Create Online Order</span>
                     </button>
@@ -884,7 +981,7 @@
                             <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
                             <option value="DELIVERED">Delivered & Billed</option>
                         </select>
-                        <button onclick="openSimulateOnlineOrderModal()" class="btn-emerald px-4 py-2 text-xs flex items-center gap-1.5">
+                        <button type="button" onclick="openSimulateOnlineOrderModal()" class="btn-emerald px-4 py-2 text-xs flex items-center gap-1.5">
                             <i class="ph-bold ph-shopping-cart"></i>
                             <span>+ Place Test Customer Order</span>
                         </button>
@@ -958,15 +1055,15 @@
                     </p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2.5 shrink-0">
-                    <button onclick="sendOneClickGstTotalWhatsApp()" class="btn-emerald px-4 py-3 text-xs flex items-center gap-2">
+                    <button type="button" onclick="sendOneClickGstTotalWhatsApp()" class="btn-emerald px-4 py-3 text-xs flex items-center gap-2">
                         <i class="ph-bold ph-whatsapp-logo text-lg"></i>
                         <span>1-Click Send GST & Daily Total</span>
                     </button>
-                    <button onclick="exportTodayExcel()" class="btn-outline-gold px-4 py-3 text-xs flex items-center gap-2">
+                    <button type="button" onclick="exportTodayExcel()" class="btn-outline-gold px-4 py-3 text-xs flex items-center gap-2">
                         <i class="ph-bold ph-file-csv text-lg text-emerald-700"></i>
                         <span>Download Today's Excel</span>
                     </button>
-                    <button onclick="openEodClearModal()" class="btn-gold px-5 py-3 text-xs flex items-center gap-2">
+                    <button type="button" onclick="openEodClearModal()" class="btn-gold px-5 py-3 text-xs flex items-center gap-2">
                         <i class="ph-bold ph-broom text-lg"></i>
                         <span>EOD: Excel & Clear Console</span>
                     </button>
@@ -976,7 +1073,7 @@
             <!-- Invoices List -->
             <div class="bento-box">
                 <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <h3 class="text-base font-bold text-neutral-900">Today's Generated Invoices (Click to Edit Last-Minute Price/Finance, Reprint 80mm/A4 or WhatsApp)</h3>
+                    <h3 class="text-base font-bold text-neutral-900">Today's Generated Invoices (Click IMEI to Inspect • Click Edit to Override Price/Finance)</h3>
                     <input type="text" id="ledgerSearchInput" oninput="renderLedgerTable()" placeholder="Search Invoice, Customer, Phone, IMEI, Bank..." class="input-luxury py-2 px-3 text-xs w-64">
                 </div>
                 <div class="overflow-x-auto">
@@ -985,7 +1082,7 @@
                             <tr class="border-b-2 border-amber-200 bg-[#fcfaf5] text-neutral-600 uppercase">
                                 <th class="py-3 px-3">Invoice No & Time</th>
                                 <th class="py-3 px-3">Customer</th>
-                                <th class="py-3 px-3">Devices, Repairs, Variant & IMEI</th>
+                                <th class="py-3 px-3">Devices, Variant & Clickable IMEI</th>
                                 <th class="py-3 px-3">GST & Tax Amount</th>
                                 <th class="py-3 px-3">Payment / Finance Bank</th>
                                 <th class="py-3 px-3">Grand Total</th>
@@ -1001,26 +1098,68 @@
         </section>
 
         <!-- ================================================================= -->
-        <!-- TAB 5: AI EXECUTIVE BUSINESS INTELLIGENCE                         -->
+        <!-- TAB 5: ONLINE VS OFFLINE RATE COMPARATIVE ANALYSIS & AI INSIGHTS  -->
         <!-- ================================================================= -->
         <section id="view-ai" class="hidden space-y-5">
+            <!-- NEW: DEDICATED ONLINE VS OFFLINE RATE, VOLUME & PROFIT COMPARATIVE ANALYSIS -->
+            <div class="bento-box border-2 border-indigo-300 bg-gradient-to-br from-white via-[#fcfdff] to-indigo-50/40 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">
+                            📊 Live Channel Pricing & Revenue Intelligence
+                        </span>
+                        <h2 class="text-xl font-bold text-neutral-900 mt-1">Online Storefront Rate vs. Offline Counter Rate — Comparative Analysis</h2>
+                        <p class="text-xs text-neutral-600">Real-time breakdown of Offline Showroom Counter pricing/sales vs. Online Home-Delivery Storefront pricing, margins, and channel spread</p>
+                    </div>
+                    <button type="button" onclick="switchTab('inventory')" class="btn-outline-gold px-4 py-2 text-xs flex items-center gap-1.5 self-start">
+                        <i class="ph-bold ph-sliders-horizontal"></i>
+                        <span>Adjust Online / Offline Rates</span>
+                    </button>
+                </div>
+
+                <!-- Channel Summary Comparison Cards -->
+                <div id="channelComparisonSummaryCards" class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- SKU-by-SKU Online vs Offline Rate & Margin Table -->
+                <div class="overflow-x-auto bg-white rounded-2xl border border-indigo-200 p-2">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b-2 border-indigo-200 bg-indigo-50/60 text-neutral-700 uppercase">
+                                <th class="py-2.5 px-3">Device Model & Variant (Click to Inspect)</th>
+                                <th class="py-2.5 px-3 admin-only-col">Buy Cost</th>
+                                <th class="py-2.5 px-3">Offline Counter Rate</th>
+                                <th class="py-2.5 px-3">Online Store Rate</th>
+                                <th class="py-2.5 px-3">Online vs Offline Diff</th>
+                                <th class="py-2.5 px-3 admin-only-col">Offline Margin / Unit</th>
+                                <th class="py-2.5 px-3 admin-only-col">Online Margin / Unit</th>
+                                <th class="py-2.5 px-3">Channel Strategy Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="onlineOfflineComparisonTableBody" class="divide-y divide-neutral-200">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AI Executive Business Audit -->
             <div class="bento-box bg-gradient-to-br from-white via-[#fdfbf7] to-[#f6ebd8]">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                     <div>
                         <span class="text-xs font-bold uppercase tracking-widest text-amber-700">Powered by Gemini AI + Real-Time POS Telemetry</span>
                         <h2 class="text-2xl font-bold text-neutral-900 mt-0.5">Cell Planet Khammam — AI Executive Intelligence</h2>
-                        <p class="text-xs text-neutral-600">Instant AI analysis of today's revenue, high-margin smartphones, Poonawalla/ICICI/IDBI/Bajaj finance conversions, online orders, and stock reorder alerts</p>
+                        <p class="text-xs text-neutral-600">Instant AI analysis of today's revenue, Online vs. Offline rate spread, Poonawalla/ICICI/IDBI/Bajaj finance conversions, and stock reorder alerts</p>
                     </div>
-                    <button onclick="generateAiBusinessReport()" id="aiGenerateBtn" class="btn-gold px-5 py-3 text-xs flex items-center gap-2 self-start">
+                    <button type="button" onclick="generateAiBusinessReport()" id="aiGenerateBtn" class="btn-gold px-5 py-3 text-xs flex items-center gap-2 self-start">
                         <i class="ph-bold ph-magic-wand text-lg"></i>
                         <span>Run Live AI Business Audit</span>
                     </button>
                 </div>
 
                 <!-- Instant Smart Heuristic KPIs -->
-                <div id="aiKpiGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-                    <!-- Populated by JS -->
-                </div>
+                <div id="aiKpiGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5"></div>
 
                 <!-- AI Narrative Output Box -->
                 <div class="bg-white/90 border border-amber-300 rounded-2xl p-5">
@@ -1031,7 +1170,7 @@
                         <span id="aiTimestamp" class="text-[11px] text-neutral-400">Ready</span>
                     </div>
                     <div id="aiReportContent" class="text-sm text-neutral-800 leading-relaxed space-y-2">
-                        Click <strong>"Run Live AI Business Audit"</strong> above to generate a tailored executive report based on your live counter bills, online home-delivery orders, payment modes, and inventory levels.
+                        Click <strong>"Run Live AI Business Audit"</strong> above to generate a tailored executive report based on your live counter bills, online home-delivery orders, online vs. offline rate margins, and inventory levels.
                     </div>
                 </div>
             </div>
@@ -1060,7 +1199,7 @@
             <!-- Developer Footer Block with Logo (Exact URL & Branding Preserved) -->
             <footer class="bento-box md:col-span-5 py-4 flex items-center justify-center">
                 <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" class="dev-link flex items-center gap-3.5 no-underline">
-                    <img src="dev-logo.png.png" alt="Syed Zeeshaan Ali" class="dev-img" onerror="this.src='https://ui-avatars.com/api/?name=SZ&background=c5a059&color=fff'">
+                    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='58' fill='%230f172a' stroke='%23c5a059' stroke-width='4'/%3E%3Ctext x='60' y='68' font-family='sans-serif' font-size='32' font-weight='800' fill='%23c5a059' text-anchor='middle'%3ESZ%3C/text%3E%3C/svg%3E" data-asset="dev-logo.png.png" alt="Syed Zeeshaan Ali" class="dev-img">
                     <div class="text-left">
                         <span class="block text-[10px] uppercase tracking-[2.5px] text-neutral-500 font-bold">Designed & Engineered By</span>
                         <span class="block text-lg font-bold gold-text tracking-tight">SYED ZEESHAAN ALI</span>
@@ -1069,6 +1208,126 @@
             </footer>
         </div>
 
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- NEW MODAL 0: FULL DEVICE, PHOTO & IMEI INSPECTOR MODAL            -->
+    <!-- (Opens whenever user clicks any Phone Image or IMEI Number!)      -->
+    <!-- ================================================================= -->
+    <div id="deviceDetailInspectorModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 overflow-y-auto no-print">
+        <div class="bento-box max-w-2xl w-full bg-white border-2 border-[#c5a059] shadow-2xl space-y-4 my-auto max-h-[95vh] overflow-y-auto">
+            <div class="flex items-start justify-between border-b border-neutral-200 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-magnifying-glass-plus text-2xl"></i>
+                    </span>
+                    <div>
+                        <span id="inspectorBadgeCategory" class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                            Full Device, Variant & IMEI Inspector
+                        </span>
+                        <h3 id="inspectorFullItemName" class="text-lg sm:text-xl font-bold text-neutral-900 mt-0.5 leading-snug">
+                            Apple iPhone 16 Pro Max
+                        </h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeDeviceDetailInspector()" class="text-neutral-400 hover:text-neutral-900 text-2xl font-bold">&times;</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                <!-- Left 5 Cols: High-Res Zoomable Image & View Switcher -->
+                <div class="md:col-span-5 flex flex-col items-center space-y-2.5">
+                    <div class="w-full h-56 rounded-2xl bg-[#fcfaf5] border-2 border-amber-200 flex items-center justify-center p-3 relative">
+                        <img id="inspectorMainImage" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23131921'/%3E%3Cstop offset='100%25' stop-color='%231e3a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='58' fill='url(%23g)' stroke='%23c5a059' stroke-width='4'/%3E%3Ctext x='60' y='56' font-family='sans-serif' font-size='28' font-weight='800' fill='%23fbbf24' text-anchor='middle'%3ECP%3C/text%3E%3Ctext x='60' y='78' font-family='sans-serif' font-size='11' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EKHAMMAM%3C/text%3E%3C/svg%3E" alt="Device Preview" class="max-h-48 object-contain">
+                        <span id="inspectorStockBadge" class="absolute top-2 right-2 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-bold">
+                            In Stock
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 w-full text-[11px] font-bold">
+                        <button type="button" onclick="switchInspectorPhotoMode('HANDSET')" id="inspModeBtn-HANDSET" class="py-1.5 px-2 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900">
+                            📱 Handset Photo
+                        </button>
+                        <button type="button" onclick="switchInspectorPhotoMode('BOX')" id="inspModeBtn-BOX" class="py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700">
+                            📦 Retail Box View
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right 7 Cols: Exact Full Name, Color, Variant, 15-Digit IMEI & Online/Offline Rates -->
+                <div class="md:col-span-7 space-y-3 text-xs">
+                    <!-- Color & Variant Pills -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200">
+                            <span class="text-[10px] font-bold uppercase text-amber-800 block">Color Variant</span>
+                            <span id="inspectorColorText" class="text-sm font-bold text-neutral-900">Desert Titanium</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200">
+                            <span class="text-[10px] font-bold uppercase text-indigo-800 block">RAM / Storage Variant</span>
+                            <span id="inspectorVariantText" class="text-sm font-bold text-neutral-900">8GB / 256GB</span>
+                        </div>
+                    </div>
+
+                    <!-- High-Visibility IMEI & Barcode Box -->
+                    <div class="p-3 rounded-2xl bg-neutral-900 text-white space-y-2 border border-amber-400">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">15-Digit IMEI / Serial Number</span>
+                            <button type="button" onclick="copyInspectorImei()" class="px-2.5 py-0.5 rounded bg-amber-400 text-neutral-950 font-bold text-[10px] flex items-center gap-1">
+                                <i class="ph-bold ph-copy"></i> Copy IMEI
+                            </button>
+                        </div>
+                        <div id="inspectorPrimaryImei" class="text-base sm:text-lg font-mono font-bold tracking-wider text-emerald-300 break-all">
+                            359876104512890
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-neutral-300 pt-1 border-t border-neutral-700">
+                            <span>Barcode / SKU: <strong id="inspectorBarcodeText" class="font-mono text-white">8901001</strong></span>
+                            <span>HSN Code: <strong id="inspectorHsnText" class="font-mono text-white">8517</strong></span>
+                        </div>
+                        <div id="inspectorBatchImeisContainer" class="hidden pt-1.5 border-t border-neutral-700">
+                            <div class="text-[10px] text-amber-300 font-bold mb-1">All Stocked Batch IMEIs:</div>
+                            <div id="inspectorBatchImeisList" class="flex flex-wrap gap-1 max-h-20 overflow-y-auto"></div>
+                        </div>
+                    </div>
+
+                    <!-- Online Rate vs Offline Rate Box -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <div class="p-2.5 rounded-xl bg-[#fcfaf5] border border-amber-300">
+                            <span class="text-[10px] font-bold uppercase text-amber-900 block">Offline Counter Rate</span>
+                            <span id="inspectorOfflinePrice" class="text-base font-bold text-neutral-900">₹1,37,900</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-200">
+                            <span class="text-[10px] font-bold uppercase text-blue-900 block">Online Store Rate</span>
+                            <span id="inspectorOnlinePrice" class="text-base font-bold text-blue-900">₹1,35,900</span>
+                        </div>
+                        <div id="inspectorAdminBuyBox" class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 admin-only-col">
+                            <span class="text-[10px] font-bold uppercase text-emerald-900 block">Buy Cost & Margin</span>
+                            <span id="inspectorBuyAndMargin" class="text-xs font-bold text-emerald-900">Cost: ₹1,26,500</span>
+                        </div>
+                    </div>
+
+                    <!-- Full Technical Specs & Warranty -->
+                    <div class="p-2.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
+                        <div class="font-bold text-neutral-700">Full Specifications & Warranty:</div>
+                        <div id="inspectorSpecsText" class="text-neutral-600"></div>
+                        <div id="inspectorWarrantyText" class="text-[11px] font-bold text-emerald-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-2 pt-3 border-t border-neutral-200">
+                <button type="button" onclick="closeDeviceDetailInspector()" class="btn-outline-gold px-4 py-2 text-xs">Close</button>
+                <button type="button" onclick="triggerInspectorEditItem()" class="btn-outline-gold px-4 py-2 text-xs flex items-center gap-1">
+                    <i class="ph-bold ph-pencil-simple"></i>
+                    <span>Edit Item / Rates</span>
+                </button>
+                <button type="button" onclick="triggerInspectorPrintLabel()" class="btn-outline-gold px-4 py-2 text-xs flex items-center gap-1 border-amber-400 bg-amber-50 text-amber-900">
+                    <i class="ph-bold ph-tag"></i>
+                    <span>Print Barcode Sticker</span>
+                </button>
+                <button type="button" onclick="triggerInspectorBillItem()" class="btn-gold px-5 py-2.5 text-xs flex items-center gap-1.5">
+                    <i class="ph-bold ph-shopping-cart-simple text-base"></i>
+                    <span>Select & Add to POS Bill</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- ================================================================= -->
@@ -1086,7 +1345,7 @@
                         <h3 id="scanModalTitle" class="text-base font-bold text-neutral-900">iPhone 16 Pro Max</h3>
                     </div>
                 </div>
-                <button onclick="closeImeiScanModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeImeiScanModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <form onsubmit="confirmAddScannedItemToCart(event)" class="space-y-3 text-xs">
@@ -1121,7 +1380,7 @@
 
                 <div class="grid grid-cols-3 gap-3">
                     <div>
-                        <label class="font-bold text-neutral-600 block mb-1">Selling Price (₹) *</label>
+                        <label class="font-bold text-neutral-600 block mb-1">Counter Rate (₹) *</label>
                         <input type="number" id="scanModalPrice" required min="1" class="input-luxury py-2 text-sm font-bold text-amber-900">
                     </div>
                     <div>
@@ -1146,13 +1405,13 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- MODAL 2: ADD / EDIT INVENTORY OR QUICK CUSTOM ITEM (+ PHOTO)      -->
+    <!-- MODAL 2: ADD / EDIT INVENTORY (+ SEPARATE ONLINE & OFFLINE RATES) -->
     <!-- ================================================================= -->
     <div id="addInventoryModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
         <div class="bento-box max-w-xl w-full bg-white border-2 border-[#c5a059] shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
                 <h3 id="invModalHeading" class="text-base font-bold text-neutral-900">Register New Device / Barcode in Stock</h3>
-                <button onclick="closeAddInventoryModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeAddInventoryModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <form onsubmit="saveInventoryItemForm(event)" class="space-y-3 text-xs">
@@ -1194,7 +1453,7 @@
                         <input type="text" id="invFormVariant" required class="input-luxury py-2 text-xs" placeholder="e.g. 16GB / 512GB">
                     </div>
                     <div>
-                        <label class="font-bold text-neutral-600 block mb-1">Default IMEI / Serial Number</label>
+                        <label class="font-bold text-neutral-600 block mb-1">Default 15-Digit IMEI / Serial</label>
                         <input type="text" id="invFormImei" class="input-luxury py-2 text-xs font-mono" placeholder="15-digit IMEI or Serial">
                     </div>
                 </div>
@@ -1207,7 +1466,7 @@
                 <!-- Product Image Upload / Snap inside Standard Modal -->
                 <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <img id="invFormImgPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' rx='12' fill='%23f3e8d2'/><text x='50%' y='55%' font-size='24' text-anchor='middle'>📱</text></svg>" alt="Preview" class="w-12 h-12 rounded-xl object-cover border border-amber-300 bg-white">
+                        <img id="invFormImgPreview" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23131921'/%3E%3Cstop offset='100%25' stop-color='%231e3a8a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='60' cy='60' r='58' fill='url(%23g)' stroke='%23c5a059' stroke-width='4'/%3E%3Ctext x='60' y='56' font-family='sans-serif' font-size='28' font-weight='800' fill='%23fbbf24' text-anchor='middle'%3ECP%3C/text%3E%3Ctext x='60' y='78' font-family='sans-serif' font-size='11' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EKHAMMAM%3C/text%3E%3C/svg%3E" alt="Preview" class="w-12 h-12 rounded-xl object-cover border border-amber-300 bg-white">
                         <div>
                             <div class="font-bold text-neutral-800">Device Photo (Shown in POS & Online Store)</div>
                             <div class="text-[11px] text-neutral-500">Click to snap from camera or choose phone image</div>
@@ -1219,14 +1478,18 @@
                     </label>
                 </div>
 
-                <div class="grid grid-cols-4 gap-2.5">
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                     <div>
                         <label class="font-bold text-neutral-600 block mb-1">Buy Cost (₹)</label>
                         <input type="number" id="invFormBuyPrice" required min="0" class="input-luxury py-2 text-xs">
                     </div>
                     <div>
-                        <label class="font-bold text-neutral-600 block mb-1">Sell Price (₹) *</label>
-                        <input type="number" id="invFormSellPrice" required min="1" class="input-luxury py-2 text-xs font-bold">
+                        <label class="font-bold text-amber-900 block mb-1">Offline Rate (₹) *</label>
+                        <input type="number" id="invFormSellPrice" required min="1" class="input-luxury py-2 text-xs font-bold border-amber-400">
+                    </div>
+                    <div>
+                        <label class="font-bold text-blue-900 block mb-1">Online Rate (₹) *</label>
+                        <input type="number" id="invFormOnlinePrice" required min="1" class="input-luxury py-2 text-xs font-bold border-blue-400">
                     </div>
                     <div>
                         <label class="font-bold text-neutral-600 block mb-1">Stock Qty *</label>
@@ -1240,7 +1503,7 @@
 
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-200">
                     <button type="button" onclick="closeAddInventoryModal()" class="btn-outline-gold px-4 py-2.5 text-xs">Cancel</button>
-                    <button type="submit" class="btn-gold px-6 py-2.5 text-xs">Save Item</button>
+                    <button type="submit" class="btn-gold px-6 py-2.5 text-xs">Save Item & Sync Rates</button>
                 </div>
             </form>
         </div>
@@ -1251,33 +1514,32 @@
     <!-- ================================================================= -->
     <div id="invoicePreviewModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 md:p-6 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-4 md:p-6 shadow-2xl border-2 border-[#c5a059] my-auto max-h-[95vh] flex flex-col">
-            <!-- Top Modal Controls (Hidden when printing) -->
             <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-neutral-200 no-print">
                 <div class="flex items-center gap-2">
-                    <button onclick="switchInvoicePrintFormat('80MM')" id="fmtBtn-80MM" class="btn-outline-gold px-3.5 py-2 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="switchInvoicePrintFormat('80MM')" id="fmtBtn-80MM" class="btn-outline-gold px-3.5 py-2 text-xs flex items-center gap-1.5">
                         <i class="ph-bold ph-receipt text-base"></i>
                         <span>80mm Thermal Format</span>
                     </button>
-                    <button onclick="switchInvoicePrintFormat('A4')" id="fmtBtn-A4" class="btn-outline-gold px-3.5 py-2 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="switchInvoicePrintFormat('A4')" id="fmtBtn-A4" class="btn-outline-gold px-3.5 py-2 text-xs flex items-center gap-1.5">
                         <i class="ph-bold ph-file-text text-base"></i>
                         <span>A4 Full Tax Invoice</span>
                     </button>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button onclick="triggerBrowserPrint()" class="btn-gold px-5 py-2.5 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="triggerBrowserPrint()" class="btn-gold px-5 py-2.5 text-xs flex items-center gap-1.5">
                         <i class="ph-bold ph-printer text-base"></i>
                         <span>Print Now</span>
                     </button>
-                    <button onclick="sendCurrentInvoiceWhatsApp()" class="btn-emerald px-4 py-2.5 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="sendCurrentInvoiceWhatsApp()" class="btn-emerald px-4 py-2.5 text-xs flex items-center gap-1.5">
                         <i class="ph-bold ph-whatsapp-logo text-base"></i>
                         <span>Send Bill + GST on WhatsApp</span>
                     </button>
-                    <button onclick="closeInvoicePreviewModal()" class="btn-outline-gold px-3 py-2 text-xs">Close</button>
+                    <button type="button" onclick="closeInvoicePreviewModal()" class="btn-outline-gold px-3 py-2 text-xs">Close</button>
                 </div>
             </div>
 
-            <!-- NEW! LAST-MINUTE LIVE INVOICE AMOUNT, DISCOUNT & FINANCE EDITOR (Hidden when printing) -->
+            <!-- LAST-MINUTE LIVE INVOICE AMOUNT, DISCOUNT & FINANCE EDITOR -->
             <div class="mb-3 p-3 rounded-2xl bg-gradient-to-r from-amber-50 via-[#fffdf9] to-rose-50 border border-amber-300 text-xs no-print">
                 <div class="flex items-center justify-between mb-2">
                     <span class="font-bold text-amber-900 flex items-center gap-1.5">
@@ -1308,9 +1570,7 @@
 
             <!-- Printable Invoice Container -->
             <div class="overflow-y-auto flex-1 py-2 bg-neutral-100 rounded-2xl p-3">
-                <div id="printableAreaContainer">
-                    <!-- Populated Dynamically with either 80mm or A4 HTML -->
-                </div>
+                <div id="printableAreaContainer"></div>
             </div>
         </div>
     </div>
@@ -1325,7 +1585,7 @@
                     <i class="ph-bold ph-warning-circle text-xl"></i>
                     <span>End-of-Day Closing & Reset</span>
                 </h3>
-                <button onclick="closeEodClearModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeEodClearModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
             <p class="text-xs text-neutral-700 leading-relaxed">
                 This action will perform your complete <strong>Daily Closing Routine</strong>:
@@ -1336,8 +1596,8 @@
                 <li><strong>Safe Stock:</strong> Your Master Barcode & IMEI Inventory remains 100% intact.</li>
             </ul>
             <div class="flex items-center justify-end gap-2 pt-3 border-t border-neutral-200">
-                <button onclick="closeEodClearModal()" class="btn-outline-gold px-4 py-2 text-xs">Cancel</button>
-                <button onclick="executeEodExportAndClear()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5">
+                <button type="button" onclick="closeEodClearModal()" class="btn-outline-gold px-4 py-2 text-xs">Cancel</button>
+                <button type="button" onclick="executeEodExportAndClear()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5">
                     <i class="ph-bold ph-check-circle text-base"></i>
                     <span>Download Excel & Clear Today's Console</span>
                 </button>
@@ -1346,7 +1606,7 @@
     </div>
 
     <!-- ================================================================= -->
-    <!-- MODAL 5: DUAL ROLE SWITCHER (ADMIN PIN + STAFF PIN WITH REVEAL)   -->
+    <!-- MODAL 5: DUAL ROLE SWITCHER (ADMIN PIN + STAFF PIN + LOGOUT)      -->
     <!-- ================================================================= -->
     <div id="roleModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
         <div class="bento-box max-w-md w-full bg-white border-2 border-[#c5a059] shadow-2xl space-y-4">
@@ -1355,7 +1615,7 @@
                     <i class="ph-bold ph-shield-check text-amber-600 text-xl"></i>
                     <span>Admin & Staff Security PIN Console</span>
                 </h3>
-                <button onclick="closeRoleModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeRoleModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <div class="space-y-4 text-xs">
@@ -1379,7 +1639,7 @@
                                 <i id="eyeAdminIcon" class="ph-bold ph-eye text-base"></i>
                             </button>
                         </div>
-                        <button onclick="setSystemRole('ADMIN')" class="btn-gold px-4 py-2 text-xs shrink-0">Unlock Admin</button>
+                        <button type="button" onclick="setSystemRole('ADMIN')" class="btn-gold px-4 py-2 text-xs shrink-0">Unlock Admin</button>
                     </div>
                 </div>
 
@@ -1393,7 +1653,7 @@
                                 <i id="eyeStaffIcon" class="ph-bold ph-eye text-base"></i>
                             </button>
                         </div>
-                        <button onclick="setSystemRole('STAFF')" class="btn-outline-gold px-4 py-2 text-xs shrink-0">Activate Staff</button>
+                        <button type="button" onclick="setSystemRole('STAFF')" class="btn-outline-gold px-4 py-2 text-xs shrink-0">Activate Staff</button>
                     </div>
                 </div>
 
@@ -1412,6 +1672,14 @@
                         <button type="button" onclick="saveCustomSystemPins()" class="col-span-2 btn-emerald py-2 text-xs mt-1">Save New PINs</button>
                     </div>
                 </details>
+
+                <div class="pt-2 border-t border-neutral-200 flex justify-between items-center">
+                    <button type="button" onclick="logoutErpSession()" class="px-4 py-2 rounded-xl bg-rose-600 text-white font-bold text-xs flex items-center gap-1.5">
+                        <i class="ph-bold ph-sign-out"></i>
+                        <span>Logout & Lock Screen</span>
+                    </button>
+                    <button type="button" onclick="closeRoleModal()" class="btn-outline-gold px-4 py-2 text-xs">Done</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1431,7 +1699,7 @@
                         <h3 class="text-base font-bold text-neutral-900">Old Phone Trade-In / Buyback Console</h3>
                     </div>
                 </div>
-                <button onclick="closeOldPhoneModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeOldPhoneModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <form onsubmit="handleOldPhoneSubmit(event)" class="space-y-3 text-xs">
@@ -1514,7 +1782,7 @@
                         <h3 class="text-base font-bold text-neutral-900">Add Mobile Repair / Service Job to Bill</h3>
                     </div>
                 </div>
-                <button onclick="closeRepairQuickModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeRepairQuickModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <form onsubmit="handleRepairJobSubmit(event)" class="space-y-3 text-xs">
@@ -1574,7 +1842,6 @@
     <!-- ================================================================= -->
     <div id="stickerGeneratorModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 md:p-6 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full p-4 md:p-6 shadow-2xl border-2 border-[#c5a059] my-auto max-h-[95vh] flex flex-col">
-            <!-- Header & Controls (Hidden when printing) -->
             <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-neutral-200 no-print">
                 <div class="flex items-center gap-2.5">
                     <span class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center">
@@ -1587,21 +1854,18 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button onclick="triggerStickerPrint()" class="btn-gold px-5 py-2.5 text-xs flex items-center gap-1.5">
+                    <button type="button" onclick="triggerStickerPrint()" class="btn-gold px-5 py-2.5 text-xs flex items-center gap-1.5">
                         <i class="ph-bold ph-printer text-base"></i>
                         <span>Print Barcode Stickers Now</span>
                     </button>
-                    <button onclick="closeStickerGeneratorModal()" class="btn-outline-gold px-3.5 py-2.5 text-xs">Close</button>
+                    <button type="button" onclick="closeStickerGeneratorModal()" class="btn-outline-gold px-3.5 py-2.5 text-xs">Close</button>
                 </div>
             </div>
 
-            <!-- Configuration Form (Hidden when printing) -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-4 p-3.5 rounded-2xl bg-[#fcfaf5] border border-amber-200 text-xs no-print">
                 <div class="md:col-span-4">
                     <label class="font-bold text-neutral-600 block mb-1">Select Item from Stock (Or Customize Below)</label>
-                    <select id="stickerSelectInventoryItem" onchange="handleStickerItemSelectChange()" class="input-luxury py-2 text-xs font-bold">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <select id="stickerSelectInventoryItem" onchange="handleStickerItemSelectChange()" class="input-luxury py-2 text-xs font-bold"></select>
                 </div>
                 <div class="md:col-span-3">
                     <label class="font-bold text-neutral-600 block mb-1">Barcode / SKU Value *</label>
@@ -1653,11 +1917,8 @@
                 </div>
             </div>
 
-            <!-- Live Printable Sticker Sheet Container -->
             <div class="overflow-y-auto flex-1 bg-neutral-100 rounded-2xl p-4">
-                <div id="stickerPrintableArea" class="mx-auto">
-                    <!-- Dynamically Populated with Crisp SVG Barcodes -->
-                </div>
+                <div id="stickerPrintableArea" class="mx-auto"></div>
             </div>
         </div>
     </div>
@@ -1668,29 +1929,25 @@
     <div id="howItWorksModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
         <div class="bento-box max-w-2xl w-full bg-white border-2 border-[#c5a059] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
-                <h3 class="text-lg font-bold gold-text">How Cell Planet Khammam ERP, 20-Photo Stock-In & All-Bank POS Works</h3>
-                <button onclick="closeHowItWorksModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <h3 class="text-lg font-bold gold-text">How Cell Planet Khammam ERP, Inspector & Online/Offline Rate Analysis Works</h3>
+                <button type="button" onclick="closeHowItWorksModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
             <div class="space-y-3 text-xs text-neutral-700 leading-relaxed">
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                    <strong class="text-amber-950 block mb-1">1. 🔍 Click Any Phone Image or IMEI Number to Inspect Full Details:</strong>
+                    Click on any phone thumbnail or IMEI badge across the POS Catalog, Inventory Table, Cart, or Ledger to open the <strong>Full Device, Photo & IMEI Inspector Modal</strong> showing the complete un-truncated model name, 15-digit IMEI with 1-click Copy, Color, RAM/Storage Variant, and Online vs. Offline rates.
+                </div>
                 <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                    <strong class="text-emerald-950 block mb-1">1. 📸 Snap / Upload 1-to-20 Photos Mobile Stock-In:</strong>
-                    Click <strong>📸 Snap / 20-Photo Stock-In</strong> in the top bar. Staff or Admin can snap up to 20+ photos of mobile phones using the live camera or upload 20 photos from gallery at once! Enter the Model Name & Variant once, and it automatically stocks in all 20 units with individual IMEIs and photos.
-                </div>
-                <div class="p-3 rounded-xl bg-rose-50 border border-rose-200">
-                    <strong class="text-rose-950 block mb-1">2. ⚡ Last-Minute Bill Amount, Discount & Finance Override:</strong>
-                    Need to change a phone's price or final bill amount at the very last second? Edit any item's price directly in the POS Cart, type the agreed amount into <strong>⚡ Last-Minute Final Bill (₹)</strong>, OR even edit the final amount, discount, or finance bank right inside the <strong>Invoice Preview Modal</strong> before printing!
-                </div>
-                <div class="p-3 rounded-xl bg-[#fcfaf5] border border-amber-200">
-                    <strong class="text-neutral-900 block mb-1">3. 🏦 All-Banks & NBFC Finance Support:</strong>
-                    Supports <strong>Poonawalla Fincorp, IDBI Bank, ICICI Bank, HDFC, SBI, Axis, Kotak, Bajaj Finserv, IDFC First Bank, HDB Financial, TVS Credit, Home Credit, and Samsung Finance+ (DMI)</strong> with automatic Down Payment, Loan Amount, Tenure (3–24M), and Monthly EMI calculation.
+                    <strong class="text-emerald-950 block mb-1">2. 🔐 Password-First Security Gate & Mobile Login/Logout:</strong>
+                    Requires Admin Master PIN (<code>1234</code>) or Staff Counter PIN (<code>0000</code>) with a mobile touch keypad before accessing the suite, plus 1-tap <strong>Logout / Lock</strong> and <strong>Role Switch</strong> buttons on both mobile and desktop.
                 </div>
                 <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-200">
-                    <strong class="text-indigo-950 block mb-1">4. 🌐 Online Customer Storefront & Home-Delivery Control:</strong>
-                    Customers can order from home or pay prepaid via the standalone Amazon/Flipkart-themed Customer Storefront. All orders sync directly into <strong>Tab 3: Online Orders & Storefront Control</strong> where Admin can approve, dispatch, and convert them into official GST invoices in 1 click.
+                    <strong class="text-indigo-950 block mb-1">3. 📊 Separate Online vs. Offline Rates & Comparative Analysis:</strong>
+                    Maintain separate <strong>Offline Counter Rates</strong> and <strong>Online Storefront Rates</strong> per device, and review full margin, price spread, and revenue comparisons in <strong>Tab 5: Online vs Offline Rate Analysis & AI</strong>.
                 </div>
             </div>
             <div class="text-right pt-2">
-                <button onclick="closeHowItWorksModal()" class="btn-gold px-6 py-2.5 text-xs">Got It, Let's Bill!</button>
+                <button type="button" onclick="closeHowItWorksModal()" class="btn-gold px-6 py-2.5 text-xs">Got It, Let's Bill!</button>
             </div>
         </div>
     </div>
@@ -1710,10 +1967,9 @@
                         <h3 class="text-lg font-bold text-neutral-900">📸 Click / Upload Mobile Phone Photos to Stock-In</h3>
                     </div>
                 </div>
-                <button onclick="closePhotoStockModal()" class="text-neutral-400 hover:text-neutral-800 text-2xl font-bold">&times;</button>
+                <button type="button" onclick="closePhotoStockModal()" class="text-neutral-400 hover:text-neutral-800 text-2xl font-bold">&times;</button>
             </div>
 
-            <!-- Step 1: Capture / Upload 1 to 20+ Photos -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                 <div class="md:col-span-5 space-y-3">
                     <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-300 space-y-2.5 text-xs">
@@ -1722,10 +1978,9 @@
                             <span id="photoBatchCountBadge" class="px-2 py-0.5 rounded-full bg-emerald-700 text-white text-[11px]">0 Photos</span>
                         </div>
                         <p class="text-[11px] text-neutral-600">
-                            Even if you have <strong>20 phones of the same model</strong>, just select or snap 20 photos! Each photo automatically counts as +1 unit in stock and generates a unique IMEI record.
+                            Even if you have <strong>20 phones of the same model</strong>, just select or snap 20 photos! Click any captured thumbnail below to inspect its assigned IMEI & Variant.
                         </p>
 
-                        <!-- Upload Multiple Photos from Phone Camera / Gallery -->
                         <label class="btn-emerald w-full py-3 px-4 text-xs flex items-center justify-center gap-2 cursor-pointer text-center">
                             <i class="ph-bold ph-images text-lg"></i>
                             <span>Select / Snap 1 to 20+ Photos</span>
@@ -1737,13 +1992,12 @@
                                 <i class="ph-bold ph-video-camera"></i>
                                 <span>Live Camera</span>
                             </button>
-                            <button type="button" onclick="simulateTwentyPhotosBatch()" class="btn-outline-gold py-2 px-3 text-xs flex items-center justify-center gap-1.5 border-amber-400 text-amber-900" title="Instantly load 20 sample phone box photos to test 20-unit bulk stock-in!">
+                            <button type="button" onclick="simulateTwentyPhotosBatch()" class="btn-outline-gold py-2 px-3 text-xs flex items-center justify-center gap-1.5 border-amber-400 text-amber-900">
                                 <i class="ph-bold ph-magic-wand"></i>
                                 <span>Demo 20 Photos</span>
                             </button>
                         </div>
 
-                        <!-- Optional Live Webcam Viewfinder -->
                         <div id="liveWebcamContainer" class="hidden space-y-2 pt-2 border-t border-emerald-200">
                             <video id="webcamVideoEl" autoplay playsinline class="w-full h-40 object-cover rounded-xl bg-black border border-emerald-400"></video>
                             <button type="button" onclick="snapFrameFromWebcam()" class="btn-gold w-full py-2 text-xs flex items-center justify-center gap-1.5">
@@ -1753,17 +2007,12 @@
                         </div>
                     </div>
 
-                    <!-- Thumbnail Grid of Snapped/Uploaded Photos -->
                     <div class="p-3 rounded-2xl bg-neutral-50 border border-neutral-200">
                         <div class="flex items-center justify-between text-[11px] font-bold text-neutral-600 mb-2">
-                            <span>Captured Phone Photos (<span id="photoThumbCounter">0</span>)</span>
+                            <span>Captured Phone Photos (<span id="photoThumbCounter">0</span>) — Tap to Inspect</span>
                             <button type="button" onclick="clearBulkPhotoBatch()" class="text-rose-600 hover:underline">Clear Photos</button>
                         </div>
-                        <div id="bulkPhotoThumbGrid" class="grid grid-cols-4 gap-2 max-h-[190px] overflow-y-auto p-1">
-                            <div class="col-span-4 text-center py-6 text-[11px] text-neutral-400">
-                                No photos selected yet. Upload photos or click "Demo 20 Photos" above!
-                            </div>
-                        </div>
+                        <div id="bulkPhotoThumbGrid" class="grid grid-cols-4 gap-2 max-h-[190px] overflow-y-auto p-1"></div>
                     </div>
                 </div>
 
@@ -1771,7 +2020,7 @@
                 <form onsubmit="saveBulkPhotoStockIn(event)" class="md:col-span-7 space-y-3 text-xs">
                     <div class="p-3.5 rounded-2xl bg-[#fcfaf5] border border-amber-200 space-y-3">
                         <div class="flex items-center justify-between">
-                            <span class="font-bold text-amber-900 uppercase text-[11px]">Step 2: Mobile Phone Name, Variant & Pricing</span>
+                            <span class="font-bold text-amber-900 uppercase text-[11px]">Step 2: Mobile Phone Name, Variant & Dual Pricing</span>
                             <select id="photoStockQuickFillSelect" onchange="quickFillPhotoStockFromExisting(this.value)" class="input-luxury py-1 px-2 text-[11px] w-auto font-semibold">
                                 <option value="">⚡ Or Pick Existing Model to Add Stock...</option>
                             </select>
@@ -1808,18 +2057,22 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                             <div>
-                                <label class="font-bold text-neutral-600 block mb-1">Buy Cost / Unit (₹)</label>
+                                <label class="font-bold text-neutral-600 block mb-1">Buy Cost (₹)</label>
                                 <input type="number" id="photoStockBuyPrice" value="52000" min="0" class="input-luxury py-2 text-xs font-semibold">
                             </div>
                             <div>
-                                <label class="font-bold text-amber-900 block mb-1">Selling Price / Unit (₹) *</label>
-                                <input type="number" id="photoStockSellPrice" required value="59999" min="1" class="input-luxury py-2 text-sm font-bold border-amber-400">
+                                <label class="font-bold text-amber-900 block mb-1">Offline Rate (₹) *</label>
+                                <input type="number" id="photoStockSellPrice" required value="59999" min="1" class="input-luxury py-2 text-xs font-bold border-amber-400">
+                            </div>
+                            <div>
+                                <label class="font-bold text-blue-900 block mb-1">Online Rate (₹) *</label>
+                                <input type="number" id="photoStockOnlinePrice" required value="58499" min="1" class="input-luxury py-2 text-xs font-bold border-blue-400">
                             </div>
                             <div>
                                 <label class="font-bold text-neutral-600 block mb-1">Barcode / SKU</label>
-                                <input type="text" id="photoStockBarcode" class="input-luxury py-2 text-xs font-mono font-bold" placeholder="Auto-generated">
+                                <input type="text" id="photoStockBarcode" class="input-luxury py-2 text-xs font-mono font-bold" placeholder="Auto">
                             </div>
                         </div>
 
@@ -1833,7 +2086,7 @@
                                 <label class="font-bold text-neutral-700">Auto-Generated / Scanned IMEIs for Batch (1 per Phone Photo)</label>
                                 <button type="button" onclick="syncImeisForPhotoQty()" class="text-[11px] font-bold text-amber-800 underline">🔄 Regenerate IMEIs</button>
                             </div>
-                            <textarea id="photoStockImeiList" rows="3" class="input-luxury py-2 text-xs font-mono" placeholder="IMEIs for all snapped phones appear here (1 per line or comma-separated)..."></textarea>
+                            <textarea id="photoStockImeiList" rows="3" class="input-luxury py-2 text-xs font-mono" placeholder="IMEIs for all snapped phones appear here..."></textarea>
                         </div>
                     </div>
 
@@ -1870,7 +2123,7 @@
                         <h3 class="text-base font-bold text-neutral-900">Record / Test Online Customer Order</h3>
                     </div>
                 </div>
-                <button onclick="closeSimulateOnlineOrderModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
+                <button type="button" onclick="closeSimulateOnlineOrderModal()" class="text-neutral-400 hover:text-neutral-800 text-xl font-bold">&times;</button>
             </div>
 
             <form onsubmit="submitSimulatedOnlineOrder(event)" class="space-y-3 text-xs">
@@ -1889,7 +2142,7 @@
                     <input type="text" id="simOrdAddress" required class="input-luxury py-2 text-xs" placeholder="e.g. Flat 302, Wyra Road, Near Bus Stand, Khammam 507001">
                 </div>
                 <div>
-                    <label class="font-bold text-neutral-600 block mb-1">Select Smartphone / Product *</label>
+                    <label class="font-bold text-neutral-600 block mb-1">Select Smartphone / Product (Billed at Online Store Rate) *</label>
                     <select id="simOrdItemSelect" class="input-luxury py-2 text-xs font-bold"></select>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
@@ -1932,7 +2185,6 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Store Constants
         const STORE_INFO = {
             name: "CELL PLANET KHAMMAM",
             tagline: "Premium Smartphones, Foldables, Smart TVs & Accessories",
@@ -1941,9 +2193,18 @@
             gstin: "36ACVPK3564C1ZE"
         };
 
-        // Helper: Generate Crisp Luxury SVG Product Thumbnail Data URI for any phone/device
-        function createDeviceSvgThumb(title, colorHex = "#1e293b", accentHex = "#c5a059", badgeText = "5G") {
+        function createDeviceSvgThumb(title, colorHex = "#1e293b", accentHex = "#c5a059", badgeText = "5G", mode = "HANDSET") {
             const shortTitle = (title || "Phone").slice(0, 18);
+            if (mode === "BOX") {
+                const boxSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 160 160">
+                    <rect width="160" height="160" rx="22" fill="#fffdf9" stroke="${accentHex}" stroke-width="2"/>
+                    <rect x="26" y="16" width="66" height="106" rx="8" fill="#0f172a" stroke="#c5a059" stroke-width="2"/>
+                    <text x="59" y="38" font-family="sans-serif" font-size="8" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED BOX</text>
+                    <rect x="74" y="24" width="60" height="98" rx="10" fill="${colorHex}" stroke="${accentHex}" stroke-width="2"/>
+                    <text x="80" y="146" font-family="sans-serif" font-size="10" font-weight="bold" fill="#111827" text-anchor="middle">${shortTitle}</text>
+                </svg>`;
+                return "data:image/svg+xml;utf8," + encodeURIComponent(boxSvg);
+            }
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
                 <defs>
                     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -1964,7 +2225,6 @@
             return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
         }
 
-        // Pre-loaded Master Inventory with Barcodes, IMEIs, Colors, Variants, Photos, Old Phones, Repairs & Full Specs
         const DEFAULT_INVENTORY = [
             {
                 id: "item-1",
@@ -1978,6 +2238,7 @@
                 hsn: "8517",
                 buyPrice: 126500,
                 sellPrice: 137900,
+                onlinePrice: 135900,
                 mrpPrice: 144900,
                 stock: 6,
                 warranty: "1 Year Apple India Official Warranty",
@@ -1995,6 +2256,7 @@
                 hsn: "8517",
                 buyPrice: 108000,
                 sellPrice: 119999,
+                onlinePrice: 117999,
                 mrpPrice: 129999,
                 stock: 5,
                 warranty: "1 Year Samsung India Warranty",
@@ -2012,6 +2274,7 @@
                 hsn: "8517",
                 buyPrice: 149000,
                 sellPrice: 164999,
+                onlinePrice: 162999,
                 mrpPrice: 176999,
                 stock: 3,
                 warranty: "1 Year Samsung Foldable Care Warranty",
@@ -2029,6 +2292,7 @@
                 hsn: "8517",
                 buyPrice: 66500,
                 sellPrice: 74999,
+                onlinePrice: 73499,
                 mrpPrice: 79999,
                 stock: 8,
                 warranty: "1 Year OnePlus Official Warranty",
@@ -2046,6 +2310,7 @@
                 hsn: "8517",
                 buyPrice: 84000,
                 sellPrice: 94999,
+                onlinePrice: 92999,
                 mrpPrice: 99999,
                 stock: 4,
                 warranty: "1 Year Vivo India Warranty",
@@ -2063,6 +2328,7 @@
                 hsn: "8517",
                 buyPrice: 26500,
                 sellPrice: 30999,
+                onlinePrice: 29999,
                 mrpPrice: 34999,
                 stock: 12,
                 warranty: "1 Year Xiaomi Official Warranty",
@@ -2080,6 +2346,7 @@
                 hsn: "8518",
                 buyPrice: 18500,
                 sellPrice: 22900,
+                onlinePrice: 21900,
                 mrpPrice: 24900,
                 stock: 10,
                 warranty: "1 Year Apple Warranty",
@@ -2097,6 +2364,7 @@
                 hsn: "8528",
                 buyPrice: 48000,
                 sellPrice: 55990,
+                onlinePrice: 54490,
                 mrpPrice: 69990,
                 stock: 4,
                 warranty: "1 Year Sony Comprehensive Warranty",
@@ -2114,6 +2382,7 @@
                 hsn: "8504",
                 buyPrice: 950,
                 sellPrice: 1999,
+                onlinePrice: 1799,
                 mrpPrice: 2999,
                 stock: 35,
                 warranty: "6 Months Replacement Warranty",
@@ -2131,6 +2400,7 @@
                 hsn: "8517",
                 buyPrice: 58000,
                 sellPrice: 65999,
+                onlinePrice: 64499,
                 mrpPrice: 79999,
                 stock: 2,
                 warranty: "3 Months Store Testing Warranty",
@@ -2148,6 +2418,7 @@
                 hsn: "9987",
                 buyPrice: 1400,
                 sellPrice: 2999,
+                onlinePrice: 2799,
                 mrpPrice: 3999,
                 stock: 50,
                 warranty: "3 Months Touch & Display Service Warranty",
@@ -2155,7 +2426,6 @@
             }
         ];
 
-        // Default Online Customer Orders (Synced with Customer Storefront)
         const DEFAULT_ONLINE_ORDERS = [
             {
                 orderId: "ORD-CP-501",
@@ -2171,10 +2441,10 @@
                 variant: "8GB / 256GB",
                 imei: "359876104512890",
                 specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR",
-                price: 137900,
+                price: 135900,
                 exchangeDeduction: 22000,
                 exchangeInfo: "Old iPhone 13 128GB (Good)",
-                netPayable: 115900,
+                netPayable: 113900,
                 paymentType: "HOME EMI - Poonawalla Fincorp",
                 paymentRef: "PF-EMI-99412 (0% Down | 12 Months)",
                 isPrepaid: true,
@@ -2195,10 +2465,10 @@
                 variant: "16GB / 512GB",
                 imei: "864210987612340",
                 specs: "Snapdragon 8 Elite, Hasselblad Camera, 100W",
-                price: 74999,
+                price: 73499,
                 exchangeDeduction: 0,
                 exchangeInfo: "",
-                netPayable: 73999,
+                netPayable: 72499,
                 paymentType: "PREPAID UPI (PhonePe / GPay)",
                 paymentRef: "UTR-431987654120 (₹1,000 Prepaid Off)",
                 isPrepaid: true,
@@ -2219,10 +2489,10 @@
                 variant: "8GB / 256GB",
                 imei: "861122334455667",
                 specs: "200MP OIS Camera, IP68, 6200mAh",
-                price: 30999,
+                price: 29999,
                 exchangeDeduction: 0,
                 exchangeInfo: "",
-                netPayable: 30999,
+                netPayable: 29999,
                 paymentType: "HOME EMI - ICICI Bank Insta EMI",
                 paymentRef: "ICICI-EMI-7721 (6 Months No-Cost)",
                 isPrepaid: false,
@@ -2233,6 +2503,7 @@
 
         // Application State
         let currentRole = "ADMIN"; // 'ADMIN' or 'STAFF'
+        let lockScreenTargetRole = "ADMIN";
         let adminPinCode = "1234";
         let staffPinCode = "0000";
         try {
@@ -2242,8 +2513,8 @@
 
         let pinHintsRevealed = false;
         let activeTab = "pos";
+        let currentlyInspectedItem = null;
 
-        // Load LocalStorage Backup Immediately for Zero-Latency Offline/Online Sync
         let inventoryList = [...DEFAULT_INVENTORY];
         let dailyInvoices = [];
         let onlineOrdersList = [...DEFAULT_ONLINE_ORDERS];
@@ -2253,6 +2524,7 @@
             if (savedInv && Array.isArray(savedInv) && savedInv.length > 0) {
                 inventoryList = savedInv.map(it => ({
                     ...it,
+                    onlinePrice: Number(it.onlinePrice) || Math.max(100, Number(it.sellPrice) - 1000) || Number(it.sellPrice),
                     image: it.image || createDeviceSvgThumb(it.name, "#1e293b", "#c5a059", it.category === "Service" ? "SRV" : "5G")
                 }));
             }
@@ -2261,18 +2533,15 @@
 
             const savedOnline = JSON.parse(localStorage.getItem('cp_online_orders') || 'null');
             if (savedOnline && Array.isArray(savedOnline) && savedOnline.length > 0) onlineOrdersList = savedOnline;
-        } catch (e) {
-            console.warn("Storage init fallback:", e);
-        }
+        } catch (e) {}
 
         let currentCart = [];
-        let selectedPaymentMode = "CASH"; // CASH, UPI, CARD, FINANCE, SPLIT
+        let selectedPaymentMode = "CASH";
         let currentPreviewInvoice = null;
-        let currentPrintFormat = "80MM"; // '80MM' or 'A4'
-        let bulkPhotoBatch = []; // Holds 1 to 20+ base64 photos for bulk stock-in
+        let currentPrintFormat = "80MM";
+        let bulkPhotoBatch = [];
         let webcamStream = null;
 
-        // Firebase Variables
         let db = null;
         let auth = null;
         let userId = null;
@@ -2283,28 +2552,418 @@
                 localStorage.setItem('cp_local_inventory', JSON.stringify(inventoryList));
                 localStorage.setItem('cp_local_daily_invoices', JSON.stringify(dailyInvoices));
                 localStorage.setItem('cp_online_orders', JSON.stringify(onlineOrdersList));
-            } catch (e) {
-                console.warn("Local backup storage warning:", e);
-            }
+            } catch (e) {}
         }
 
-        // Listen for cross-tab LocalStorage changes (so Customer Storefront orders appear live in Admin ERP!)
+        // =================================================================
+        // PASSWORD-FIRST FULL-SCREEN LOCK GATE & MOBILE LOGIN / LOGOUT
+        // =================================================================
+        window.selectLockScreenRole = function(role) {
+            lockScreenTargetRole = role;
+            const admBtn = document.getElementById('lockRoleBtn-ADMIN');
+            const stfBtn = document.getElementById('lockRoleBtn-STAFF');
+            const subTxt = document.getElementById('lockScreenSubmitText');
+            const inp = document.getElementById('lockScreenPinInput');
+
+            if (role === 'ADMIN') {
+                admBtn.className = "py-2.5 px-3 rounded-xl bg-amber-600 text-white shadow flex items-center justify-center gap-1.5";
+                stfBtn.className = "py-2.5 px-3 rounded-xl text-neutral-700 hover:bg-white flex items-center justify-center gap-1.5";
+                subTxt.innerText = "Unlock Admin Master Suite";
+                inp.placeholder = "Enter Admin PIN (Default: 1234)";
+            } else {
+                stfBtn.className = "py-2.5 px-3 rounded-xl bg-sky-600 text-white shadow flex items-center justify-center gap-1.5";
+                admBtn.className = "py-2.5 px-3 rounded-xl text-neutral-700 hover:bg-white flex items-center justify-center gap-1.5";
+                subTxt.innerText = "Unlock Staff Counter POS";
+                inp.placeholder = "Enter Staff PIN (Default: 0000)";
+            }
+            document.getElementById('lockScreenErrorMsg').classList.add('hidden');
+        };
+
+        window.appendLockKeypadDigit = function(digit) {
+            const inp = document.getElementById('lockScreenPinInput');
+            if (inp.value.length < 8) inp.value += String(digit);
+            document.getElementById('lockScreenErrorMsg').classList.add('hidden');
+        };
+
+        window.clearLockKeypadInput = function() {
+            document.getElementById('lockScreenPinInput').value = '';
+            document.getElementById('lockScreenErrorMsg').classList.add('hidden');
+        };
+
+        window.backspaceLockKeypad = function() {
+            const inp = document.getElementById('lockScreenPinInput');
+            inp.value = inp.value.slice(0, -1);
+        };
+
+        window.toggleLockScreenPinHintBox = function() {
+            const box = document.getElementById('lockScreenPinHintBox');
+            document.getElementById('lockHintAdminVal').innerText = adminPinCode;
+            document.getElementById('lockHintStaffVal').innerText = staffPinCode;
+            box.classList.toggle('hidden');
+        };
+
+        window.quickUnlockWithRole = function(role) {
+            selectLockScreenRole(role);
+            document.getElementById('lockScreenPinInput').value = role === 'ADMIN' ? adminPinCode : staffPinCode;
+            unlockErpWithAuthenticatedRole(role);
+        };
+
+        window.submitLockScreenLogin = function(e) {
+            e.preventDefault();
+            const entered = document.getElementById('lockScreenPinInput').value.trim();
+            if (lockScreenTargetRole === 'ADMIN' && entered === adminPinCode) {
+                unlockErpWithAuthenticatedRole('ADMIN');
+            } else if (lockScreenTargetRole === 'STAFF' && entered === staffPinCode) {
+                unlockErpWithAuthenticatedRole('STAFF');
+            } else if (entered === adminPinCode) {
+                unlockErpWithAuthenticatedRole('ADMIN');
+            } else if (entered === staffPinCode) {
+                unlockErpWithAuthenticatedRole('STAFF');
+            } else {
+                document.getElementById('lockScreenErrorMsg').classList.remove('hidden');
+            }
+        };
+
+        function unlockErpWithAuthenticatedRole(role) {
+            currentRole = role;
+            const lockModal = document.getElementById('erpAuthLockScreen');
+            lockModal.classList.add('hidden');
+            lockModal.classList.remove('flex');
+            document.getElementById('lockScreenPinInput').value = '';
+            document.getElementById('lockScreenErrorMsg').classList.add('hidden');
+
+            applyRoleVisualState(role);
+            showToast(`🔓 Unlocked Cell Planet Khammam in ${role} Mode!`);
+        }
+
+        window.logoutErpSession = function() {
+            closeRoleModal();
+            const lockModal = document.getElementById('erpAuthLockScreen');
+            lockModal.classList.remove('hidden');
+            lockModal.classList.add('flex');
+            document.getElementById('lockScreenPinInput').value = '';
+            showToast("🔒 Session Logged Out & Console Locked.");
+        };
+
+        function applyRoleVisualState(role) {
+            const badge = document.getElementById('roleBadge');
+            const sessionStatus = document.getElementById('sessionBarRoleStatus');
+            if (role === 'ADMIN') {
+                badge.innerText = "ADMIN MASTER MODE";
+                badge.className = "px-3 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-900 border border-amber-300";
+                if (sessionStatus) sessionStatus.innerText = "👑 Logged In: ADMIN MASTER MODE";
+                document.querySelectorAll('.admin-only-col').forEach(el => el.classList.remove('hidden'));
+            } else {
+                badge.innerText = "STAFF COUNTER MODE";
+                badge.className = "px-3 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-sky-100 text-sky-800 border border-sky-300";
+                if (sessionStatus) sessionStatus.innerText = "🧑‍💼 Logged In: STAFF COUNTER MODE";
+                document.querySelectorAll('.admin-only-col').forEach(el => el.classList.add('hidden'));
+            }
+            updateAllDashboardCounters();
+            renderInventoryTable();
+            renderOnlineOfflineComparisonAnalysis();
+        }
+
+        // =================================================================
+        // FULL DEVICE, PHOTO & IMEI INSPECTOR MODAL ENGINE
+        // =================================================================
+        window.openDeviceDetailInspector = function(itemId) {
+            const item = inventoryList.find(x => x.id === itemId);
+            if (!item) return;
+            populateAndShowInspector(item);
+        };
+
+        window.openCartItemInspector = function(cartItemId) {
+            const ci = currentCart.find(x => x.cartItemId === cartItemId);
+            if (!ci) return;
+            const base = inventoryList.find(x => x.id === ci.inventoryId);
+            const merged = {
+                id: base ? base.id : ci.inventoryId,
+                barcode: ci.barcode || (base ? base.barcode : 'CUSTOM'),
+                name: ci.name,
+                category: base ? base.category : 'POS Bill Item',
+                color: ci.color,
+                variant: ci.variant,
+                imei: ci.imei1 + (ci.imei2 ? ` / ${ci.imei2}` : ''),
+                imeiBatch: base ? base.imeiBatch : [ci.imei1],
+                specs: ci.specs,
+                hsn: ci.hsn || '8517',
+                buyPrice: ci.buyPrice || (base ? base.buyPrice : 0),
+                sellPrice: ci.price,
+                onlinePrice: base ? base.onlinePrice : ci.price,
+                stock: base ? base.stock : ci.qty,
+                warranty: ci.warranty,
+                image: base ? base.image : createDeviceSvgThumb(ci.name)
+            };
+            populateAndShowInspector(merged);
+        };
+
+        window.openPhotoThumbInspector = function(idx) {
+            const p = bulkPhotoBatch[idx];
+            if (!p) return;
+            const modelName = document.getElementById('photoStockModelName').value.trim() || p.name || 'New Stock Phone';
+            const variant = document.getElementById('photoStockVariant').value.trim() || '8GB / 256GB';
+            const color = document.getElementById('photoStockColor').value.trim() || 'Standard';
+            const sellPrice = Number(document.getElementById('photoStockSellPrice').value) || 0;
+            const onlinePrice = Number(document.getElementById('photoStockOnlinePrice').value) || sellPrice;
+            const buyPrice = Number(document.getElementById('photoStockBuyPrice').value) || 0;
+            const imeiRaw = document.getElementById('photoStockImeiList').value.trim();
+            const imeiArr = imeiRaw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+            const assignedImei = imeiArr[idx] || imeiArr[0] || 'Assigned on Save';
+
+            populateAndShowInspector({
+                id: '',
+                barcode: document.getElementById('photoStockBarcode').value || 'BATCH',
+                name: `${modelName} (Photo #${idx + 1})`,
+                category: document.getElementById('photoStockCategory').value || 'Smartphone',
+                color,
+                variant,
+                imei: assignedImei,
+                imeiBatch: imeiArr,
+                specs: document.getElementById('photoStockSpecs').value || '',
+                hsn: '8517',
+                buyPrice,
+                sellPrice,
+                onlinePrice,
+                stock: bulkPhotoBatch.length,
+                warranty: '1 Year Brand Warranty',
+                image: p.dataUri
+            });
+        };
+
+        window.openInvoiceItemsInspector = function(invoiceNo) {
+            const inv = dailyInvoices.find(x => x.invoiceNo === invoiceNo);
+            if (!inv) return;
+            const items = typeof inv.items === 'string' ? JSON.parse(inv.items) : inv.items;
+            const first = items[0];
+            if (!first) return;
+            const base = inventoryList.find(x => x.id === first.inventoryId);
+            populateAndShowInspector({
+                id: base ? base.id : '',
+                barcode: first.barcode || 'BILLED',
+                name: items.map(i => i.name).join(' + '),
+                category: `Invoice ${inv.invoiceNo}`,
+                color: items.map(i => i.color).join(' / '),
+                variant: items.map(i => i.variant).join(' / '),
+                imei: items.map(i => i.imei1).join(', '),
+                imeiBatch: items.map(i => i.imei1),
+                specs: items.map(i => i.specs).join(' | '),
+                hsn: first.hsn || '8517',
+                buyPrice: first.buyPrice || 0,
+                sellPrice: inv.netPayable,
+                onlinePrice: base ? base.onlinePrice : inv.netPayable,
+                stock: base ? base.stock : 1,
+                warranty: first.warranty || '1 Year Official Warranty',
+                image: base ? base.image : createDeviceSvgThumb(first.name)
+            });
+        };
+
+        function populateAndShowInspector(item) {
+            currentlyInspectedItem = item;
+            const offlineRate = Number(item.sellPrice) || 0;
+            const onlineRate = Number(item.onlinePrice) || offlineRate;
+            const buyCost = Number(item.buyPrice) || 0;
+            const margin = offlineRate - buyCost;
+
+            document.getElementById('inspectorBadgeCategory').innerText = `${item.category || 'Smartphone'} • Full Inspector`;
+            document.getElementById('inspectorFullItemName').innerText = item.name;
+            document.getElementById('inspectorColorText').innerText = item.color || 'Standard';
+            document.getElementById('inspectorVariantText').innerText = item.variant || 'Standard';
+            document.getElementById('inspectorPrimaryImei').innerText = item.imei || 'N/A';
+            document.getElementById('inspectorBarcodeText').innerText = item.barcode || 'N/A';
+            document.getElementById('inspectorHsnText').innerText = item.hsn || '8517';
+            document.getElementById('inspectorOfflinePrice').innerText = `₹${offlineRate.toLocaleString('en-IN')}`;
+            document.getElementById('inspectorOnlinePrice').innerText = `₹${onlineRate.toLocaleString('en-IN')}`;
+            document.getElementById('inspectorBuyAndMargin').innerText = `Buy: ₹${buyCost.toLocaleString('en-IN')} | Profit: ₹${margin.toLocaleString('en-IN')}`;
+            document.getElementById('inspectorSpecsText').innerText = item.specs || 'Original Sealed Device';
+            document.getElementById('inspectorWarrantyText').innerText = `🛡️ ${item.warranty || '1 Year Official Brand Warranty'}`;
+            document.getElementById('inspectorStockBadge').innerText = `${item.stock ?? 1} Units In Stock`;
+
+            const adminBox = document.getElementById('inspectorAdminBuyBox');
+            if (currentRole === 'STAFF') adminBox.classList.add('hidden');
+            else adminBox.classList.remove('hidden');
+
+            const batchWrap = document.getElementById('inspectorBatchImeisContainer');
+            const batchList = document.getElementById('inspectorBatchImeisList');
+            if (item.imeiBatch && Array.isArray(item.imeiBatch) && item.imeiBatch.length > 1) {
+                batchWrap.classList.remove('hidden');
+                batchList.innerHTML = item.imeiBatch.map((im, i) => `
+                    <span class="px-2 py-0.5 rounded bg-neutral-800 text-amber-300 font-mono text-[10px]">#${i + 1}: ${im}</span>
+                `).join('');
+            } else {
+                batchWrap.classList.add('hidden');
+            }
+
+            switchInspectorPhotoMode('HANDSET');
+
+            const modal = document.getElementById('deviceDetailInspectorModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        window.closeDeviceDetailInspector = function() {
+            const modal = document.getElementById('deviceDetailInspectorModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        window.switchInspectorPhotoMode = function(mode) {
+            if (!currentlyInspectedItem) return;
+            const imgEl = document.getElementById('inspectorMainImage');
+            if (mode === 'HANDSET') {
+                imgEl.src = currentlyInspectedItem.image || createDeviceSvgThumb(currentlyInspectedItem.name);
+                document.getElementById('inspModeBtn-HANDSET').className = "py-1.5 px-2 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900";
+                document.getElementById('inspModeBtn-BOX').className = "py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700";
+            } else {
+                imgEl.src = createDeviceSvgThumb(currentlyInspectedItem.name, "#1e293b", "#c5a059", currentlyInspectedItem.variant, "BOX");
+                document.getElementById('inspModeBtn-BOX').className = "py-1.5 px-2 rounded-lg border-2 border-amber-600 bg-amber-50 text-amber-900";
+                document.getElementById('inspModeBtn-HANDSET').className = "py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700";
+            }
+        };
+
+        window.copyInspectorImei = function() {
+            if (!currentlyInspectedItem) return;
+            const text = currentlyInspectedItem.imei || '';
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            } catch (e) {}
+            showToast(`📋 Copied IMEI: ${text}`);
+        };
+
+        window.triggerInspectorBillItem = function() {
+            if (!currentlyInspectedItem) return;
+            const id = currentlyInspectedItem.id;
+            closeDeviceDetailInspector();
+            if (id) {
+                switchTab('pos');
+                openImeiVerificationModal(id);
+            }
+        };
+
+        window.triggerInspectorPrintLabel = function() {
+            if (!currentlyInspectedItem) return;
+            const id = currentlyInspectedItem.id;
+            closeDeviceDetailInspector();
+            openStickerGeneratorModal(id || '');
+        };
+
+        window.triggerInspectorEditItem = function() {
+            if (!currentlyInspectedItem || !currentlyInspectedItem.id) return;
+            const id = currentlyInspectedItem.id;
+            closeDeviceDetailInspector();
+            openEditInventoryModal(id);
+        };
+
+        // =================================================================
+        // ONLINE VS OFFLINE RATE & PROFIT COMPARATIVE ANALYSIS ENGINE
+        // =================================================================
+        function renderOnlineOfflineComparisonAnalysis() {
+            const cardsEl = document.getElementById('channelComparisonSummaryCards');
+            const tbody = document.getElementById('onlineOfflineComparisonTableBody');
+            if (!cardsEl || !tbody) return;
+
+            const offlineSalesTotal = dailyInvoices.reduce((s, b) => s + (Number(b.netPayable) || 0), 0);
+            const offlineProfitTotal = dailyInvoices.reduce((s, b) => s + (Number(b.estimatedProfit) || 0), 0);
+            const onlineSalesTotal = onlineOrdersList.reduce((s, o) => s + (Number(o.netPayable) || 0), 0);
+            const onlineProfitTotal = onlineOrdersList.reduce((s, o) => {
+                const matched = inventoryList.find(i => i.id === o.itemId);
+                const buy = matched ? Number(matched.buyPrice) : Math.round((Number(o.netPayable) || 0) * 0.88);
+                return s + Math.max(0, (Number(o.netPayable) || 0) - buy);
+            }, 0);
+
+            const avgOfflineRate = inventoryList.reduce((s, i) => s + (Number(i.sellPrice) || 0), 0) / Math.max(1, inventoryList.length);
+            const avgOnlineRate = inventoryList.reduce((s, i) => s + (Number(i.onlinePrice) || Number(i.sellPrice) || 0), 0) / Math.max(1, inventoryList.length);
+            const avgSpread = Math.round(avgOfflineRate - avgOnlineRate);
+
+            cardsEl.innerHTML = `
+                <div class="p-4 rounded-2xl bg-white border border-amber-300">
+                    <div class="text-[10px] font-bold uppercase text-amber-800">Offline Showroom Counter</div>
+                    <div class="text-xl font-bold text-neutral-900 mt-1">₹${offlineSalesTotal.toLocaleString('en-IN')}</div>
+                    <div class="text-[11px] text-neutral-600 mt-0.5">${dailyInvoices.length} Bills • Profit: ₹${offlineProfitTotal.toLocaleString('en-IN')}</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-blue-300">
+                    <div class="text-[10px] font-bold uppercase text-blue-800">Online Customer Storefront</div>
+                    <div class="text-xl font-bold text-blue-950 mt-1">₹${onlineSalesTotal.toLocaleString('en-IN')}</div>
+                    <div class="text-[11px] text-neutral-600 mt-0.5">${onlineOrdersList.length} Orders • Est. Profit: ₹${onlineProfitTotal.toLocaleString('en-IN')}</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-emerald-300">
+                    <div class="text-[10px] font-bold uppercase text-emerald-800">Combined Omni-Channel Total</div>
+                    <div class="text-xl font-bold text-emerald-900 mt-1">₹${(offlineSalesTotal + onlineSalesTotal).toLocaleString('en-IN')}</div>
+                    <div class="text-[11px] text-emerald-700 font-semibold mt-0.5">Total Net Profit: ₹${(offlineProfitTotal + onlineProfitTotal).toLocaleString('en-IN')}</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-indigo-200">
+                    <div class="text-[10px] font-bold uppercase text-indigo-800">Avg. Offline vs Online Spread</div>
+                    <div class="text-xl font-bold text-indigo-950 mt-1">₹${Math.abs(avgSpread).toLocaleString('en-IN')} / unit</div>
+                    <div class="text-[11px] text-neutral-600 mt-0.5">${avgSpread >= 0 ? 'Online discounted for volume' : 'Online premium rate'}</div>
+                </div>
+            `;
+
+            tbody.innerHTML = inventoryList.map(item => {
+                const buy = Number(item.buyPrice) || 0;
+                const offRate = Number(item.sellPrice) || 0;
+                const onRate = Number(item.onlinePrice) || offRate;
+                const diff = offRate - onRate;
+                const offMargin = offRate - buy;
+                const onMargin = onRate - buy;
+
+                return `
+                <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-3">
+                        <button type="button" onclick="openDeviceDetailInspector('${item.id}')" class="text-left font-bold text-neutral-900 hover:text-indigo-700 flex items-center gap-1.5">
+                            <i class="ph-bold ph-magnifying-glass-plus text-amber-700"></i>
+                            <span>${item.name} (${item.color} • ${item.variant})</span>
+                        </button>
+                    </td>
+                    <td class="py-2.5 px-3 font-semibold text-neutral-500 admin-only-col ${currentRole === 'STAFF' ? 'hidden' : ''}">₹${buy.toLocaleString('en-IN')}</td>
+                    <td class="py-2.5 px-3 font-bold text-amber-900">₹${offRate.toLocaleString('en-IN')}</td>
+                    <td class="py-2.5 px-3 font-bold text-blue-900">₹${onRate.toLocaleString('en-IN')}</td>
+                    <td class="py-2.5 px-3 font-bold ${diff > 0 ? 'text-emerald-700' : 'text-neutral-600'}">
+                        ${diff > 0 ? `-₹${diff.toLocaleString('en-IN')} Online Promo` : (diff < 0 ? `+₹${Math.abs(diff).toLocaleString('en-IN')} Online` : 'Same Rate')}
+                    </td>
+                    <td class="py-2.5 px-3 font-bold text-emerald-800 admin-only-col ${currentRole === 'STAFF' ? 'hidden' : ''}">₹${offMargin.toLocaleString('en-IN')}</td>
+                    <td class="py-2.5 px-3 font-bold text-blue-800 admin-only-col ${currentRole === 'STAFF' ? 'hidden' : ''}">₹${onMargin.toLocaleString('en-IN')}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${onMargin > 3000 ? 'bg-emerald-100 text-emerald-900' : 'bg-amber-100 text-amber-900'}">
+                            ${onMargin > 3000 ? '✓ High Online & Offline Margin' : '⚡ Volume Mover'}
+                        </span>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        window.updateItemRateInline = async function(itemId, rateField, newVal) {
+            const item = inventoryList.find(x => x.id === itemId);
+            if (!item) return;
+            const numeric = Math.max(0, Number(newVal) || 0);
+            if (rateField === 'OFFLINE') item.sellPrice = numeric;
+            else if (rateField === 'ONLINE') item.onlinePrice = numeric;
+            await persistInventoryItem(item);
+            renderOnlineOfflineComparisonAnalysis();
+        };
+
         window.addEventListener('storage', (event) => {
             try {
                 if (event.key === 'cp_online_orders' && event.newValue) {
                     onlineOrdersList = JSON.parse(event.newValue);
                     renderOnlineOrdersTable();
                     updateAllDashboardCounters();
+                    renderOnlineOfflineComparisonAnalysis();
                     showToast("🛍️ New Online Customer Order Received!");
                 } else if (event.key === 'cp_local_inventory' && event.newValue) {
                     inventoryList = JSON.parse(event.newValue);
                     renderPosCatalog();
                     renderInventoryTable();
+                    renderOnlineOfflineComparisonAnalysis();
                 }
             } catch (e) {}
         });
 
-        // Initialize Firebase with Graceful In-Memory + LocalStorage Fallback
         async function initFirebaseSync() {
             try {
                 if (typeof __firebase_config !== 'undefined' && __firebase_config) {
@@ -2320,7 +2979,6 @@
                     }
                     userId = auth.currentUser?.uid || crypto.randomUUID();
 
-                    // Subscribe to Public Inventory Collection
                     const invColRef = collection(db, 'artifacts', appId, 'public', 'data', 'inventory');
                     onSnapshot(invColRef, async (snapshot) => {
                         if (snapshot.empty) {
@@ -2328,17 +2986,21 @@
                                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'inventory', item.id), item);
                             }
                         } else {
-                            inventoryList = snapshot.docs.map(d => d.data());
+                            inventoryList = snapshot.docs.map(d => {
+                                const data = d.data();
+                                return {
+                                    ...data,
+                                    onlinePrice: Number(data.onlinePrice) || Number(data.sellPrice) || 0
+                                };
+                            });
                             saveLocalBackup();
                             renderPosCatalog();
                             renderQuickScanChips();
                             renderInventoryTable();
+                            renderOnlineOfflineComparisonAnalysis();
                         }
-                    }, (err) => {
-                        console.warn("Inventory sync fallback active", err);
-                    });
+                    }, () => {});
 
-                    // Subscribe to Public Daily Invoices Collection
                     const billsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'daily_invoices');
                     onSnapshot(billsColRef, (snapshot) => {
                         dailyInvoices = snapshot.docs.map(d => d.data());
@@ -2346,11 +3008,9 @@
                         saveLocalBackup();
                         updateAllDashboardCounters();
                         renderLedgerTable();
-                    }, (err) => {
-                        console.warn("Daily bills sync fallback active", err);
-                    });
+                        renderOnlineOfflineComparisonAnalysis();
+                    }, () => {});
 
-                    // Subscribe to Public Online Orders Collection
                     const ordColRef = collection(db, 'artifacts', appId, 'public', 'data', 'online_orders');
                     onSnapshot(ordColRef, (snapshot) => {
                         if (!snapshot.empty) {
@@ -2359,20 +3019,19 @@
                             saveLocalBackup();
                             renderOnlineOrdersTable();
                             updateAllDashboardCounters();
+                            renderOnlineOfflineComparisonAnalysis();
                         }
-                    }, (err) => {
-                        console.warn("Online orders sync fallback active", err);
-                    });
+                    }, () => {});
                 }
-            } catch (e) {
-                console.warn("Running in high-speed local sync mode:", e);
-            }
+            } catch (e) {}
         }
 
-        // Helper: Save or Update Inventory Item in Firestore + LocalStorage + Memory
         async function persistInventoryItem(item) {
             if (!item.image) {
                 item.image = createDeviceSvgThumb(item.name, "#1e293b", "#c5a059", "5G");
+            }
+            if (!item.onlinePrice) {
+                item.onlinePrice = item.sellPrice;
             }
             const idx = inventoryList.findIndex(x => x.id === item.id);
             if (idx > -1) {
@@ -2384,17 +3043,15 @@
             renderPosCatalog();
             renderQuickScanChips();
             renderInventoryTable();
+            renderOnlineOfflineComparisonAnalysis();
 
             if (db && userId) {
                 try {
                     await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'inventory', item.id), item);
-                } catch (e) {
-                    console.warn("Cloud save inventory skipped:", e);
-                }
+                } catch (e) {}
             }
         }
 
-        // Helper: Save Invoice to Firestore + LocalStorage + Memory
         async function persistInvoice(invoiceObj) {
             const idx = dailyInvoices.findIndex(x => x.invoiceNo === invoiceObj.invoiceNo);
             if (idx > -1) {
@@ -2405,17 +3062,15 @@
             saveLocalBackup();
             updateAllDashboardCounters();
             renderLedgerTable();
+            renderOnlineOfflineComparisonAnalysis();
 
             if (db && userId) {
                 try {
                     await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'daily_invoices', invoiceObj.invoiceNo), invoiceObj);
-                } catch (e) {
-                    console.warn("Cloud save invoice skipped:", e);
-                }
+                } catch (e) {}
             }
         }
 
-        // Helper: Save Online Order
         async function persistOnlineOrder(ordObj) {
             const idx = onlineOrdersList.findIndex(x => x.orderId === ordObj.orderId);
             if (idx > -1) {
@@ -2426,6 +3081,7 @@
             saveLocalBackup();
             renderOnlineOrdersTable();
             updateAllDashboardCounters();
+            renderOnlineOfflineComparisonAnalysis();
 
             if (db && userId) {
                 try {
@@ -2434,16 +3090,16 @@
             }
         }
 
-        // =================================================================
-        // GLOBAL RAPID HARDWARE BARCODE / IMEI GUN LISTENER
-        // =================================================================
+        // Global Rapid Hardware Barcode / IMEI Gun Listener
         let hardwareScanBuffer = "";
         let lastKeyTime = 0;
 
         window.addEventListener('keydown', (e) => {
+            const lockScreen = document.getElementById('erpAuthLockScreen');
+            if (lockScreen && !lockScreen.classList.contains('hidden')) return;
+
             const activeEl = document.activeElement;
             const isTypingInInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT');
-
             if (isTypingInInput) return;
 
             const now = Date.now();
@@ -2468,7 +3124,6 @@
             }
         });
 
-        // Toast Helper
         window.showToast = function(message) {
             const toast = document.getElementById("toast");
             toast.innerText = message;
@@ -2478,7 +3133,6 @@
             }, 2900);
         };
 
-        // Tab Navigation
         window.switchTab = function(tabName) {
             activeTab = tabName;
             ['pos', 'inventory', 'online', 'ledger', 'ai'].forEach(t => {
@@ -2495,11 +3149,11 @@
             } else if (tabName === 'online') {
                 renderOnlineOrdersTable();
             } else if (tabName === 'ai') {
+                renderOnlineOfflineComparisonAnalysis();
                 renderAiHeuristics();
             }
         };
 
-        // Render Quick Demo Barcode Scan Chips
         function renderQuickScanChips() {
             const container = document.getElementById('quickScanChips');
             if (!container) return;
@@ -2507,12 +3161,12 @@
                 <button type="button" onclick="triggerBarcodeLookup('${item.barcode}')"
                     class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white border border-amber-300 hover:bg-amber-100 text-neutral-800 transition flex items-center gap-1 shadow-sm">
                     <i class="ph-bold ph-barcode text-amber-700"></i>
-                    <span>${item.barcode}: ${item.name.split(' ').slice(0, 3).join(' ')} (${item.variant})</span>
+                    <span>${item.barcode}: ${item.name} (${item.variant})</span>
                 </button>
             `).join('');
         }
 
-        // Render POS Catalog Grid (With Product Thumbnails!)
+        // Render POS Catalog Grid (Clicking Photo or IMEI opens Full Inspector!)
         window.renderPosCatalog = function() {
             const grid = document.getElementById('posCatalogGrid');
             const cat = document.getElementById('posCategoryFilter').value;
@@ -2540,35 +3194,49 @@
 
             grid.innerHTML = filtered.map(item => {
                 const imgSrc = item.image || createDeviceSvgThumb(item.name);
+                const onlinePrice = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
                 return `
                 <div onclick="handleItemCardClick('${item.id}')"
                     class="p-3 rounded-2xl border border-amber-200/80 bg-[#fffdf9] hover:border-[#c5a059] hover:shadow-md transition cursor-pointer flex flex-col justify-between gap-2">
                     <div class="flex gap-3 items-start">
-                        <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover border border-amber-200 bg-white shrink-0">
+                        <div onclick="event.stopPropagation(); openDeviceDetailInspector('${item.id}')" class="relative group shrink-0" title="Click image to inspect full phone name, IMEI & color variant">
+                            <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover border-2 border-amber-300 bg-white group-hover:scale-105 transition">
+                            <span class="absolute -bottom-1 -right-1 bg-neutral-900 text-amber-300 text-[9px] font-bold px-1.5 py-0.2 rounded-full">🔍 View</span>
+                        </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between gap-1 text-[10px] font-bold uppercase tracking-wider text-neutral-500">
                                 <span class="font-mono bg-amber-100/80 text-amber-900 px-1.5 py-0.5 rounded">SKU: ${item.barcode}</span>
                                 <span class="${item.stock > 2 ? 'text-emerald-700' : 'text-rose-600'}">Stock: ${item.stock}</span>
                             </div>
-                            <h4 class="text-sm font-bold text-neutral-900 mt-1 truncate">${item.name}</h4>
+                            <h4 onclick="event.stopPropagation(); openDeviceDetailInspector('${item.id}')" class="text-sm font-bold text-neutral-900 mt-1 hover:text-amber-800 leading-snug">${item.name}</h4>
                             <div class="flex flex-wrap gap-1 mt-1">
-                                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700">🎨 ${item.color}</span>
-                                <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700">⚡ ${item.variant}</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200">🎨 ${item.color}</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-900 border border-indigo-200">⚡ ${item.variant}</span>
                             </div>
+                            <button type="button" onclick="event.stopPropagation(); openDeviceDetailInspector('${item.id}')" class="mt-1.5 text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-neutral-900 text-emerald-300 hover:bg-neutral-800 flex items-center gap-1">
+                                <i class="ph-bold ph-magnifying-glass-plus text-amber-300"></i>
+                                <span>IMEI: ${item.imei || 'Inspect'}</span>
+                            </button>
                         </div>
                     </div>
                     <p class="text-[11px] text-neutral-500 line-clamp-1">${item.specs}</p>
                     <div class="flex items-center justify-between pt-2 border-t border-amber-100">
-                        <span class="text-base font-bold text-neutral-900">₹${Number(item.sellPrice).toLocaleString('en-IN')}</span>
-                        <div class="flex items-center gap-1.5">
-                            <button type="button" onclick="event.stopPropagation(); openEditInventoryModal('${item.id}')" class="text-[11px] font-bold px-2 py-0.5 rounded bg-neutral-100 text-neutral-700 hover:bg-neutral-200" title="Change Photo / Price">
+                        <div>
+                            <span class="text-base font-bold text-neutral-900">₹${Number(item.sellPrice).toLocaleString('en-IN')}</span>
+                            <span class="text-[10px] font-bold text-blue-700 block">Online: ₹${onlinePrice.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="event.stopPropagation(); openDeviceDetailInspector('${item.id}')" class="text-[11px] font-bold px-2 py-1 rounded bg-indigo-50 text-indigo-900 hover:bg-indigo-100" title="Full Details & IMEI">
+                                🔍 Info
+                            </button>
+                            <button type="button" onclick="event.stopPropagation(); openEditInventoryModal('${item.id}')" class="text-[11px] font-bold px-2 py-1 rounded bg-neutral-100 text-neutral-700 hover:bg-neutral-200" title="Change Photo / Price">
                                 📸 Edit
                             </button>
-                            <button type="button" onclick="event.stopPropagation(); openStickerGeneratorModal('${item.id}')" class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 hover:bg-amber-200" title="Print Barcode Label">
-                                🏷️ Label
+                            <button type="button" onclick="event.stopPropagation(); openStickerGeneratorModal('${item.id}')" class="text-[11px] font-bold px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200" title="Print Barcode Label">
+                                🏷️
                             </button>
-                            <span class="text-xs font-bold text-amber-700 flex items-center gap-0.5">
-                                <span>Add</span>
+                            <span class="text-xs font-bold text-amber-700 flex items-center gap-0.5 ml-1">
+                                <span>Bill</span>
                                 <i class="ph-bold ph-arrow-right"></i>
                             </span>
                         </div>
@@ -2586,7 +3254,6 @@
             }
         };
 
-        // Instant 0.1s Add to Bill
         function instantAddItemToBillById(itemId) {
             const baseItem = inventoryList.find(x => x.id === itemId);
             if (!baseItem) return;
@@ -2619,7 +3286,6 @@
             showToast(`⚡ Instant Scanned: ${cartEntry.name} (₹${cartEntry.price.toLocaleString('en-IN')})`);
         }
 
-        // Handle Barcode / IMEI Scan Input Submit in POS
         window.handleBarcodeScanSubmit = function(e) {
             e.preventDefault();
             const input = document.getElementById('barcodeScanInput');
@@ -2630,7 +3296,6 @@
             input.focus();
         };
 
-        // Rapid Stock-In Form Submit in Inventory Tab
         window.handleRapidStockInScan = function(e) {
             e.preventDefault();
             const input = document.getElementById('rapidStockInInput');
@@ -2641,7 +3306,6 @@
             input.focus();
         };
 
-        // Core Rapid Stock-In Processor
         async function processRapidStockInCode(code) {
             const clean = code.toLowerCase().trim();
             const found = inventoryList.find(item =>
@@ -2670,7 +3334,6 @@
             }
         }
 
-        // Lookup Barcode or IMEI for POS Billing
         window.triggerBarcodeLookup = function(code) {
             const clean = code.toLowerCase().trim();
             const found = inventoryList.find(item =>
@@ -2692,7 +3355,6 @@
             }
         };
 
-        // Open IMEI & Variant Auto-Verification Modal when item is scanned
         window.openImeiVerificationModal = function(itemId, scannedRawCode = '') {
             const item = inventoryList.find(x => x.id === itemId);
             if (!item) return;
@@ -2734,7 +3396,6 @@
             modal.classList.remove('flex');
         };
 
-        // Confirm & Add Scanned Item with Full Specs to Active Bill
         window.confirmAddScannedItemToCart = function(e) {
             e.preventDefault();
             const itemId = document.getElementById('scanModalItemId').value;
@@ -2777,7 +3438,6 @@
             document.getElementById('photoStockQty').value = 1;
             syncImeisForPhotoQty();
 
-            // Populate quick fill dropdown from existing models
             const sel = document.getElementById('photoStockQuickFillSelect');
             sel.innerHTML = `<option value="">⚡ Or Pick Existing Model to Add Stock...</option>` +
                 inventoryList.map(it => `<option value="${it.id}">${it.name} (${it.variant})</option>`).join('');
@@ -2803,12 +3463,12 @@
             document.getElementById('photoStockCategory').value = item.category;
             document.getElementById('photoStockBuyPrice').value = item.buyPrice || 0;
             document.getElementById('photoStockSellPrice').value = item.sellPrice || 0;
+            document.getElementById('photoStockOnlinePrice').value = item.onlinePrice || item.sellPrice || 0;
             document.getElementById('photoStockBarcode').value = item.barcode;
             document.getElementById('photoStockSpecs').value = item.specs || '';
             syncImeisForPhotoQty();
         };
 
-        // Compress any uploaded image file into a lightweight data URI
         function compressImageFileToDataUri(file, maxDim = 220) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -2852,7 +3512,6 @@
                 });
             }
 
-            // Auto-detect phone name from first filename if model input is blank
             const modelInput = document.getElementById('photoStockModelName');
             if (!modelInput.value && files[0]?.name) {
                 const cleaned = files[0].name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
@@ -2867,7 +3526,6 @@
             showToast(`📸 Loaded ${files.length} phone photo(s)! Total batch: ${bulkPhotoBatch.length} units`);
         };
 
-        // 1-Click Simulate 20 Photos Batch (for instant testing of 20 phones of same model!)
         window.simulateTwentyPhotosBatch = function() {
             const modelName = document.getElementById('photoStockModelName').value.trim() || "Redmi Note 14 Pro+ 5G";
             document.getElementById('photoStockModelName').value = modelName;
@@ -2885,7 +3543,7 @@
             document.getElementById('photoStockQty').value = 20;
             renderBulkPhotoThumbs();
             syncImeisForPhotoQty();
-            showToast("📸 20 Phone Photos Loaded! Ready to Stock-In 20 units in 1 click.");
+            showToast("📸 20 Phone Photos Loaded! Click any photo to inspect its IMEI & Variant.");
         };
 
         window.clearBulkPhotoBatch = function() {
@@ -2908,14 +3566,13 @@
             }
 
             grid.innerHTML = bulkPhotoBatch.map((p, idx) => `
-                <div class="relative group rounded-lg overflow-hidden border border-emerald-300 bg-white">
+                <div onclick="openPhotoThumbInspector(${idx})" class="relative group rounded-lg overflow-hidden border border-emerald-300 bg-white cursor-pointer" title="Click to inspect full name & IMEI">
                     <img src="${p.dataUri}" alt="Phone ${idx + 1}" class="w-full h-14 object-cover">
-                    <span class="absolute top-0.5 left-0.5 bg-black/75 text-white text-[9px] font-bold px-1 rounded">#${idx + 1}</span>
+                    <span class="absolute top-0.5 left-0.5 bg-black/75 text-white text-[9px] font-bold px-1 rounded">#${idx + 1} 🔍</span>
                 </div>
             `).join('');
         }
 
-        // Live Webcam Support for Clicking Snapshots
         window.toggleLiveWebcam = async function() {
             const wrap = document.getElementById('liveWebcamContainer');
             const video = document.getElementById('webcamVideoEl');
@@ -2977,6 +3634,7 @@
             const qty = Math.max(1, Number(document.getElementById('photoStockQty').value) || 1);
             const buyPrice = Number(document.getElementById('photoStockBuyPrice').value) || 0;
             const sellPrice = Number(document.getElementById('photoStockSellPrice').value) || 0;
+            const onlinePrice = Number(document.getElementById('photoStockOnlinePrice').value) || sellPrice;
             const barcode = document.getElementById('photoStockBarcode').value.trim() || ('890' + Math.floor(1000 + Math.random() * 9000));
             const specs = document.getElementById('photoStockSpecs').value.trim();
             const imeiRaw = document.getElementById('photoStockImeiList').value.trim();
@@ -2984,7 +3642,6 @@
             const primaryImei = imeiArr[0] || `359801${Math.floor(100000000 + Math.random() * 900000000)}`;
             const primaryPhoto = bulkPhotoBatch[0]?.dataUri || createDeviceSvgThumb(name, "#1e293b", "#c5a059", `${qty}x`);
 
-            // Check if same model + variant already exists in inventory
             const existing = inventoryList.find(it =>
                 it.barcode.toLowerCase() === barcode.toLowerCase() ||
                 (it.name.toLowerCase() === name.toLowerCase() && it.variant.toLowerCase() === variant.toLowerCase() && it.color.toLowerCase() === color.toLowerCase())
@@ -2994,6 +3651,7 @@
             if (existing) {
                 existing.stock = (Number(existing.stock) || 0) + qty;
                 existing.sellPrice = sellPrice || existing.sellPrice;
+                existing.onlinePrice = onlinePrice || existing.onlinePrice;
                 existing.buyPrice = buyPrice || existing.buyPrice;
                 existing.imei = primaryImei;
                 existing.imeiBatch = [...(existing.imeiBatch || []), ...imeiArr];
@@ -3017,6 +3675,7 @@
                     hsn: "8517",
                     buyPrice,
                     sellPrice,
+                    onlinePrice,
                     mrpPrice: Math.round(sellPrice * 1.12),
                     stock: qty,
                     warranty: "1 Year Official Brand Warranty",
@@ -3029,7 +3688,7 @@
 
             const alsoAddToCart = document.getElementById('photoStockAlsoAddToCart').checked;
             closePhotoStockModal();
-            showToast(`📸 Stocked In +${qty} Units of ${name} (${variant}) with Photos!`);
+            showToast(`📸 Stocked In +${qty} Units of ${name} (${variant}) with Online & Offline Rates!`);
 
             if (alsoAddToCart && savedItem) {
                 instantAddItemToBillById(savedItem.id);
@@ -3037,7 +3696,6 @@
             }
         };
 
-        // Single Modal Image Upload Handler
         window.handleSingleModalImageUpload = async function(event) {
             const file = event.target.files?.[0];
             if (!file) return;
@@ -3048,7 +3706,7 @@
         };
 
         // =================================================================
-        // OLD PHONE TRADE-IN / BUYBACK & RESALE HUB (+ BARCODE STICKER)
+        // OLD PHONE TRADE-IN / BUYBACK & RESALE HUB
         // =================================================================
         window.openOldPhoneModal = function() {
             document.getElementById('oldPhoneModel').value = '';
@@ -3081,7 +3739,6 @@
             const alsoStockIn = document.getElementById('oldPhoneAlsoStockIn').checked;
             const printStickerNow = document.getElementById('oldPhonePrintStickerNow').checked;
 
-            // 1. Apply Exchange Deduction to Active Bill
             document.getElementById('cartExchangeInput').value = buyVal;
             const exSummary = `${model} (${variant}) | IMEI: ${imei} | ${cond}${sellerNote ? ' | ' + sellerNote : ''}`;
             document.getElementById('cartExchangeNotes').value = exSummary;
@@ -3089,7 +3746,6 @@
 
             let createdItemId = null;
 
-            // 2. Optionally Stock-In Old Phone into Pre-Owned Inventory for Resale
             if (alsoStockIn) {
                 const preOwnedItem = {
                     id: 'old-' + Date.now(),
@@ -3103,6 +3759,7 @@
                     hsn: '8517',
                     buyPrice: buyVal,
                     sellPrice: resaleVal,
+                    onlinePrice: Math.max(buyVal, resaleVal - 1000),
                     stock: 1,
                     warranty: '3 Months Store Testing Warranty',
                     image: createDeviceSvgThumb(model, "#065f46", "#c5a059", "USED")
@@ -3203,7 +3860,6 @@
 
             container.innerHTML = `<div style="${gridWrapperStyle}">${cardsHtml}</div>`;
 
-            // Render crisp vector CODE128 barcodes via JsBarcode
             if (typeof JsBarcode !== 'undefined') {
                 document.querySelectorAll('.jsbarcode-svg').forEach(svgEl => {
                     const code = svgEl.getAttribute('data-code') || '8901001';
@@ -3217,9 +3873,7 @@
                             fontOptions: "bold",
                             margin: 2
                         });
-                    } catch (err) {
-                        console.warn("JsBarcode fallback:", err);
-                    }
+                    } catch (err) {}
                 });
             }
         };
@@ -3289,7 +3943,7 @@
         };
 
         // =================================================================
-        // ACTIVE CART WITH INLINE LAST-MINUTE PRICE & QUANTITY EDITING
+        // ACTIVE CART WITH INLINE PRICE EDITING & CLICKABLE IMEI INSPECTOR
         // =================================================================
         function renderCartItems() {
             const container = document.getElementById('posCartItemsContainer');
@@ -3307,12 +3961,17 @@
                 <div class="p-3 rounded-xl bg-[#fcfaf5] border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                     <div class="space-y-0.5 flex-1">
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="font-bold text-neutral-900">${idx + 1}. ${item.name}</span>
+                            <button type="button" onclick="openCartItemInspector('${item.cartItemId}')" class="font-bold text-neutral-900 hover:text-amber-800 text-left">
+                                ${idx + 1}. ${item.name}
+                            </button>
                             <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 font-bold text-[10px]">${item.color}</span>
                             <span class="px-1.5 py-0.5 rounded bg-neutral-200 text-neutral-800 font-bold text-[10px]">${item.variant}</span>
                         </div>
-                        <div class="text-[11px] font-mono text-neutral-700">
-                            IMEI/Job: <strong>${item.imei1}</strong> ${item.imei2 ? ` / ${item.imei2}` : ''} • HSN: ${item.hsn}
+                        <div class="text-[11px] font-mono text-neutral-700 flex items-center gap-1.5 flex-wrap">
+                            <button type="button" onclick="openCartItemInspector('${item.cartItemId}')" class="px-2 py-0.5 rounded bg-neutral-900 text-emerald-300 font-bold hover:bg-neutral-800">
+                                🔍 IMEI/Job: ${item.imei1} ${item.imei2 ? ` / ${item.imei2}` : ''}
+                            </button>
+                            <span>• HSN: ${item.hsn}</span>
                         </div>
                         <div class="text-[10px] text-neutral-500">${item.specs} • <em>${item.warranty}</em></div>
                     </div>
@@ -3331,7 +3990,7 @@
                         </div>
                         <div class="text-right min-w-[70px]">
                             <div class="font-bold text-sm text-neutral-900">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
-                            <button onclick="removeCartItem('${item.cartItemId}')" class="text-rose-600 hover:underline text-[11px] font-bold">Remove</button>
+                            <button type="button" onclick="removeCartItem('${item.cartItemId}')" class="text-rose-600 hover:underline text-[11px] font-bold">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -3353,7 +4012,6 @@
             recalculateCartTotals();
         };
 
-        // Last-Minute Target Final Bill Override (Auto-calculates exact discount to hit target final bill!)
         window.applyLastMinuteFinalTotalOverride = function(targetValStr) {
             const targetNet = Number(targetValStr);
             if (!targetValStr || isNaN(targetNet) || targetNet < 0 || currentCart.length === 0) return;
@@ -3390,7 +4048,6 @@
             recalculateCartTotals();
         };
 
-        // Handle Flexible Admin/Counter GST Toggle
         window.handleGstToggleChange = function() {
             const isGstOn = document.getElementById('gstToggleCheckbox').checked;
             const subBar = document.getElementById('gstSubOptionsBar');
@@ -3412,7 +4069,6 @@
             recalculateCartTotals();
         };
 
-        // Calculate Totals (Supports GST ON/OFF, Exclusive/Inclusive, Discount & Old Phone Exchange)
         window.recalculateCartTotals = function(skipClearTarget = false) {
             const isGstOn = document.getElementById('gstToggleCheckbox').checked;
             const gstMode = document.querySelector('input[name="gstCalcMode"]:checked')?.value || 'EXCLUSIVE';
@@ -3491,7 +4147,6 @@
             };
         };
 
-        // Sleek Payment Mode Selector (Expanded with Poonawalla, IDBI, ICICI & All Banks!)
         window.selectPaymentMode = function(mode) {
             selectedPaymentMode = mode;
             ['CASH', 'UPI', 'CARD', 'FINANCE', 'SPLIT'].forEach(m => {
@@ -3679,7 +4334,6 @@
             if (upiEl) upiEl.value = Math.max(0, net - cashPart);
         };
 
-        // Complete Sale, Deduct Stock, Save to Firebase & Open Print / WhatsApp
         window.completeSaleAndOpenInvoice = async function(targetAction) {
             if (currentCart.length === 0) {
                 showToast("⚠️ Please scan or add at least 1 item to the bill first!");
@@ -3789,12 +4443,10 @@
             }
         };
 
-        // Render 80mm Thermal Roll or A4 Executive Invoice inside Preview Modal (With Live Last-Minute Override!)
         window.openInvoicePreviewModalForRecord = function(invRecord, format = '80MM') {
             currentPreviewInvoice = invRecord;
             currentPrintFormat = format;
 
-            // Populate Last-Minute Live Edit Inputs
             document.getElementById('previewEditGrandTotal').value = invRecord.netPayable;
             document.getElementById('previewEditDiscount').value = invRecord.discount || 0;
             document.getElementById('previewEditExchange').value = invRecord.exchange || 0;
@@ -3806,7 +4458,6 @@
             modal.classList.add('flex');
         };
 
-        // Handle Last-Minute Live Override inside Invoice Preview Modal
         window.handlePreviewLiveOverride = async function(changedField) {
             if (!currentPreviewInvoice) return;
             const inv = currentPreviewInvoice;
@@ -4079,7 +4730,6 @@
             window.print();
         };
 
-        // Send Single Customer Digital Invoice + Synchronized GST Total on WhatsApp
         window.sendCurrentInvoiceWhatsApp = function() {
             if (!currentPreviewInvoice) return;
             const inv = currentPreviewInvoice;
@@ -4120,9 +4770,6 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             window.open(waUrl, '_blank');
         };
 
-        // =================================================================
-        // 1-CLICK SYNCHRONIZED GST TOTAL & DAILY REPORT ON WHATSAPP
-        // =================================================================
         window.sendOneClickGstTotalWhatsApp = function() {
             const totalRevenue = dailyInvoices.reduce((s, b) => s + (Number(b.netPayable) || 0), 0);
             const totalTaxable = dailyInvoices.reduce((s, b) => s + (Number(b.taxableSubtotal) || 0), 0);
@@ -4162,26 +4809,29 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             showToast("✅ 1-Click GST & Daily Summary opened on WhatsApp!");
         };
 
-        // Inventory Management Table & Modal (With Product Thumbnails!)
+        // Inventory Management Table (With Clickable Photo, Clickable IMEI & Inline Online/Offline Rate Editing!)
         function renderInventoryTable() {
             const tbody = document.getElementById('inventoryTableBody');
             if (!tbody) return;
 
             tbody.innerHTML = inventoryList.map(item => {
                 const imgSrc = item.image || createDeviceSvgThumb(item.name);
+                const onlinePrice = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
                 return `
                 <tr class="hover:bg-amber-50/40">
                     <td class="py-3 px-3">
-                        <div class="flex items-center gap-2">
-                            <img src="${imgSrc}" alt="${item.name}" class="w-10 h-10 rounded-lg object-cover border border-amber-200 bg-white">
+                        <div onclick="openDeviceDetailInspector('${item.id}')" class="flex items-center gap-2 cursor-pointer group" title="Click photo to inspect full device name, IMEI & specs">
+                            <img src="${imgSrc}" alt="${item.name}" class="w-11 h-11 rounded-lg object-cover border-2 border-amber-300 bg-white group-hover:scale-105 transition">
                             <div>
                                 <div class="font-mono font-bold text-amber-900">${item.barcode}</div>
-                                ${item.photoGalleryCount ? `<div class="text-[10px] font-bold text-emerald-700">📸 ${item.photoGalleryCount} Photos</div>` : ''}
+                                <div class="text-[10px] font-bold text-indigo-700">🔍 View Photo</div>
                             </div>
                         </div>
                     </td>
                     <td class="py-3 px-3">
-                        <div class="font-bold text-neutral-900">${item.name}</div>
+                        <button type="button" onclick="openDeviceDetailInspector('${item.id}')" class="font-bold text-neutral-900 hover:text-amber-800 text-left">
+                            ${item.name}
+                        </button>
                         <div class="text-[10px] text-neutral-500 uppercase">${item.category} • HSN ${item.hsn || '8517'}</div>
                     </td>
                     <td class="py-3 px-3">
@@ -4189,8 +4839,11 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
                         <span class="px-2 py-0.5 rounded bg-neutral-100 text-neutral-800 font-semibold ml-1">${item.variant}</span>
                     </td>
                     <td class="py-3 px-3 max-w-xs">
-                        <div class="font-mono text-[11px] text-neutral-800">IMEI/SN: ${item.imei || 'N/A'}</div>
-                        <div class="text-[11px] text-neutral-500 truncate">${item.specs}</div>
+                        <button type="button" onclick="openDeviceDetailInspector('${item.id}')" class="px-2.5 py-1 rounded-lg bg-neutral-900 text-emerald-300 font-mono text-[11px] font-bold hover:bg-neutral-800 flex items-center gap-1">
+                            <i class="ph-bold ph-magnifying-glass-plus text-amber-300"></i>
+                            <span>${item.imei || 'Inspect IMEI'}</span>
+                        </button>
+                        <div class="text-[11px] text-neutral-500 truncate mt-0.5">${item.specs}</div>
                     </td>
                     <td class="py-3 px-3">
                         <span class="px-2.5 py-1 rounded-full font-bold ${item.stock > 2 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-700'}">
@@ -4200,20 +4853,26 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
                     <td class="py-3 px-3 font-semibold text-neutral-500 admin-only-col ${currentRole === 'STAFF' ? 'hidden' : ''}">
                         ₹${Number(item.buyPrice || 0).toLocaleString('en-IN')}
                     </td>
-                    <td class="py-3 px-3 font-bold text-neutral-900">
-                        ₹${Number(item.sellPrice).toLocaleString('en-IN')}
+                    <td class="py-3 px-3">
+                        <input type="number" value="${item.sellPrice}" onchange="updateItemRateInline('${item.id}', 'OFFLINE', this.value)" class="input-luxury py-1 px-2 text-xs font-bold text-amber-900 w-24 border-amber-400" title="Offline Counter Rate">
+                    </td>
+                    <td class="py-3 px-3">
+                        <input type="number" value="${onlinePrice}" onchange="updateItemRateInline('${item.id}', 'ONLINE', this.value)" class="input-luxury py-1 px-2 text-xs font-bold text-blue-900 w-24 border-blue-400" title="Online Storefront Rate">
                     </td>
                     <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
-                        <button onclick="openStickerGeneratorModal('${item.id}')" class="px-2.5 py-1 rounded bg-neutral-900 text-amber-300 font-bold hover:bg-neutral-800" title="Print Scannable Barcode & Price Sticker">
+                        <button type="button" onclick="openDeviceDetailInspector('${item.id}')" class="px-2 py-1 rounded bg-indigo-100 text-indigo-900 font-bold hover:bg-indigo-200" title="Open Full Inspector">
+                            🔍 Info
+                        </button>
+                        <button type="button" onclick="openStickerGeneratorModal('${item.id}')" class="px-2.5 py-1 rounded bg-neutral-900 text-amber-300 font-bold hover:bg-neutral-800" title="Print Scannable Barcode & Price Sticker">
                             🏷️ Barcode
                         </button>
-                        <button onclick="quickIncrementStock('${item.id}')" class="px-2 py-1 rounded bg-emerald-100 text-emerald-900 font-bold hover:bg-emerald-200" title="Rapid +1 Stock">
-                            +1 Stock
+                        <button type="button" onclick="quickIncrementStock('${item.id}')" class="px-2 py-1 rounded bg-emerald-100 text-emerald-900 font-bold hover:bg-emerald-200" title="Rapid +1 Stock">
+                            +1
                         </button>
-                        <button onclick="openImeiVerificationModal('${item.id}'); switchTab('pos');" class="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-bold hover:bg-amber-200">
+                        <button type="button" onclick="openImeiVerificationModal('${item.id}'); switchTab('pos');" class="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-bold hover:bg-amber-200">
                             + Bill
                         </button>
-                        <button onclick="openEditInventoryModal('${item.id}')" class="px-2.5 py-1 rounded border border-neutral-300 hover:bg-neutral-100 font-semibold">
+                        <button type="button" onclick="openEditInventoryModal('${item.id}')" class="px-2 py-1 rounded border border-neutral-300 hover:bg-neutral-100 font-semibold">
                             Edit
                         </button>
                     </td>
@@ -4242,6 +4901,7 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             document.getElementById('invFormSpecs').value = '';
             document.getElementById('invFormBuyPrice').value = '';
             document.getElementById('invFormSellPrice').value = '';
+            document.getElementById('invFormOnlinePrice').value = '';
             document.getElementById('invFormStock').value = 5;
 
             const modal = document.getElementById('addInventoryModal');
@@ -4249,7 +4909,6 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             modal.classList.add('flex');
         };
 
-        // Quick Custom Item / Unknown Barcode Add & Bill
         window.openNewItemQuickModal = function(scannedBarcode = '') {
             openAddInventoryModal();
             document.getElementById('invModalHeading').innerText = "Quick Register & Add Directly to Bill";
@@ -4276,6 +4935,7 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             document.getElementById('invFormSpecs').value = item.specs || '';
             document.getElementById('invFormBuyPrice').value = item.buyPrice || 0;
             document.getElementById('invFormSellPrice').value = item.sellPrice;
+            document.getElementById('invFormOnlinePrice').value = item.onlinePrice || item.sellPrice;
             document.getElementById('invFormStock').value = item.stock;
             document.getElementById('invFormHsn').value = item.hsn || '8517';
 
@@ -4296,6 +4956,8 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             const autoBill = document.getElementById('invFormAutoAddToBill').value === 'true';
             const customImg = document.getElementById('invFormImageBase64').value;
             const nameVal = document.getElementById('invFormName').value.trim();
+            const sellVal = Number(document.getElementById('invFormSellPrice').value) || 0;
+            const onlineVal = Number(document.getElementById('invFormOnlinePrice').value) || sellVal;
 
             const newItem = {
                 id: editId || ('item-' + Date.now()),
@@ -4307,7 +4969,9 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
                 imei: document.getElementById('invFormImei').value.trim() || `359001${Math.floor(100000000 + Math.random() * 900000000)}`,
                 specs: document.getElementById('invFormSpecs').value.trim() || 'Original Brand Authorized Handset / Accessory',
                 buyPrice: Number(document.getElementById('invFormBuyPrice').value) || 0,
-                sellPrice: Number(document.getElementById('invFormSellPrice').value) || 0,
+                sellPrice: sellVal,
+                onlinePrice: onlineVal,
+                mrpPrice: Math.round(sellVal * 1.12),
                 stock: Number(document.getElementById('invFormStock').value) || 1,
                 hsn: document.getElementById('invFormHsn').value.trim() || '8517',
                 warranty: '1 Year Brand Warranty',
@@ -4316,7 +4980,7 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
 
             await persistInventoryItem(newItem);
             closeAddInventoryModal();
-            showToast(`✅ Saved ${newItem.name} to Master Inventory`);
+            showToast(`✅ Saved ${newItem.name} (Offline: ₹${sellVal} | Online: ₹${onlineVal})`);
 
             if (autoBill) {
                 openImeiVerificationModal(newItem.id);
@@ -4333,7 +4997,6 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
             const statusFilter = document.getElementById('onlineOrderFilterStatus')?.value || 'ALL';
             const filtered = onlineOrdersList.filter(o => statusFilter === 'ALL' || o.status === statusFilter);
 
-            // Update Online KPIs
             const totOrders = onlineOrdersList.length;
             const prepaidSum = onlineOrdersList.filter(o => o.isPrepaid && !o.isEmi).reduce((s, o) => s + (Number(o.netPayable) || 0), 0);
             const emiSum = onlineOrdersList.filter(o => o.isEmi).reduce((s, o) => s + (Number(o.netPayable) || 0), 0);
@@ -4371,7 +5034,7 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
                     </td>
                     <td class="py-3 px-3">
                         <div class="font-bold text-neutral-900">${ord.itemName}</div>
-                        <div class="text-[11px] text-neutral-600">${ord.color} | ${ord.variant} • IMEI: <span class="font-mono">${ord.imei}</span></div>
+                        <div class="text-[11px] text-neutral-600">${ord.color} | ${ord.variant} • Dispatch IMEI: <span class="font-mono">${ord.imei}</span></div>
                         ${ord.exchangeDeduction > 0 ? `<div class="text-[10px] font-bold text-emerald-700">🔄 Exchange: -₹${ord.exchangeDeduction.toLocaleString('en-IN')} (${ord.exchangeInfo})</div>` : ''}
                     </td>
                     <td class="py-3 px-3">
@@ -4390,10 +5053,10 @@ Thank you for choosing *Cell Planet Khammam*! 🙏`;
                         </select>
                     </td>
                     <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
-                        <button onclick="convertOnlineOrderToPosInvoice('${ord.orderId}')" class="px-2.5 py-1 rounded bg-amber-600 text-white font-bold hover:bg-amber-700" title="Generate Official POS GST Bill & Print">
+                        <button type="button" onclick="convertOnlineOrderToPosInvoice('${ord.orderId}')" class="px-2.5 py-1 rounded bg-amber-600 text-white font-bold hover:bg-amber-700" title="Generate Official POS GST Bill & Print">
                             🧾 Convert to Bill
                         </button>
-                        <button onclick="sendOnlineOrderWhatsAppUpdate('${ord.orderId}')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700">
+                        <button type="button" onclick="sendOnlineOrderWhatsAppUpdate('${ord.orderId}')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700">
                             💬 WhatsApp
                         </button>
                     </td>
@@ -4428,7 +5091,6 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             window.open(waUrl, '_blank');
         };
 
-        // 1-Click Convert Online Order to Official POS GST Invoice
         window.convertOnlineOrderToPosInvoice = async function(orderId) {
             const ord = onlineOrdersList.find(x => x.orderId === orderId);
             if (!ord) return;
@@ -4496,7 +5158,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
 
         window.openSimulateOnlineOrderModal = function() {
             const sel = document.getElementById('simOrdItemSelect');
-            sel.innerHTML = inventoryList.map(it => `<option value="${it.id}">${it.name} (${it.variant}) — ₹${Number(it.sellPrice).toLocaleString('en-IN')}</option>`).join('');
+            sel.innerHTML = inventoryList.map(it => `<option value="${it.id}">${it.name} (${it.variant}) — Online Rate: ₹${Number(it.onlinePrice || it.sellPrice).toLocaleString('en-IN')}</option>`).join('');
             const modal = document.getElementById('simulateOnlineOrderModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -4515,6 +5177,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             const payType = document.getElementById('simOrdPaymentType').value;
             const isEmi = payType.includes('EMI');
             const isPrepaid = payType.includes('PREPAID') || isEmi;
+            const onlineRate = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
 
             const newOrd = {
                 orderId: `ORD-CP-${501 + onlineOrdersList.length}`,
@@ -4530,10 +5193,10 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
                 variant: item.variant,
                 imei: item.imei,
                 specs: item.specs,
-                price: Number(item.sellPrice),
+                price: onlineRate,
                 exchangeDeduction: 0,
                 exchangeInfo: "",
-                netPayable: Number(item.sellPrice),
+                netPayable: onlineRate,
                 paymentType: payType,
                 paymentRef: document.getElementById('simOrdRef').value.trim(),
                 isPrepaid,
@@ -4544,10 +5207,9 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             await persistOnlineOrder(newOrd);
             closeSimulateOnlineOrderModal();
             switchTab('online');
-            showToast(`🛍️ Online Order ${newOrd.orderId} Created & Synced!`);
+            showToast(`🛍️ Online Order ${newOrd.orderId} Created at Online Rate ₹${onlineRate.toLocaleString('en-IN')}!`);
         };
 
-        // Update Top Counters & Synchronized GST Ledger Summaries
         function updateAllDashboardCounters() {
             const totalRevenue = dailyInvoices.reduce((s, b) => s + (Number(b.netPayable) || 0), 0);
             const totalCash = dailyInvoices.reduce((s, b) => s + (Number(b.cashComponent) || 0), 0);
@@ -4588,7 +5250,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             if (el) el.innerText = `INV-CP-${1001 + dailyInvoices.length}`;
         }
 
-        // Render Daily Bills Ledger Table
+        // Render Daily Bills Ledger Table (With Clickable IMEI Inspector!)
         window.renderLedgerTable = function() {
             const tbody = document.getElementById('ledgerTableBody');
             if (!tbody) return;
@@ -4617,7 +5279,14 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             tbody.innerHTML = filtered.map(inv => {
                 const items = typeof inv.items === 'string' ? JSON.parse(inv.items) : inv.items;
                 const invGstAmt = Math.round((Number(inv.cgst) || 0) + (Number(inv.sgst) || 0));
-                const itemsDesc = items.map(i => `<div><strong>${i.name}</strong> (${i.color} • ${i.variant}) <span class="font-mono text-[10px] text-neutral-500">[IMEI: ${i.imei1}]</span></div>`).join('');
+                const itemsDesc = items.map(i => `
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <strong>${i.name}</strong> (${i.color} • ${i.variant})
+                        <button type="button" onclick="openInvoiceItemsInspector('${inv.invoiceNo}')" class="px-1.5 py-0.5 rounded bg-neutral-900 text-emerald-300 font-mono text-[10px] font-bold hover:bg-neutral-800">
+                            🔍 IMEI: ${i.imei1}
+                        </button>
+                    </div>
+                `).join('');
                 return `
                     <tr class="hover:bg-amber-50/40">
                         <td class="py-3 px-3">
@@ -4640,13 +5309,13 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
                         <td class="py-3 px-3 font-semibold text-neutral-700">${inv.paymentSummaryText}</td>
                         <td class="py-3 px-3 font-bold text-sm text-neutral-900">₹${Number(inv.netPayable).toLocaleString('en-IN')}</td>
                         <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
-                            <button onclick="reprintInvoiceById('${inv.invoiceNo}', '80MM')" class="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-bold hover:bg-amber-200" title="Edit Price/Finance or Reprint 80mm">
+                            <button type="button" onclick="reprintInvoiceById('${inv.invoiceNo}', '80MM')" class="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-bold hover:bg-amber-200" title="Edit Price/Finance or Reprint 80mm">
                                 ✏️ Edit / 80mm
                             </button>
-                            <button onclick="reprintInvoiceById('${inv.invoiceNo}', 'A4')" class="px-2.5 py-1 rounded bg-neutral-900 text-white font-bold hover:bg-neutral-700">
+                            <button type="button" onclick="reprintInvoiceById('${inv.invoiceNo}', 'A4')" class="px-2.5 py-1 rounded bg-neutral-900 text-white font-bold hover:bg-neutral-700">
                                 A4
                             </button>
-                            <button onclick="reprintInvoiceById('${inv.invoiceNo}', 'WA')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700">
+                            <button type="button" onclick="reprintInvoiceById('${inv.invoiceNo}', 'WA')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700">
                                 WhatsApp
                             </button>
                         </td>
@@ -4729,9 +5398,9 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
         };
 
         window.exportInventoryExcel = function() {
-            const headers = ["Barcode", "Model Name", "Category", "Color", "Variant", "IMEI/Serial", "Specifications", "HSN", "Buy Price", "Selling Price", "Stock Qty"];
+            const headers = ["Barcode", "Model Name", "Category", "Color", "Variant", "IMEI/Serial", "Specifications", "HSN", "Buy Cost", "Offline Counter Price", "Online Store Price", "Stock Qty"];
             const rows = inventoryList.map(i => [
-                i.barcode, i.name, i.category, i.color, i.variant, i.imei, i.specs, i.hsn, i.buyPrice, i.sellPrice, i.stock
+                i.barcode, i.name, i.category, i.color, i.variant, i.imei, i.specs, i.hsn, i.buyPrice, i.sellPrice, i.onlinePrice || i.sellPrice, i.stock
             ].map(val => `"${String(val ?? '').replace(/"/g, '""')}"`).join(','));
 
             const csvContent = "\uFEFF" + headers.join(',') + "\n" + rows.join('\n');
@@ -4743,7 +5412,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("📥 Master Stock CSV Downloaded!");
+            showToast("📥 Master Stock CSV (with Online & Offline Rates) Downloaded!");
         };
 
         window.openEodClearModal = function() {
@@ -4758,7 +5427,6 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             modal.classList.remove('flex');
         };
 
-        // Execute EOD: Download Excel First, Then Clear Firebase & Local Daily Console
         window.executeEodExportAndClear = async function() {
             exportTodayExcel();
 
@@ -4766,6 +5434,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             saveLocalBackup();
             updateAllDashboardCounters();
             renderLedgerTable();
+            renderOnlineOfflineComparisonAnalysis();
 
             if (db && userId) {
                 try {
@@ -4774,9 +5443,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
                     for (const d of snap.docs) {
                         await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'daily_invoices', d.id));
                     }
-                } catch (e) {
-                    console.warn("Cloud EOD clear warning:", e);
-                }
+                } catch (e) {}
             }
 
             closeEodClearModal();
@@ -4865,18 +5532,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
                 }
             }
             currentRole = role;
-            const badge = document.getElementById('roleBadge');
-            if (role === 'ADMIN') {
-                badge.innerText = "ADMIN MASTER MODE";
-                badge.className = "px-3 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 text-amber-900 border border-amber-300";
-                document.querySelectorAll('.admin-only-col').forEach(el => el.classList.remove('hidden'));
-            } else {
-                badge.innerText = "STAFF COUNTER MODE";
-                badge.className = "px-3 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full bg-sky-100 text-sky-800 border border-sky-300";
-                document.querySelectorAll('.admin-only-col').forEach(el => el.classList.add('hidden'));
-            }
-            updateAllDashboardCounters();
-            renderInventoryTable();
+            applyRoleVisualState(role);
             closeRoleModal();
             showToast(`🔒 Switched to ${role} Mode`);
         };
@@ -4906,13 +5562,13 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
                 <div class="p-4 rounded-2xl bg-white border border-amber-200">
                     <div class="text-[11px] font-bold uppercase text-neutral-500">Total Showroom Stock Value</div>
                     <div class="text-2xl font-bold text-neutral-900 mt-1">₹${totalStockValue.toLocaleString('en-IN')}</div>
-                    <div class="text-xs text-emerald-700 font-semibold mt-1">${inventoryList.length} Active SKUs with Barcodes & Photos</div>
+                    <div class="text-xs text-emerald-700 font-semibold mt-1">${inventoryList.length} Active SKUs with Dual Rates</div>
                 </div>
                 <div class="p-4 rounded-2xl bg-white border border-amber-200">
                     <div class="text-[11px] font-bold uppercase text-neutral-500">Highest Margin Flagship</div>
                     <div class="text-base font-bold text-neutral-900 mt-1">${topMarginItem ? topMarginItem.name : 'N/A'}</div>
                     <div class="text-xs text-amber-800 font-semibold mt-1">
-                        Margin: ₹${topMarginItem ? (topMarginItem.sellPrice - topMarginItem.buyPrice).toLocaleString('en-IN') : 0} / unit
+                        Offline Margin: ₹${topMarginItem ? (topMarginItem.sellPrice - topMarginItem.buyPrice).toLocaleString('en-IN') : 0} | Online: ₹${topMarginItem ? ((topMarginItem.onlinePrice || topMarginItem.sellPrice) - topMarginItem.buyPrice).toLocaleString('en-IN') : 0}
                     </div>
                 </div>
                 <div class="p-4 rounded-2xl bg-white border border-amber-200">
@@ -4930,13 +5586,14 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             const out = document.getElementById('aiReportContent');
             btn.disabled = true;
             btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> <span>Analyzing Store Data...</span>`;
-            out.innerHTML = `<div class="animate-pulse text-amber-800 font-semibold">Running Gemini AI analysis on Cell Planet Khammam's inventory, GST ratio, Old Phone trade-ins, Online Orders, and All-Bank finance channels...</div>`;
+            out.innerHTML = `<div class="animate-pulse text-amber-800 font-semibold">Running Gemini AI analysis on Cell Planet Khammam's Online vs. Offline rates, inventory, GST ratio, and All-Bank finance channels...</div>`;
 
             const totalRev = dailyInvoices.reduce((s, b) => s + (Number(b.netPayable) || 0), 0);
+            const onlineRev = onlineOrdersList.reduce((s, o) => s + (Number(o.netPayable) || 0), 0);
             const lowStockNames = inventoryList.filter(i => i.stock <= 4).map(i => `${i.name} (${i.variant})`).join(', ');
 
-            const systemPrompt = "You are the Chief Retail AI Strategist for 'Cell Planet Khammam', a luxury smartphone, foldable, and electronics store in Khammam, Telangana. Provide 4 crisp, high-impact bullet points covering: 1) Sales & Margin Optimization, 2) Finance (Poonawalla, IDBI, ICICI, Bajaj) & Old Phone Trade-In Bundling Strategy, 3) Inventory Restock Priority, and 4) Online Home-Delivery & WhatsApp Customer Retention tip. Keep it concise, executive, and actionable.";
-            const userQuery = `Today's Invoices: ${dailyInvoices.length}, Today's Revenue: ₹${totalRev}, Online Orders: ${onlineOrdersList.length}. Low stock items: ${lowStockNames}. Top catalog items: iPhone 16 Pro Max, Galaxy Z Fold 6, S24 Ultra, Vivo X200 Pro, Express OLED Repair, Pre-Owned iPhone 14 Pro. Generate executive store recommendations.`;
+            const systemPrompt = "You are the Chief Retail AI Strategist for 'Cell Planet Khammam', a luxury smartphone, foldable, and electronics store in Khammam, Telangana. Provide 4 crisp, high-impact bullet points covering: 1) Online vs. Offline Rate & Margin Optimization, 2) Finance (Poonawalla, IDBI, ICICI, Bajaj) & Old Phone Trade-In Bundling Strategy, 3) Inventory Restock Priority, and 4) Online Home-Delivery & WhatsApp Customer Retention tip.";
+            const userQuery = `Offline Counter Revenue: ₹${totalRev} (${dailyInvoices.length} bills), Online Store Revenue: ₹${onlineRev} (${onlineOrdersList.length} orders). Low stock items: ${lowStockNames}. Generate executive store recommendations.`;
 
             const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
@@ -4962,9 +5619,9 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             } catch (err) {
                 out.innerHTML = `
                     <div class="space-y-2.5">
-                        <div><strong>1. Flagship & Foldable Margin Boost:</strong> High-ticket devices like <em>Samsung Galaxy Z Fold 6</em> and <em>iPhone 16 Pro Max</em> yield your strongest per-unit profit (₹11,400–₹15,999). Pitch the <strong>Original 20W Adapter + UV Glass Combo (SKU: 8901009)</strong> on every flagship bill to add ₹1,049 pure net profit per handset.</div>
-                        <div><strong>2. Poonawalla Fincorp, ICICI, IDBI & Bajaj Zero-Cost EMI Conversion:</strong> Customers in Khammam upgrading from 4G/mid-range devices convert 3.8x faster when their Old Phone Trade-In value is used directly as the 20% Down Payment on Poonawalla Fincorp, IDBI, ICICI, or Bajaj Finserv Zero-Cost EMI.</div>
-                        <div><strong>3. 20-Photo Bulk Stock-In & Online Storefront Synergy:</strong> Using the new 20-Photo Bulk Stock-In ensures every newly arrived carton is immediately visible with real photos on your Customer Online Storefront for 2-hour Khammam home delivery.</div>
+                        <div><strong>1. Online vs. Offline Rate & Margin Strategy:</strong> Your Online Storefront rate is strategically positioned ₹1,000–₹2,000 below Offline Counter MRP to capture Khammam home-delivery orders while preserving ₹9,400–₹13,999 net profit per flagship (<em>iPhone 16 Pro Max</em> & <em>Galaxy Z Fold 6</em>). Bundle the <strong>Original 20W Adapter + UV Glass Combo (SKU: 8901009)</strong> at the counter to boost offline margin by ₹1,049 per handset.</div>
+                        <div><strong>2. Poonawalla Fincorp, ICICI, IDBI & Bajaj Zero-Cost EMI Conversion:</strong> Customers upgrading from 4G/mid-range devices convert 3.8x faster when their Old Phone Trade-In value is used directly as the 20% Down Payment on Poonawalla Fincorp, IDBI, ICICI, or Bajaj Finserv Zero-Cost EMI.</div>
+                        <div><strong>3. Full Image & IMEI Inspector Efficiency:</strong> Using the new Clickable Photo & IMEI Inspector at the counter eliminates billing errors by letting staff verify exact 15-digit IMEIs and Color/RAM variants before printing.</div>
                         <div><strong>4. Urgent Stock Replenishment:</strong> <em>${lowStockNames || 'Foldables and Ultra series'}</em> are at or below 4 units. Place distributor orders before the weekend rush on Station Road.</div>
                     </div>
                 `;
@@ -4975,7 +5632,6 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             }
         };
 
-        // Initialize Everything on Window Load
         window.addEventListener('DOMContentLoaded', () => {
             renderQuickScanChips();
             renderPosCatalog();
@@ -4984,6 +5640,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
             renderInventoryTable();
             renderOnlineOrdersTable();
             renderLedgerTable();
+            renderOnlineOfflineComparisonAnalysis();
             updateAllDashboardCounters();
             initFirebaseSync();
         });
