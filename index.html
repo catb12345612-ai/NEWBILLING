@@ -1,1449 +1,1300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CELL PLANET — Smart POS & Service Terminal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cell Planet Khammam Online Store | Buy Smartphones, Foldables & TVs — Express Home Delivery & Prepaid/EMI</title>
 
-    /* ULTRA-SHARP PRINT STYLESHEET (A4 & 80mm Thermal Ready) */
-    @media print {
-      body * { visibility: hidden !important; }
-      #printInvoiceArea, #printInvoiceArea * { visibility: visible !important; }
-      #printInvoiceArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #ffffff !important;
-        color: #000000 !important;
-        box-shadow: none !important;
-      }
-      @page { margin: 6mm; }
-    }
-    .thermal-80mm { max-width: 78mm !important; margin: 0 auto !important; font-size: 11px !important; }
-  </style>
+    <!-- ================================================================= -->
+    <!-- GOOGLE ANALYTICS TRACKER PLACEMENT (PRESERVED)                    -->
+    <!-- ================================================================= -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JJ68W27HPH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JJ68W27HPH');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap');
+
+        :root {
+            /* Amazon / Flipkart Flagship E-Commerce Palette + Cell Planet Royal Gold Accents */
+            --fk-blue: #1e40af;
+            --fk-blue-dark: #131921;
+            --amz-orange: #ff9900;
+            --amz-yellow: #ffd814;
+            --cp-gold: #c5a059;
+            --bg-store: #f1f3f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-store);
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .store-header {
+            background: linear-gradient(90deg, #131921 0%, #1e3a8a 60%, #172554 100%);
+            color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(30, 58, 138, 0.12);
+            border-color: #93c5fd;
+        }
+
+        .btn-buy-now {
+            background: linear-gradient(135deg, #fb641b 0%, #ea580c 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-buy-now:hover {
+            filter: brightness(1.06);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(234, 88, 12, 0.35);
+        }
+
+        .btn-add-cart {
+            background: linear-gradient(135deg, #ff9f00 0%, #f59e0b 100%);
+            color: #111827;
+            font-weight: 700;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-add-cart:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        .assured-badge {
+            background: linear-gradient(90deg, #1e40af 0%, #1d4ed8 100%);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #fbbf24;
+            object-fit: cover;
+            background: #fff;
+            padding: 2px;
+        }
+
+        .dev-img {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #c5a059;
+            background: #fff;
+            padding: 2px;
+        }
+
+        .toast-store {
+            visibility: hidden;
+            min-width: 280px;
+            background: #131921;
+            border: 1.5px solid #fbbf24;
+            color: #fff;
+            text-align: center;
+            border-radius: 999px;
+            padding: 12px 22px;
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.35);
+            transition: all 0.28s ease;
+        }
+        .toast-store.show {
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media print {
+            body * { visibility: hidden !important; }
+            #customerOrderPrintableReceipt, #customerOrderPrintableReceipt * { visibility: visible !important; }
+            #customerOrderPrintableReceipt {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                background: #fff !important;
+            }
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body>
 
-  <!-- TOP NAVIGATION BAR -->
-  <header class="bg-slate-900 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3 no-print">
-    <div class="flex items-center gap-3">
-      <div class="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-amber-500/20">CP</div>
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 id="uiShopName" class="font-extrabold text-lg tracking-wide text-white">CELL PLANET</h1>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">LIVE POS</span>
-        </div>
-        <p class="text-xs text-slate-400">Hardware Barcode / 15-Digit IMEI Ready — Just Scan Anywhere</p>
-      </div>
-    </div>
-
-    <!-- Staff Selector & Mode Tabs -->
-    <div class="flex flex-wrap items-center gap-2">
-      <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5">
-        <span class="text-xs text-slate-400 mr-2 font-semibold">ACTIVE STAFF:</span>
-        <select id="activeStaffSelect" class="bg-transparent text-amber-400 font-bold text-sm focus:outline-none">
-          <option value="S1">Staff #1 (S1)</option>
-          <option value="S2">Staff #2 (S2)</option>
-          <option value="S3">Staff #3 (S3)</option>
-          <option value="S4">Staff #4 (S4)</option>
-        </select>
-      </div>
-
-      <button onclick="switchTab('pos')" id="tabBtn_pos" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition">1. Billing Counter</button>
-      <button onclick="switchTab('service')" id="tabBtn_service" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">2. Daily Repairs / Service</button>
-      <button onclick="switchTab('inward')" id="tabBtn_inward" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">3. Staff Blind Stock Scan</button>
-      <button onclick="switchTab('warranty')" id="tabBtn_warranty" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">4. Warranty / Bill Lookup</button>
-    </div>
-  </header>
-
-  <!-- ====================================================================== -->
-  <!-- TAB 1: MAIN RETAIL POS & EXCHANGE BILLING                              -->
-  <!-- ====================================================================== -->
-  <main id="tab_pos" class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 no-print">
-
-    <!-- LEFT 7 COLS: SCANNER, BRAND FILTER & PRODUCT CATALOG -->
-    <section class="lg:col-span-7 flex flex-col gap-4">
-      <!-- Instant Scan & Search Bar -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-lg">
-        <div class="flex flex-wrap gap-2 items-center">
-          <div class="relative flex-1 min-w-[240px]">
-            <input id="manualScanInput" type="text" placeholder="Scan Box Barcode, 15-Digit IMEI, or search model (e.g., iPhone 15, Vivo)..."
-              class="scan-ready w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none mono" />
-          </div>
-          <button onclick="triggerManualScan()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-lg transition">Add / Scan</button>
-          <button onclick="openCustomItemModal()" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-sm rounded-lg transition">+ Quick Custom Item</button>
-        </div>
-
-        <!-- Brand Filter Pills -->
-        <div id="brandFilterBar" class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-slate-800">
-          <!-- Populated dynamically -->
-        </div>
-      </div>
-
-      <!-- Live Approved Stock Grid (Zero Buying Cost Shown to Staff) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex-1 flex flex-col">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Live Approved Stock Catalog</h2>
-          <span id="catalogCountBadge" class="text-xs mono text-slate-400">0 items available</span>
-        </div>
-        <div id="stockGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 overflow-y-auto max-h-[540px] pr-1">
-          <!-- Populated from /inventory_live/ -->
-        </div>
-      </div>
-    </section>
-
-    <!-- RIGHT 5 COLS: ACTIVE BILL, GST TOGGLE, EXCHANGE, FINANCE & CHECKOUT -->
-    <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between shadow-xl">
-      <div>
-        <!-- Top Row: GST Toggle + Print Size Switch -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
-          <div class="flex items-center gap-2">
-            <label class="text-xs font-bold text-slate-400 uppercase">BILL MODE:</label>
-            <button id="gstToggleBtn" onclick="toggleGstMode()" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-              GST ON (Tax Invoice)
-            </button>
-          </div>
-          <div class="flex items-center gap-2">
-            <label class="text-xs text-slate-400">Paper:</label>
-            <select id="printSizeSelect" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200">
-              <option value="A4">A4 Luxury Sheet</option>
-              <option value="80MM">80mm Thermal Roll</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Customer Details Row -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 my-3">
-          <input id="custMobile" type="tel" maxlength="10" placeholder="Customer Mobile *" oninput="lookupReturningCustomer(this.value)"
-            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white mono focus:border-amber-500 focus:outline-none" />
-          <input id="custName" type="text" placeholder="Customer Full Name *"
-            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 focus:outline-none" />
-          <input id="custGstin" type="text" placeholder="Customer GSTIN (Opt)"
-            class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white mono uppercase focus:border-amber-500 focus:outline-none" />
-        </div>
-        <div id="crmStatusBanner" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold"></div>
-
-        <!-- Cart Line Items Table -->
-        <div class="border border-slate-800 rounded-lg overflow-hidden bg-slate-950 my-2">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900 text-slate-400 uppercase">
-              <tr>
-                <th class="py-2 px-2.5">Item / Variant / 15-Digit IMEI</th>
-                <th class="py-2 px-2 text-center">Qty</th>
-                <th class="py-2 px-2 text-right">Amount</th>
-                <th class="py-2 px-1.5"></th>
-              </tr>
-            </thead>
-            <tbody id="cartTableBody" class="divide-y divide-slate-800">
-              <tr><td colspan="4" class="py-8 text-center text-slate-500">Scan a barcode or click any item from stock to begin billing</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Second-Hand Exchange & Insurance Quick Bar -->
-        <div class="grid grid-cols-2 gap-2 my-2">
-          <button onclick="openExchangeModal()" class="py-2 px-3 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/40 text-indigo-300 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-            <span>⇄ Add Old Phone Exchange</span>
-          </button>
-          <button onclick="toggleInsuranceBox()" class="py-2 px-3 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-            <span>🛡️ Add Insurance / Protection</span>
-          </button>
-        </div>
-
-        <!-- Active Exchange Badge -->
-        <div id="exchangeSummaryBox" class="hidden my-2 p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-700/60 text-xs flex items-center justify-between">
-          <div>
-            <span class="font-bold text-indigo-300">EXCHANGE APPLIED:</span>
-            <span id="exchangeSummaryText" class="text-slate-200 ml-1"></span>
-          </div>
-          <button onclick="clearExchangeData()" class="text-rose-400 hover:underline font-bold ml-2">Remove</button>
-        </div>
-
-        <!-- Insurance Input Box -->
-        <div id="insuranceInputBox" class="hidden my-2 p-2.5 rounded-lg bg-cyan-950/50 border border-cyan-800/60 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-          <input id="insProvider" type="text" placeholder="Provider (e.g. AppleCare / OnsiteGo)" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white" />
-          <input id="insPolicyNo" type="text" placeholder="Policy / Kit No." class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono" />
-          <input id="insAmount" type="number" placeholder="Insurance Fee ₹ (0 if incl)" oninput="renderCart()" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono" />
-        </div>
-      </div>
-
-      <!-- BILL TOTALS & PAYMENT SPLIT SECTION -->
-      <div class="pt-3 border-t border-slate-800 space-y-2.5">
-        <div class="grid grid-cols-2 gap-2 text-xs">
-          <div class="flex items-center justify-between bg-slate-950 px-3 py-1.5 rounded border border-slate-800">
-            <span class="text-slate-400">Discount (₹):</span>
-            <input id="billDiscountInput" type="number" value="0" min="0" oninput="renderCart()"
-              class="w-20 bg-transparent text-right font-bold text-amber-400 mono focus:outline-none" />
-          </div>
-          <div class="flex items-center justify-between bg-slate-950 px-3 py-1.5 rounded border border-slate-800">
-            <span class="text-slate-400">GST Breakup:</span>
-            <span id="uiTaxSummary" class="mono text-slate-300 font-semibold">₹0.00</span>
-          </div>
-        </div>
-
-        <div class="bg-slate-950 border border-amber-500/40 rounded-xl p-3 flex items-center justify-between">
-          <div>
-            <span class="text-xs uppercase font-bold text-slate-400 block">NET PAYABLE AMOUNT</span>
-            <span id="uiExchangeSubtext" class="text-[11px] text-indigo-400"></span>
-          </div>
-          <span id="uiNetPayable" class="text-2xl font-extrabold text-amber-400 mono">₹0.00</span>
-        </div>
-
-        <!-- Payment Mode & Split Amounts -->
-        <div class="space-y-2">
-          <div class="grid grid-cols-4 gap-1.5">
-            <button onclick="setPaymentMode('CASH')" id="payBtn_CASH" class="py-1.5 rounded text-xs font-bold bg-emerald-500 text-slate-950">CASH</button>
-            <button onclick="setPaymentMode('ONLINE')" id="payBtn_ONLINE" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">UPI / ONLINE</button>
-            <button onclick="setPaymentMode('FINANCE')" id="payBtn_FINANCE" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">FINANCE / EMI</button>
-            <button onclick="setPaymentMode('SPLIT')" id="payBtn_SPLIT" class="py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300">SPLIT PAY</button>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 text-xs">
-            <div>
-              <label class="text-[10px] text-slate-400 uppercase">Cash Paid ₹</label>
-              <input id="payCashAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+    <!-- ================================================================= -->
+    <!-- AMAZON / FLIPKART STYLE STICKY TOP NAVIGATION HEADER              -->
+    <!-- ================================================================= -->
+    <header class="store-header">
+        <div class="max-w-[1440px] mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Logo & Khammam Express Pin Code -->
+            <div class="flex items-center gap-3">
+                <img src="cell-logo.png.jfif" alt="Cell Planet" class="brand-logo" onerror="this.src='https://ui-avatars.com/api/?name=CP&background=c5a059&color=fff&size=120'">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-lg sm:text-xl tracking-tight text-white" style="font-family:'Space Grotesk',sans-serif;">
+                            CELL PLANET <span class="text-amber-400">ONLINE</span>
+                        </span>
+                        <span class="hidden sm:inline-flex items-center gap-1 bg-amber-400 text-neutral-950 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+                            <i class="ph-fill ph-lightning"></i> Plus Assured
+                        </span>
+                    </div>
+                    <div class="text-[11px] text-neutral-300 flex items-center gap-1">
+                        <i class="ph-fill ph-map-pin text-amber-400"></i>
+                        <span>Deliver to <strong>Khammam 507001</strong> • 2-Hour Express Delivery</span>
+                    </div>
+                </div>
             </div>
-            <div>
-              <label class="text-[10px] text-slate-400 uppercase">UPI / Online ₹</label>
-              <input id="payOnlineAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+
+            <!-- Amazon / Flipkart Instant Search Bar -->
+            <div class="flex-1 max-w-xl mx-auto w-full order-3 lg:order-2">
+                <div class="relative flex items-center">
+                    <input
+                        type="text"
+                        id="storeSearchInput"
+                        oninput="renderStoreProducts()"
+                        placeholder="Search iPhone 16 Pro Max, Galaxy S24 Ultra, Z Fold 6, Vivo X200, Smart TVs..."
+                        class="w-full py-2.5 pl-4 pr-11 rounded-xl text-sm text-neutral-900 font-medium bg-white focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    >
+                    <button onclick="renderStoreProducts()" class="absolute right-1.5 bg-amber-400 hover:bg-amber-500 text-neutral-950 p-2 rounded-lg font-bold">
+                        <i class="ph-bold ph-magnifying-glass text-base"></i>
+                    </button>
+                </div>
             </div>
-            <div>
-              <label class="text-[10px] text-slate-400 uppercase">Finance Loan ₹</label>
-              <input id="payFinanceAmt" type="number" value="0" class="w-full bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-white mono font-bold" />
+
+            <!-- Right Action Buttons: Bank EMI Offers, Track Order, Cart -->
+            <div class="flex items-center gap-2 sm:gap-3 order-2 lg:order-3">
+                <button onclick="openTrackOrdersModal()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 border border-white/15">
+                    <i class="ph-bold ph-package text-base text-amber-400"></i>
+                    <span>My Orders (<span id="headerMyOrdersCount">0</span>)</span>
+                </button>
+                <button onclick="openCartDrawer()" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-neutral-950 text-xs font-extrabold flex items-center gap-1.5 shadow">
+                    <i class="ph-bold ph-shopping-cart-simple text-base"></i>
+                    <span>Cart (<span id="headerCartCount">0</span>)</span>
+                </button>
             </div>
-          </div>
-
-          <!-- Finance Provider & DO Box -->
-          <div id="financeDetailsBox" class="hidden grid grid-cols-2 gap-2 pt-1">
-            <select id="financeProvider" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white">
-              <option value="Bajaj Finserv">Bajaj Finserv</option>
-              <option value="IDFC First">IDFC First Bank</option>
-              <option value="HDB Financial">HDB Financial</option>
-              <option value="Home Credit">Home Credit</option>
-              <option value="TVS Credit">TVS Credit</option>
-              <option value="Credit Card EMI">Credit Card EMI</option>
-            </select>
-            <input id="financeDoNumber" type="text" placeholder="Finance DO / Approval ID" class="bg-slate-950 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white mono" />
-          </div>
         </div>
 
-        <button onclick="completeAndPrintSale()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-extrabold text-sm tracking-wide shadow-lg shadow-amber-500/20 transition">
-          ✓ CLEAR BILL, NOTIFY ADMIN & PRINT INVOICE
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <!-- ====================================================================== -->
-  <!-- TAB 2: DAILY MOBILE REPAIR & SERVICES PORTFOLIO                        -->
-  <!-- ====================================================================== -->
-  <section id="tab_service" class="hidden flex-1 p-4 max-w-6xl mx-auto w-full no-print space-y-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-      <h2 class="text-base font-extrabold text-amber-400 mb-1">Log Daily Mobile Service / Repair Ticket</h2>
-      <p class="text-xs text-slate-400 mb-4">Logs directly to Google Sheets, prints a customer service token, and updates the Owner's live service portfolio.</p>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-        <input id="srvCustName" type="text" placeholder="Customer Name *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
-        <input id="srvCustMobile" type="tel" maxlength="10" placeholder="Customer Mobile *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
-        <input id="srvDeviceModel" type="text" placeholder="Mobile Brand & Model (e.g. Vivo V29) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
-        <input id="srvImeiOrLock" type="text" placeholder="IMEI or Screen Lock PIN/Pattern" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
-        <input id="srvIssue" type="text" placeholder="Service / Repair Done (e.g. Original Combo Display) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white" />
-        <select id="srvStatus" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white">
-          <option value="COMPLETED & DELIVERED">COMPLETED & DELIVERED (Paid)</option>
-          <option value="RECEIVED - IN REPAIR">RECEIVED - IN REPAIR (Job Sheet)</option>
-        </select>
-        <input id="srvSpareCost" type="number" placeholder="Spare Part Cost ₹ (For Admin Ledger)" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white mono" />
-        <input id="srvChargeTotal" type="number" placeholder="Customer Service Charge ₹ *" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-amber-400 font-bold mono" />
-        <select id="srvPayMode" class="bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-white">
-          <option value="CASH">Paid via CASH</option>
-          <option value="ONLINE">Paid via UPI / ONLINE</option>
-          <option value="PENDING">Payment Pending on Delivery</option>
-        </select>
-      </div>
-      <button onclick="submitServiceTicket()" class="mt-4 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm">
-        + Save Service Entry & Print Service Receipt
-      </button>
-    </div>
-
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-      <h3 class="text-sm font-bold text-slate-300 uppercase mb-3">Today's Logged Services</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-slate-950 text-slate-400 uppercase">
-            <tr>
-              <th class="p-2.5">Job ID</th>
-              <th class="p-2.5">Time</th>
-              <th class="p-2.5">Staff</th>
-              <th class="p-2.5">Customer</th>
-              <th class="p-2.5">Device & Service</th>
-              <th class="p-2.5">Status</th>
-              <th class="p-2.5 text-right">Amount</th>
-              <th class="p-2.5">Mode</th>
-            </tr>
-          </thead>
-          <tbody id="todayServicesBody" class="divide-y divide-slate-800"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====================================================================== -->
-  <!-- TAB 3: STAFF "BLIND STOCK INWARD" (GOES TO OWNER APPROVAL QUEUE)       -->
-  <!-- ====================================================================== -->
-  <section id="tab_inward" class="hidden flex-1 p-4 max-w-4xl mx-auto w-full no-print">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div>
-          <h2 class="text-base font-extrabold text-amber-400">Staff Blind Stock Inward Scanner</h2>
-          <p class="text-xs text-slate-400">Scan new box arrivals here. Batch will be sent to Owner Admin Portal for Purchase Cost entry & instant approval.</p>
-        </div>
-        <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 text-xs font-bold">WAITING FOR ADMIN APPROVAL</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Box Barcode / EAN / SKU *</label>
-          <input id="inwBarcode" type="text" placeholder="Scan or type Box Barcode" class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white mono" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Category *</label>
-          <select id="inwCategory" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white">
-            <option value="NEW_PHONE">New Smartphone</option>
-            <option value="ACCESSORY">Mobile Accessory</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Brand *</label>
-          <select id="inwBrand" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white">
-            <option value="Apple">Apple</option>
-            <option value="Xiaomi">Xiaomi</option>
-            <option value="Vivo">Vivo</option>
-            <option value="Motorola">Motorola</option>
-            <option value="Samsung">Samsung</option>
-            <option value="OnePlus">OnePlus</option>
-            <option value="Realme">Realme</option>
-            <option value="Oppo">Oppo</option>
-            <option value="Accessories">Accessories</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Model Name *</label>
-          <input id="inwModel" type="text" placeholder="e.g. iPhone 15 / Vivo V30 / 20W Adapter" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Variant (RAM / Storage / Color) *</label>
-          <input id="inwVariant" type="text" placeholder="e.g. 8GB / 128GB | Titanium Blue" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Quantity Scanned *</label>
-          <input id="inwQty" type="number" value="1" min="1" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-white mono font-bold" />
-        </div>
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400 block mb-1">Scan 15-Digit IMEIs (One per line — auto-updates Quantity if scanned)</label>
-        <textarea id="inwImeiList" rows="4" placeholder="Scan IMEI-1 barcodes here (press Enter after each scan)..."
-          oninput="syncInwardQtyFromImeis()"
-          class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs text-emerald-400 mono"></textarea>
-      </div>
-
-      <button onclick="submitStaffBlindStock()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm">
-        📤 Submit Batch to Owner Admin Portal for Approval
-      </button>
-    </div>
-  </section>
-
-  <!-- ====================================================================== -->
-  <!-- TAB 4: 365-DAY WARRANTY & PAST BILL LOOKUP                             -->
-  <!-- ====================================================================== -->
-  <section id="tab_warranty" class="hidden flex-1 p-4 max-w-5xl mx-auto w-full no-print">
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
-      <h2 class="text-base font-extrabold text-amber-400">365-Day Warranty & Customer Bill Verification</h2>
-      <div class="flex gap-2">
-        <input id="warrantySearchInput" type="text" placeholder="Enter Customer 10-Digit Mobile, Invoice No, or Scan 15-Digit IMEI..."
-          oninput="searchWarrantyRecords(this.value)"
-          class="scan-ready flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white mono" />
-      </div>
-      <div id="warrantyResultsBox" class="space-y-2 max-h-[500px] overflow-y-auto"></div>
-    </div>
-  </section>
-
-  <!-- ====================================================================== -->
-  <!-- MODAL 1: SECOND-HAND PHONE BUY-BACK / EXCHANGE VAULT                   -->
-  <!-- ====================================================================== -->
-  <div id="exchangeModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 no-print">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-5 space-y-3 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-        <h3 class="font-extrabold text-base text-indigo-400">Second-Hand Exchange / Buy-Back Intake</h3>
-        <button onclick="closeExchangeModal()" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
-      </div>
-      <p class="text-xs text-slate-400">Deducts from the customer's new bill AND adds this phone into Pre-Owned Stock + Owner's KYC Vault.</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-        <input id="exBrandModel" type="text" placeholder="Old Phone Brand & Model *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-        <input id="exVariant" type="text" placeholder="GB / Color & Condition (A+/A/B) *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-        <input id="exImei1" type="text" maxlength="15" placeholder="Old Phone 15-Digit IMEI-1 *" class="scan-ready bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
-        <input id="exImei2" type="text" maxlength="15" placeholder="IMEI-2 (Optional)" class="scan-ready bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
-        <input id="exGovtId" type="text" placeholder="Seller Govt ID / KYC Ref No. *" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
-        <select id="exBoxBill" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white">
-          <option value="Original Box + Bill Verified">Original Box + Bill Verified</option>
-          <option value="Only Box Provided">Only Box Provided</option>
-          <option value="Device Only (KYC Verified)">Device Only (KYC Verified)</option>
-        </select>
-        <input id="exBuyPrice" type="number" placeholder="Agreed Exchange Value ₹ *" class="bg-slate-950 border border-indigo-500 rounded-lg px-3 py-2 text-amber-400 font-bold mono sm:col-span-2 text-sm" />
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="saveStandaloneBuyback()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200">Direct Cash Buy-Back (No New Bill)</button>
-        <button onclick="applyExchangeToCurrentBill()" class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-xs font-extrabold text-white">Apply Exchange to Current Bill</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====================================================================== -->
-  <!-- MODAL 2: QUICK CUSTOM ITEM / ACCESSORY ADDER                           -->
-  <!-- ====================================================================== -->
-  <div id="customItemModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50 no-print">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-5 space-y-3">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <h3 class="font-extrabold text-sm text-amber-400">Add Unlisted / Custom Item to Bill</h3>
-        <button onclick="closeCustomItemModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-      <div class="space-y-2.5 text-xs">
-        <input id="custItemBrand" type="text" placeholder="Brand (e.g. Apple / Vivo / Accessory)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-        <input id="custItemModel" type="text" placeholder="Model / Item Description *" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-        <input id="custItemVariant" type="text" placeholder="Variant (GB / Color / Specs)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white" />
-        <input id="custItemImei" type="text" placeholder="15-Digit IMEI / Serial No. (If Phone)" class="scan-ready w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white mono" />
-        <input id="custItemPrice" type="number" placeholder="Selling Price ₹ *" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-amber-400 font-bold mono text-sm" />
-      </div>
-      <button onclick="addCustomItemToCart()" class="w-full py-2.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold text-xs">Add to Bill</button>
-    </div>
-  </div>
-
-  <!-- ====================================================================== -->
-  <!-- LUXURY HIGH-CONTRAST PRINTABLE INVOICE CONTAINER                       -->
-  <!-- ====================================================================== -->
-  <div id="printInvoiceArea" class="hidden bg-white text-black p-6 max-w-3xl mx-auto">
-    <div class="border-2 border-black p-4">
-      <!-- Shop Header -->
-      <div class="text-center border-b-2 border-black pb-3">
-        <h1 id="prShopName" class="text-2xl font-extrabold tracking-wider uppercase">CELL PLANET</h1>
-        <p id="prShopTagline" class="text-xs font-semibold">Multi-Brand Smartphones, Original Accessories & Express Service Hub</p>
-        <p id="prShopAddress" class="text-xs">Main Road, Khammam, Telangana - 507001</p>
-        <div class="flex justify-center gap-4 text-xs font-bold mt-1 mono">
-          <span id="prShopPhone">Phone: +91 98765 43210</span>
-          <span id="prShopGstin">GSTIN: 36XXXXX1234X1Z5</span>
-        </div>
-        <div id="prInvoiceTypeBadge" class="inline-block mt-1.5 px-3 py-0.5 border border-black text-xs font-extrabold uppercase">TAX INVOICE</div>
-      </div>
-
-      <!-- Invoice & Customer Meta -->
-      <div class="grid grid-cols-2 gap-2 py-2.5 border-b border-black text-xs">
-        <div>
-          <p><span class="font-bold">INVOICE NO:</span> <span id="prInvoiceNo" class="mono font-extrabold"></span></p>
-          <p><span class="font-bold">DATE & TIME:</span> <span id="prDateTime" class="mono"></span></p>
-          <p><span class="font-bold">SOLD BY STAFF:</span> <span id="prStaffCode" class="mono font-bold"></span></p>
-        </div>
-        <div class="text-right">
-          <p><span class="font-bold">CUSTOMER:</span> <span id="prCustName" class="font-extrabold"></span></p>
-          <p><span class="font-bold">MOBILE NO:</span> <span id="prCustMobile" class="mono font-bold"></span></p>
-          <p id="prCustGstinRow" class="hidden"><span class="font-bold">CUST GSTIN:</span> <span id="prCustGstin" class="mono"></span></p>
-        </div>
-      </div>
-
-      <!-- Line Items Table -->
-      <table class="w-full text-left border-collapse my-2 text-xs">
-        <thead>
-          <tr class="border-b-2 border-black uppercase">
-            <th class="py-1.5 px-1">#</th>
-            <th class="py-1.5 px-1">Item, Variant & 15-Digit IMEI / Serial</th>
-            <th id="prHsnHeader" class="py-1.5 px-1 text-center">HSN</th>
-            <th class="py-1.5 px-1 text-center">Qty</th>
-            <th class="py-1.5 px-1 text-right">Rate</th>
-            <th class="py-1.5 px-1 text-right">Amount</th>
-          </tr>
-        </thead>
-        <tbody id="prItemsBody" class="divide-y divide-gray-300"></tbody>
-      </table>
-
-      <!-- Exchange & Totals Block -->
-      <div class="border-t-2 border-black pt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-        <div class="space-y-1">
-          <p class="font-bold">PAYMENT & FINANCE BREAKDOWN:</p>
-          <p id="prPaymentBreakdown" class="mono text-[11px]"></p>
-          <p id="prExchangePrintRow" class="hidden font-bold text-[11px] border border-black p-1.5 mt-1"></p>
-          <p id="prInsurancePrintRow" class="hidden text-[11px] border border-black p-1.5 mt-1"></p>
-        </div>
-        <div class="space-y-1 text-right mono">
-          <div id="prTaxableRow" class="flex justify-between"><span>Taxable Value:</span><span id="prTaxableVal"></span></div>
-          <div id="prCgstRow" class="flex justify-between"><span>CGST (9%):</span><span id="prCgstVal"></span></div>
-          <div id="prSgstRow" class="flex justify-between"><span>SGST (9%):</span><span id="prSgstVal"></span></div>
-          <div id="prDiscountRow" class="hidden flex justify-between"><span>Special Discount:</span><span id="prDiscountVal"></span></div>
-          <div id="prExchangeDedRow" class="hidden flex justify-between font-bold"><span>Less: Exchange Credit:</span><span id="prExchangeDedVal"></span></div>
-          <div class="flex justify-between text-base font-extrabold border-t-2 border-black pt-1 mt-1">
-            <span>NET PAYABLE:</span>
-            <span id="prNetPayableVal"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Terms & Signatures -->
-      <div class="border-t border-black mt-3 pt-2 text-[10px] leading-snug">
-        <p class="font-bold">TERMS & WARRANTY DECLARATIONS:</p>
-        <p>1. Goods once sold will not be taken back or exchanged without valid invoice.</p>
-        <p id="prInsuranceTermsText">2. Brand warranty is provided strictly by the respective Authorized Service Center.</p>
-        <div class="flex justify-between items-end mt-8 pt-2 font-bold text-xs">
-          <span>Customer Signature</span>
-          <span>For <span id="prSignShopName">CELL PLANET</span> (Authorized Signatory)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====================================================================== -->
-  <!-- POS APPLICATION ENGINE (FIREBASE + BARCODE SCANNER + SHEETS SYNC)      -->
-  <!-- ====================================================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, get, set, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-    import { ERP_CONFIG, syncToGoogleSheet } from "./config.js";
-
-    const app = initializeApp(ERP_CONFIG.firebaseConfig);
-    const db = getDatabase(app);
-
-    // State
-    let shopConfig = { ...ERP_CONFIG.defaultShop };
-    let liveInventory = {};
-    let adminCostsMap = {}; // Fetched quietly on checkout only to compute accurate Owner notification profit
-    let activeBrandFilter = "ALL";
-    let cart = [];
-    let gstEnabled = true;
-    let paymentMode = "CASH";
-    let activeExchange = null;
-    let allRecentSales = [];
-
-    // 1. Load Shop Profile
-    onValue(ref(db, "shop_config"), (snap) => {
-      if (snap.exists()) {
-        shopConfig = { ...shopConfig, ...snap.val() };
-        document.getElementById("uiShopName").textContent = shopConfig.name;
-      }
-      renderBrandPills();
-    });
-
-    // 2. Load Live Public Stock
-    onValue(ref(db, "inventory_live"), (snap) => {
-      liveInventory = snap.val() || {};
-      renderStockCatalog();
-    });
-
-    // 3. Load Admin Cost Node for silent profit computation on Owner Alert
-    onValue(ref(db, "admin_costs"), (snap) => {
-      adminCostsMap = snap.val() || {};
-    });
-
-    // 4. Load Recent Sales for Returning Customer CRM & 365-Day Warranty Lookup
-    onValue(ref(db, "recent_sales_cache"), (snap) => {
-      const data = snap.val() || {};
-      allRecentSales = Object.values(data).reverse();
-    });
-
-    // 5. Load Today's Services
-    onValue(ref(db, "completed_service_cache"), (snap) => {
-      const data = snap.val() || {};
-      const list = Object.values(data).reverse();
-      const tbody = document.getElementById("todayServicesBody");
-      tbody.innerHTML = list.map(s => `
-        <tr class="hover:bg-slate-800/40">
-          <td class="p-2.5 mono font-bold text-amber-400">${s.jobId}</td>
-          <td class="p-2.5 text-slate-400">${s.timestamp}</td>
-          <td class="p-2.5 font-bold">${s.staffCode}</td>
-          <td class="p-2.5">${s.customerName} (${s.customerMobile})</td>
-          <td class="p-2.5 font-semibold text-white">${s.deviceModel} — <span class="text-emerald-400">${s.issueReported}</span></td>
-          <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">${s.jobStatus}</span></td>
-          <td class="p-2.5 text-right mono font-bold">₹${Number(s.serviceCharge).toLocaleString('en-IN')}</td>
-          <td class="p-2.5 font-bold">${s.payMode}</td>
-        </tr>
-      `).join("") || `<tr><td colspan="8" class="p-6 text-center text-slate-500">No services logged today yet</td></tr>`;
-    });
-
-    // ========================================================================
-    // HARDWARE BARCODE & 15-DIGIT IMEI KEYBOARD-WEDGE LISTENER
-    // ========================================================================
-    let scanBuffer = "";
-    let lastKeyTime = Date.now();
-
-    document.addEventListener("keydown", (e) => {
-      const activeEl = document.activeElement;
-      const isInput = activeEl && ["INPUT", "TEXTAREA", "SELECT"].includes(activeEl.tagName);
-      if (isInput && !activeEl.classList.contains("scan-ready")) return;
-
-      const now = Date.now();
-      if (now - lastKeyTime > 60) scanBuffer = "";
-      lastKeyTime = now;
-
-      if (e.key === "Enter" && scanBuffer.length >= 4) {
-        if (!isInput) {
-          e.preventDefault();
-          processScannedString(scanBuffer.trim());
-        }
-        scanBuffer = "";
-      } else if (e.key.length === 1) {
-        scanBuffer += e.key;
-      }
-    });
-
-    window.triggerManualScan = () => {
-      const input = document.getElementById("manualScanInput");
-      const val = input.value.trim();
-      if (!val) return;
-      processScannedString(val);
-      input.value = "";
-    };
-
-    document.getElementById("manualScanInput").addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        window.triggerManualScan();
-      }
-    });
-
-    function processScannedString(code) {
-      // 1. Check if 15-digit IMEI matches any item in liveInventory
-      if (/^\d{15}$/.test(code)) {
-        for (const [sku, item] of Object.entries(liveInventory)) {
-          const imeiArr = Array.isArray(item.imeis) ? item.imeis : [];
-          if (imeiArr.includes(code)) {
-            addItemToCart(sku, code);
-            return;
-          }
-        }
-        // Otherwise attach IMEI to the last added phone in cart
-        for (let i = cart.length - 1; i >= 0; i--) {
-          if (!cart[i].imei) {
-            cart[i].imei = code;
-            renderCart();
-            return;
-          }
-        }
-        alert(`15-Digit IMEI Scanned (${code}), but not found in stock. Adding via Quick Item modal.`);
-        openCustomItemModal();
-        document.getElementById("custItemImei").value = code;
-        return;
-      }
-
-      // 2. Check exact SKU / Barcode match
-      if (liveInventory[code]) {
-        addItemToCart(code, "");
-        return;
-      }
-
-      // 3. Fuzzy search by model name
-      const foundSku = Object.keys(liveInventory).find(
-        k => (liveInventory[k].model + " " + liveInventory[k].brand).toLowerCase().includes(code.toLowerCase())
-      );
-      if (foundSku) {
-        addItemToCart(foundSku, "");
-      } else {
-        alert(`Barcode "${code}" not found in approved stock. You can add it as a Custom Item or scan it in Blind Stock Inward.`);
-      }
-    }
-
-    // ========================================================================
-    // STOCK CATALOG & CART ENGINE
-    // ========================================================================
-    function renderBrandPills() {
-      const bar = document.getElementById("brandFilterBar");
-      const brands = ["ALL", ...(shopConfig.brands || ERP_CONFIG.defaultShop.brands)];
-      bar.innerHTML = brands.map(b => `
-        <button onclick="setBrandFilter('${b}')"
-          class="px-3 py-1 rounded-lg text-xs font-bold transition ${activeBrandFilter === b ? 'bg-amber-500 text-slate-950' : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'}">
-          ${b}
-        </button>
-      `).join("");
-    }
-
-    window.setBrandFilter = (b) => {
-      activeBrandFilter = b;
-      renderBrandPills();
-      renderStockCatalog();
-    };
-
-    function renderStockCatalog() {
-      const grid = document.getElementById("stockGrid");
-      const items = Object.entries(liveInventory).filter(([sku, it]) => {
-        if (activeBrandFilter !== "ALL" && it.brand !== activeBrandFilter) return false;
-        return true;
-      });
-
-      document.getElementById("catalogCountBadge").textContent = `${items.length} products registered`;
-
-      if (items.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-xs">No live stock in this category yet. Ask Admin to add/approve stock.</div>`;
-        return;
-      }
-
-      grid.innerHTML = items.map(([sku, it]) => {
-        const qty = Number(it.currentStock || 0);
-        const low = qty <= Number(it.minAlertQty || 2);
-        return `
-          <div onclick="selectCatalogItem('${sku}')"
-            class="cursor-pointer bg-slate-950 hover:bg-slate-800/80 border ${low ? 'border-rose-500/50' : 'border-slate-800'} rounded-xl p-3 flex flex-col justify-between transition">
-            <div>
-              <div class="flex items-center justify-between text-[10px] font-bold uppercase">
-                <span class="text-amber-400">${it.brand}</span>
-                <span class="mono ${low ? 'text-rose-400 font-extrabold' : 'text-emerald-400'}">Stock: ${qty}</span>
-              </div>
-              <h3 class="font-bold text-sm text-white mt-1">${it.model}</h3>
-              <p class="text-xs text-slate-400">${it.variant || 'Standard'}</p>
+        <!-- Category Quick Filter Strip (Flipkart/Amazon Top Bar) -->
+        <div class="bg-[#232f3e] text-white border-t border-white/10">
+            <div class="max-w-[1440px] mx-auto px-3 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto text-xs font-semibold whitespace-nowrap">
+                <button onclick="setStoreCategory('ALL')" id="catChip-ALL" class="store-cat-chip px-3 py-1 rounded-full bg-amber-400 text-neutral-950 font-bold">
+                    🔥 All Top Deals
+                </button>
+                <button onclick="setStoreCategory('Smartphone')" id="catChip-Smartphone" class="store-cat-chip px-3 py-1 rounded-full hover:bg-white/10">
+                    📱 5G Smartphones & Foldables
+                </button>
+                <button onclick="setStoreCategory('Pre-Owned')" id="catChip-Pre-Owned" class="store-cat-chip px-3 py-1 rounded-full hover:bg-white/10">
+                    ♻️ Certified Pre-Owned (Second Hand)
+                </button>
+                <button onclick="setStoreCategory('Smart TV')" id="catChip-Smart TV" class="store-cat-chip px-3 py-1 rounded-full hover:bg-white/10">
+                    📺 4K Smart TVs
+                </button>
+                <button onclick="setStoreCategory('Accessory')" id="catChip-Accessory" class="store-cat-chip px-3 py-1 rounded-full hover:bg-white/10">
+                    🎧 AirPods, Chargers & UV Glass
+                </button>
+                <button onclick="setStoreCategory('Service')" id="catChip-Service" class="store-cat-chip px-3 py-1 rounded-full hover:bg-white/10">
+                    🔧 Doorstep Mobile Repair
+                </button>
+                <span class="ml-auto text-amber-300 font-bold hidden md:inline">
+                    🏦 0% EMI: Poonawalla Fincorp • IDBI Bank • ICICI Bank • Bajaj Finserv • IDFC First
+                </span>
             </div>
-            <div class="flex items-center justify-between mt-3 pt-2 border-t border-slate-900">
-              <span class="text-[10px] mono text-slate-500">${sku}</span>
-              <span class="text-sm font-extrabold text-white mono">₹${Number(it.sellingPrice || 0).toLocaleString('en-IN')}</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    window.selectCatalogItem = (sku) => {
-      const it = liveInventory[sku];
-      if (!it) return;
-      if (Number(it.currentStock) <= 0) {
-        alert(`Out of Stock! "${it.brand} ${it.model}" has 0 available quantity.`);
-        return;
-      }
-      let chosenImei = "";
-      const imeiPool = Array.isArray(it.imeis) ? it.imeis : [];
-      if (imeiPool.length > 0) {
-        chosenImei = prompt(`Scan or confirm 15-Digit IMEI for ${it.brand} ${it.model}:\nAvailable: ${imeiPool.join(", ")}`, imeiPool[0]) || "";
-      } else if (it.category === "NEW_PHONE" || it.brand !== "Accessories") {
-        chosenImei = prompt(`Scan/Enter 15-Digit IMEI for ${it.brand} ${it.model} (Leave blank if accessory):`, "") || "";
-      }
-      addItemToCart(sku, chosenImei.trim());
-    };
-
-    function addItemToCart(sku, imei) {
-      const it = liveInventory[sku];
-      if (!it) return;
-
-      // Prevent duplicate IMEI in same bill
-      if (imei && cart.some(c => c.imei === imei)) {
-        alert(`IMEI ${imei} is already added to this bill!`);
-        return;
-      }
-
-      if (!imei) {
-        const existing = cart.find(c => c.sku === sku && !c.imei);
-        if (existing) {
-          existing.qty += 1;
-          renderCart();
-          return;
-        }
-      }
-
-      cart.push({
-        sku,
-        brand: it.brand,
-        model: it.model,
-        variant: it.variant || "",
-        imei: imei || "",
-        hsn: it.brand === "Accessories" ? "8504" : "8517",
-        qty: 1,
-        price: Number(it.sellingPrice || 0),
-        minPrice: Number(it.minSellingPrice || 0)
-      });
-      renderCart();
-    }
-
-    window.removeCartItem = (idx) => {
-      cart.splice(idx, 1);
-      renderCart();
-    };
-
-    window.updateCartItemPrice = (idx, newVal) => {
-      const val = Number(newVal || 0);
-      const item = cart[idx];
-      if (item.minPrice > 0 && val < item.minPrice) {
-        const pin = prompt(`Price ₹${val} is below Minimum Selling Price (₹${item.minPrice}). Enter Owner Override PIN:`);
-        if (pin !== shopConfig.overridePin && pin !== shopConfig.adminPin) {
-          alert("Invalid Override PIN! Price reset.");
-          renderCart();
-          return;
-        }
-      }
-      cart[idx].price = val;
-      renderCart();
-    };
-
-    window.renderCart = () => {
-      const tbody = document.getElementById("cartTableBody");
-      if (cart.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="py-8 text-center text-slate-500">Scan a barcode or click any item from stock to begin billing</td></tr>`;
-      } else {
-        tbody.innerHTML = cart.map((c, idx) => `
-          <tr>
-            <td class="py-2 px-2.5">
-              <div class="font-bold text-white">${c.brand} ${c.model}</div>
-              <div class="text-[11px] text-slate-400">${c.variant}</div>
-              ${c.imei ? `<div class="text-[11px] mono text-emerald-400 font-bold">IMEI: ${c.imei}</div>` : ''}
-            </td>
-            <td class="py-2 px-2 text-center mono font-bold">${c.qty}</td>
-            <td class="py-2 px-2 text-right">
-              <input type="number" value="${c.price}" onchange="updateCartItemPrice(${idx}, this.value)"
-                class="w-24 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-right mono font-bold text-amber-400" />
-            </td>
-            <td class="py-2 px-1.5 text-center">
-              <button onclick="removeCartItem(${idx})" class="text-rose-400 font-bold">✕</button>
-            </td>
-          </tr>
-        `).join("");
-      }
-
-      const grossItems = cart.reduce((s, c) => s + (c.price * c.qty), 0);
-      const insFee = Number(document.getElementById("insAmount").value || 0);
-      const discount = Number(document.getElementById("billDiscountInput").value || 0);
-      const exchangeDed = activeExchange ? Number(activeExchange.buyBackPrice || 0) : 0;
-
-      const subTotalAfterDisc = Math.max(0, grossItems + insFee - discount);
-      let taxable = subTotalAfterDisc;
-      let cgst = 0;
-      let sgst = 0;
-
-      if (gstEnabled) {
-        taxable = subTotalAfterDisc / 1.18;
-        cgst = taxable * 0.09;
-        sgst = taxable * 0.09;
-        document.getElementById("uiTaxSummary").textContent = `CGST ₹${cgst.toFixed(0)} + SGST ₹${sgst.toFixed(0)}`;
-      } else {
-        document.getElementById("uiTaxSummary").textContent = `GST OFF (₹0)`;
-      }
-
-      const netPayable = Math.max(0, subTotalAfterDisc - exchangeDed);
-      document.getElementById("uiNetPayable").textContent = `₹${netPayable.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      document.getElementById("uiExchangeSubtext").textContent = exchangeDed > 0 ? `After ₹${exchangeDed.toLocaleString('en-IN')} Exchange Deduction` : "";
-
-      // Auto-sync payment split boxes unless in SPLIT mode
-      if (paymentMode === "CASH") {
-        document.getElementById("payCashAmt").value = netPayable.toFixed(0);
-        document.getElementById("payOnlineAmt").value = 0;
-        document.getElementById("payFinanceAmt").value = 0;
-      } else if (paymentMode === "ONLINE") {
-        document.getElementById("payCashAmt").value = 0;
-        document.getElementById("payOnlineAmt").value = netPayable.toFixed(0);
-        document.getElementById("payFinanceAmt").value = 0;
-      } else if (paymentMode === "FINANCE") {
-        document.getElementById("payCashAmt").value = 0;
-        document.getElementById("payOnlineAmt").value = 0;
-        document.getElementById("payFinanceAmt").value = netPayable.toFixed(0);
-      }
-    };
-
-    window.toggleGstMode = () => {
-      gstEnabled = !gstEnabled;
-      const btn = document.getElementById("gstToggleBtn");
-      if (gstEnabled) {
-        btn.textContent = "GST ON (Tax Invoice)";
-        btn.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
-      } else {
-        btn.textContent = "GST OFF (Retail Bill)";
-        btn.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-slate-800 text-slate-300 border border-slate-700";
-      }
-      renderCart();
-    };
-
-    window.setPaymentMode = (mode) => {
-      paymentMode = mode;
-      ["CASH", "ONLINE", "FINANCE", "SPLIT"].forEach(m => {
-        const b = document.getElementById("payBtn_" + m);
-        b.className = m === mode
-          ? "py-1.5 rounded text-xs font-bold bg-emerald-500 text-slate-950"
-          : "py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-300";
-      });
-      const finBox = document.getElementById("financeDetailsBox");
-      if (mode === "FINANCE" || mode === "SPLIT") {
-        finBox.classList.remove("hidden");
-      } else {
-        finBox.classList.add("hidden");
-      }
-      renderCart();
-    };
-
-    window.toggleInsuranceBox = () => {
-      document.getElementById("insuranceInputBox").classList.toggle("hidden");
-    };
-
-    // ========================================================================
-    // RETURNING CUSTOMER CRM & 365-DAY WARRANTY SEARCH
-    // ========================================================================
-    window.lookupReturningCustomer = (mob) => {
-      const banner = document.getElementById("crmStatusBanner");
-      if (mob.length !== 10) {
-        banner.classList.add("hidden");
-        return;
-      }
-      const past = allRecentSales.filter(s => s.customerMobile === mob);
-      if (past.length > 0) {
-        document.getElementById("custName").value = past[0].customerName;
-        banner.textContent = `★ Returning VIP Customer! ${past.length} previous purchase(s) at Cell Planet. Last item: ${past[0].itemsSummary}`;
-        banner.classList.remove("hidden");
-      } else {
-        banner.classList.add("hidden");
-      }
-    };
-
-    window.searchWarrantyRecords = (q) => {
-      const box = document.getElementById("warrantyResultsBox");
-      const term = q.trim().toLowerCase();
-      if (!term) {
-        box.innerHTML = "";
-        return;
-      }
-      const matches = allRecentSales.filter(s =>
-        (s.customerMobile && s.customerMobile.includes(term)) ||
-        (s.invoiceId && s.invoiceId.toLowerCase().includes(term)) ||
-        (s.imeiList && s.imeiList.toLowerCase().includes(term)) ||
-        (s.customerName && s.customerName.toLowerCase().includes(term))
-      );
-      box.innerHTML = matches.map(m => `
-        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-          <div>
-            <span class="mono font-extrabold text-amber-400">${m.invoiceId}</span>
-            <span class="text-slate-400 ml-2">${m.timestamp} | Sold by ${m.staffCode}</span>
-            <p class="font-bold text-white mt-1">${m.customerName} (+91 ${m.customerMobile})</p>
-            <p class="text-emerald-400 mono mt-0.5">${m.itemsSummary} | IMEI: ${m.imeiList || 'N/A'}</p>
-          </div>
-          <div class="text-right">
-            <span class="text-sm font-extrabold mono text-white block">₹${Number(m.netPayable).toLocaleString('en-IN')}</span>
-            <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">Warranty Active</span>
-          </div>
         </div>
-      `).join("") || `<div class="text-slate-500 text-xs py-6 text-center">No matching invoice or IMEI found.</div>`;
-    };
+    </header>
 
-    // ========================================================================
-    // SECOND-HAND EXCHANGE MODAL LOGIC
-    // ========================================================================
-    window.openExchangeModal = () => {
-      document.getElementById("exchangeModal").classList.remove("hidden");
-      document.getElementById("exchangeModal").classList.add("flex");
-    };
-    window.closeExchangeModal = () => {
-      document.getElementById("exchangeModal").classList.add("hidden");
-      document.getElementById("exchangeModal").classList.remove("flex");
-    };
+    <!-- ================================================================= -->
+    <!-- MAIN STOREFRONT CONTENT                                           -->
+    <!-- ================================================================= -->
+    <main class="max-w-[1440px] mx-auto px-3 sm:px-6 py-5 space-y-6">
 
-    window.applyExchangeToCurrentBill = () => {
-      const brandModel = document.getElementById("exBrandModel").value.trim();
-      const conditionGrade = document.getElementById("exVariant").value.trim();
-      const imei1 = document.getElementById("exImei1").value.trim();
-      const imei2 = document.getElementById("exImei2").value.trim();
-      const govtIdRef = document.getElementById("exGovtId").value.trim();
-      const boxBillStatus = document.getElementById("exBoxBill").value;
-      const buyBackPrice = Number(document.getElementById("exBuyPrice").value || 0);
+        <!-- HERO MEGA DEAL BANNER (Amazon Great Indian / Flipkart Big Billion Style) -->
+        <div class="rounded-3xl bg-gradient-to-r from-[#0f172a] via-[#1e3a8a] to-[#311042] text-white p-5 sm:p-7 shadow-xl border border-amber-400/40 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="space-y-3 max-w-2xl">
+                <div class="inline-flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full bg-amber-400 text-neutral-950 text-xs font-extrabold uppercase tracking-wider">
+                        ⚡ Khammam Express Home Delivery
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold">
+                        GST Invoice • 100% Brand Sealed
+                    </span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                    Order From Home — <span class="text-amber-400">Prepaid UPI, All-Bank 0% EMI</span> or Pay on Delivery!
+                </h1>
+                <p class="text-xs sm:text-sm text-neutral-200 leading-relaxed">
+                    Official Online Store of <strong>Cell Planet Khammam</strong> (Station Rd, Opp. Urdu Ghar Shadi Khana). Enjoy instant <strong>₹1,000 Off on Prepaid UPI/Card orders</strong>, instant paperless EMI with <strong>Poonawalla Fincorp, IDBI Bank, ICICI Bank, HDFC, SBI & Bajaj Finserv</strong>, and doorstep Old Phone Exchange!
+                </p>
+                <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                    <div class="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs">
+                        <span class="text-amber-300 font-bold block">🏦 All-Bank Finance</span>
+                        <span>Poonawalla • IDBI • ICICI • Bajaj</span>
+                    </div>
+                    <div class="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs">
+                        <span class="text-emerald-300 font-bold block">⚡ Prepaid Bonus</span>
+                        <span>Extra ₹1,000 Off on UPI/Card</span>
+                    </div>
+                    <div class="bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs">
+                        <span class="text-sky-300 font-bold block">🔄 Old Phone Exchange</span>
+                        <span>Up to ₹45,000 Instant Trade-In</span>
+                    </div>
+                </div>
+            </div>
 
-      if (!brandModel || !imei1 || !govtIdRef || buyBackPrice <= 0) {
-        alert("Please fill Old Phone Model, 15-Digit IMEI-1, Customer KYC ID Ref, and Exchange Value.");
-        return;
-      }
+            <!-- Right Promo Card -->
+            <div class="bg-white/10 backdrop-blur-md border border-amber-400/50 rounded-2xl p-4 sm:p-5 w-full lg:w-80 space-y-3 shrink-0">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Live Showroom Sync</span>
+                    <span class="text-[11px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full">● Online</span>
+                </div>
+                <div class="text-sm font-bold">Need Instant Help or Video Call Demo?</div>
+                <p class="text-xs text-neutral-300">Chat directly with our Station Road Khammam showroom desk before ordering.</p>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <a href="tel:9550677795" class="py-2.5 px-3 rounded-xl bg-white text-neutral-900 font-bold text-xs text-center no-underline flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-phone-call text-emerald-700"></i> Call Store
+                    </a>
+                    <a href="https://wa.me/919550677795" target="_blank" class="py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-bold text-xs text-center no-underline flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-whatsapp-logo"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
 
-      activeExchange = {
-        intakeId: "EX-" + Date.now().toString().slice(-6),
-        brandModel,
-        conditionGrade,
-        imei1,
-        imei2,
-        govtIdRef,
-        boxBillStatus,
-        buyBackPrice
-      };
+        <!-- FILTER & SORT BAR -->
+        <div class="bg-white rounded-2xl p-3.5 border border-neutral-200 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2 text-xs font-bold text-neutral-700">
+                <span id="storeResultCountText">Showing All In-Stock Devices</span>
+                <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 hidden sm:inline">
+                    ✓ Synced Live with Cell Planet POS Inventory
+                </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <label class="font-bold text-neutral-600">Sort By:</label>
+                <select id="storeSortSelect" onchange="renderStoreProducts()" class="border border-neutral-300 rounded-lg px-3 py-1.5 font-semibold bg-white">
+                    <option value="POPULAR">Popularity & Bestsellers</option>
+                    <option value="PRICE_LOW">Price: Low to High</option>
+                    <option value="PRICE_HIGH">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
 
-      document.getElementById("exchangeSummaryBox").classList.remove("hidden");
-      document.getElementById("exchangeSummaryText").textContent = `${brandModel} (${conditionGrade}) | IMEI: ${imei1} | -₹${buyBackPrice.toLocaleString('en-IN')}`;
-      closeExchangeModal();
-      renderCart();
-    };
+        <!-- AMAZON / FLIPKART PRODUCT CATALOG GRID -->
+        <div id="storeProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Dynamically Populated -->
+        </div>
 
-    window.clearExchangeData = () => {
-      activeExchange = null;
-      document.getElementById("exchangeSummaryBox").classList.add("hidden");
-      renderCart();
-    };
+        <!-- ================================================================= -->
+        <!-- PRESERVED STORE LINKS & DEVELOPER FOOTER BLOCK                    -->
+        <!-- ================================================================= -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
+            <div class="bg-white rounded-2xl border border-amber-300 p-4 md:col-span-7 flex flex-wrap items-center justify-around gap-3 shadow-sm">
+                <a href="tel:9550677795" class="px-4 py-2.5 rounded-xl border border-amber-300 font-bold text-xs text-neutral-800 hover:bg-amber-50 flex items-center gap-2 no-underline">
+                    <span>📞</span> <span>Call 9550677795</span>
+                </a>
+                <a href="https://wa.me/919550677795" target="_blank" class="px-4 py-2.5 rounded-xl border border-amber-300 font-bold text-xs text-neutral-800 hover:bg-amber-50 flex items-center gap-2 no-underline">
+                    <span>💬</span> <span>Store WhatsApp</span>
+                </a>
+                <a href="https://www.instagram.com/cellplanetkhammam?utm_source=qr&igsi=dzRuNjBtMGt5NTY0" target="_blank" class="px-4 py-2.5 rounded-xl border border-amber-300 font-bold text-xs text-neutral-800 hover:bg-amber-50 flex items-center gap-2 no-underline">
+                    <span>📸</span> <span>@cellplanetkhammam</span>
+                </a>
+                <a href="https://www.google.com/maps?cid=5164307951894865629" target="_blank" class="px-4 py-2.5 rounded-xl border border-amber-300 font-bold text-xs text-neutral-800 hover:bg-amber-50 flex items-center gap-2 no-underline">
+                    <span>📍</span> <span>Store Map Location</span>
+                </a>
+            </div>
 
-    window.saveStandaloneBuyback = async () => {
-      window.applyExchangeToCurrentBill();
-      if (!activeExchange) return;
-      const sellerName = document.getElementById("custName").value.trim() || prompt("Enter Seller Full Name:") || "Walk-in Seller";
-      const sellerMobile = document.getElementById("custMobile").value.trim() || prompt("Enter Seller 10-Digit Mobile:") || "";
-      const timestamp = new Date().toLocaleString("en-IN");
+            <footer class="bg-white rounded-2xl border border-amber-300 p-4 md:col-span-5 flex items-center justify-center shadow-sm">
+                <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" class="flex items-center gap-3.5 no-underline">
+                    <img src="dev-logo.png.png" alt="Syed Zeeshaan Ali" class="dev-img" onerror="this.src='https://ui-avatars.com/api/?name=SZ&background=c5a059&color=fff'">
+                    <div class="text-left">
+                        <span class="block text-[10px] uppercase tracking-[2.5px] text-neutral-500 font-bold">Designed & Engineered By</span>
+                        <span class="block text-lg font-bold text-amber-700 tracking-tight" style="font-family:'Space Grotesk',sans-serif;">SYED ZEESHAAN ALI</span>
+                    </div>
+                </a>
+            </footer>
+        </div>
+    </main>
 
-      // Push to Pending Pre-Owned Queue for Admin Resale Price
-      await push(ref(db, "pending_stock_queue"), {
-        batchId: activeExchange.intakeId,
-        timestamp,
-        entryMode: "SECOND_HAND_BUYBACK",
-        scannedBy: document.getElementById("activeStaffSelect").value,
-        barcode: activeExchange.intakeId,
-        category: "PRE_OWNED",
-        brand: "Pre-Owned",
-        model: activeExchange.brandModel,
-        variant: activeExchange.conditionGrade,
-        qtyScanned: 1,
-        imeis: [activeExchange.imei1],
-        suggestedBuyCost: activeExchange.buyBackPrice,
-        kycDetails: activeExchange
-      });
+    <!-- ================================================================= -->
+    <!-- MODAL 1: CART & PREPAID / ALL-BANKS EMI CHECKOUT DRAWER           -->
+    <!-- ================================================================= -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl border-2 border-amber-400 my-auto max-h-[95vh] overflow-y-auto space-y-4">
+            <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                        <i class="ph-bold ph-shopping-cart-simple text-2xl"></i>
+                    </span>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-blue-700">Cell Planet Khammam • Secure Online Checkout</span>
+                        <h3 class="text-lg font-extrabold text-neutral-900">Your Shopping Cart & Express Home Checkout</h3>
+                    </div>
+                </div>
+                <button onclick="closeCartDrawer()" class="text-neutral-400 hover:text-neutral-800 text-2xl font-bold">&times;</button>
+            </div>
 
-      await push(ref(db, "live_notifications"), {
-        type: "EXCHANGE_BUYBACK",
-        timestamp,
-        title: `Second-Hand Phone Purchased: ${activeExchange.brandModel}`,
-        message: `Bought by ${document.getElementById("activeStaffSelect").value} from ${sellerName} for ₹${activeExchange.buyBackPrice}. Waiting for your Resale Price in Pending Stock.`
-      });
+            <!-- Cart Items List -->
+            <div id="storeCartItemsList" class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1"></div>
 
-      syncToGoogleSheet({
-        action: "DIRECT_BUYBACK",
-        intakeId: activeExchange.intakeId,
-        timestamp,
-        sellerName,
-        sellerMobile,
-        ...activeExchange
-      });
+            <!-- Old Phone Exchange Attachment Option -->
+            <div class="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 font-bold text-emerald-950 cursor-pointer">
+                        <input type="checkbox" id="chkExchangeToggle" onchange="updateStoreCheckoutTotals()" class="accent-emerald-600">
+                        <span>🔄 Have an Old Phone to Exchange? (Instant Doorstep Trade-In Deduction)</span>
+                    </label>
+                    <span id="chkExchangeSavedBadge" class="font-bold text-emerald-700 hidden">-₹0</span>
+                </div>
+                <div id="chkExchangeFields" class="grid grid-cols-1 sm:grid-cols-3 gap-2 hidden pt-1">
+                    <input type="text" id="chkOldModel" placeholder="Your Old Phone Model (e.g. iPhone 12)" class="border border-emerald-300 rounded-lg px-2.5 py-1.5 bg-white">
+                    <input type="text" id="chkOldImei" placeholder="15-Digit IMEI (Optional)" class="border border-emerald-300 rounded-lg px-2.5 py-1.5 bg-white font-mono">
+                    <select id="chkOldValue" onchange="updateStoreCheckoutTotals()" class="border border-emerald-400 rounded-lg px-2.5 py-1.5 bg-white font-bold text-emerald-900">
+                        <option value="8000">4G / Budget Phone (~₹8,000 Off)</option>
+                        <option value="15000">Mid-Range 5G Phone (~₹15,000 Off)</option>
+                        <option value="24000">iPhone 12 / 13 / S22 (~₹24,000 Off)</option>
+                        <option value="38000">iPhone 14 Pro / S23 Ultra (~₹38,000 Off)</option>
+                    </select>
+                </div>
+            </div>
 
-      alert(`Pre-Owned Phone (${activeExchange.brandModel}) logged to KYC Vault & sent to Admin Portal for Resale Pricing!`);
-      clearExchangeData();
-    };
+            <!-- Customer Delivery Address & Payment Method Form -->
+            <form onsubmit="submitCustomerOnlineOrder(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-bold text-neutral-700 block mb-1">Full Name *</label>
+                        <input type="text" id="chkCustName" required placeholder="Enter your full name" class="w-full border border-neutral-300 rounded-xl px-3 py-2.5 font-semibold">
+                    </div>
+                    <div>
+                        <label class="font-bold text-neutral-700 block mb-1">10-Digit WhatsApp Mobile Number *</label>
+                        <input type="tel" id="chkCustPhone" required maxlength="10" placeholder="e.g. 9848012345" class="w-full border border-neutral-300 rounded-xl px-3 py-2.5 font-semibold">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="font-bold text-neutral-700 block mb-1">Delivery Address in Khammam (Or Select Store Pickup) *</label>
+                        <input type="text" id="chkCustAddress" required placeholder="House/Flat No, Street, Landmark, Khammam 507001" class="w-full border border-neutral-300 rounded-xl px-3 py-2.5">
+                    </div>
+                </div>
 
-    // ========================================================================
-    // CUSTOM ITEM MODAL
-    // ========================================================================
-    window.openCustomItemModal = () => {
-      document.getElementById("customItemModal").classList.remove("hidden");
-      document.getElementById("customItemModal").classList.add("flex");
-    };
-    window.closeCustomItemModal = () => {
-      document.getElementById("customItemModal").classList.add("hidden");
-      document.getElementById("customItemModal").classList.remove("flex");
-    };
-    window.addCustomItemToCart = () => {
-      const brand = document.getElementById("custItemBrand").value.trim() || "Custom";
-      const model = document.getElementById("custItemModel").value.trim();
-      const variant = document.getElementById("custItemVariant").value.trim();
-      const imei = document.getElementById("custItemImei").value.trim();
-      const price = Number(document.getElementById("custItemPrice").value || 0);
-      if (!model || price <= 0) {
-        alert("Enter item model and selling price.");
-        return;
-      }
-      cart.push({
-        sku: "CUSTOM-" + Date.now().toString().slice(-4),
-        brand,
-        model,
-        variant,
-        imei,
-        hsn: imei ? "8517" : "8504",
-        qty: 1,
-        price,
-        minPrice: 0
-      });
-      closeCustomItemModal();
-      renderCart();
-    };
+                <!-- Payment Method Selector (Prepaid UPI, All-Bank EMI, Prepaid Card, COD) -->
+                <div class="space-y-2">
+                    <label class="font-extrabold text-neutral-800 uppercase tracking-wider block">
+                        Select Payment / Bank Finance Option:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <button type="button" onclick="selectStorePaymentMode('PREPAID_UPI')" id="stPay-PREPAID_UPI" class="p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-50 text-emerald-950 font-bold text-left">
+                            <div class="flex items-center justify-between">
+                                <span>⚡ Prepaid UPI</span>
+                                <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">-₹1,000</span>
+                            </div>
+                            <div class="text-[10px] text-neutral-600 mt-0.5">PhonePe / GPay / Paytm</div>
+                        </button>
+                        <button type="button" onclick="selectStorePaymentMode('BANK_EMI')" id="stPay-BANK_EMI" class="p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left">
+                            <div>🏦 All-Bank 0% EMI</div>
+                            <div class="text-[10px] text-neutral-500 mt-0.5">Poonawalla, IDBI, ICICI, Bajaj</div>
+                        </button>
+                        <button type="button" onclick="selectStorePaymentMode('PREPAID_CARD')" id="stPay-PREPAID_CARD" class="p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left">
+                            <div class="flex items-center justify-between">
+                                <span>💳 Credit/Debit</span>
+                                <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">-₹1,000</span>
+                            </div>
+                            <div class="text-[10px] text-neutral-500 mt-0.5">All Visa / MasterCard / RuPay</div>
+                        </button>
+                        <button type="button" onclick="selectStorePaymentMode('COD')" id="stPay-COD" class="p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left">
+                            <div>🚚 Pay on Delivery</div>
+                            <div class="text-[10px] text-neutral-500 mt-0.5">Cash / UPI at Doorstep</div>
+                        </button>
+                    </div>
 
-    // ========================================================================
-    // FINAL CHECKOUT, STOCK DEDUCTION, ADMIN NOTIFICATION & PRINT
-    // ========================================================================
-    window.completeAndPrintSale = async () => {
-      if (cart.length === 0) {
-        alert("Cart is empty! Scan or select at least 1 product.");
-        return;
-      }
-      const custName = document.getElementById("custName").value.trim();
-      const custMobile = document.getElementById("custMobile").value.trim();
-      if (!custName || custMobile.length < 10) {
-        alert("Please enter Customer Full Name and 10-Digit Mobile Number.");
-        return;
-      }
+                    <!-- Dynamic Payment Sub-Box -->
+                    <div id="storePaymentSubBox" class="p-3.5 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-2"></div>
+                </div>
 
-      const staffCode = document.getElementById("activeStaffSelect").value;
-      const timestamp = new Date().toLocaleString("en-IN");
+                <!-- Order Summary Box -->
+                <div class="bg-[#131921] text-white rounded-2xl p-4 space-y-1.5">
+                    <div class="flex justify-between text-xs text-neutral-300">
+                        <span>Items Total (Inclusive of 18% GST):</span>
+                        <span id="chkSumItems">₹0</span>
+                    </div>
+                    <div id="chkPrepaidRow" class="flex justify-between text-xs text-emerald-400">
+                        <span>⚡ Instant Prepaid Cashback Discount:</span>
+                        <span id="chkSumPrepaidDisc">-₹1,000</span>
+                    </div>
+                    <div id="chkExchangeRow" class="flex justify-between text-xs text-amber-300 hidden">
+                        <span>🔄 Old Phone Exchange Deduction:</span>
+                        <span id="chkSumExchange">-₹0</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-neutral-300">
+                        <span>Express 2-Hour Khammam Delivery:</span>
+                        <span class="text-emerald-400 font-bold">FREE</span>
+                    </div>
+                    <div class="border-t border-neutral-700 pt-2 flex justify-between items-baseline">
+                        <span class="text-sm font-bold text-amber-400 uppercase">Net Payable Total:</span>
+                        <span id="chkSumNetPayable" class="text-2xl font-extrabold text-white">₹0</span>
+                    </div>
+                </div>
 
-      // 1. Generate Sequential Invoice Number
-      const counterKey = gstEnabled ? "gst_seq" : "bill_seq";
-      const seqSnap = await runTransaction(ref(db, `counters/${counterKey}`), (curr) => (curr || 1000) + 1);
-      const seqNum = seqSnap.snapshot.val();
-      const invoiceId = gstEnabled ? `CP/GST/26-27/${seqNum}` : `CP/BILL/${seqNum}`;
+                <div class="flex flex-wrap items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeCartDrawer()" class="px-4 py-2.5 rounded-xl border border-neutral-300 font-bold">Continue Shopping</button>
+                    <button type="submit" class="btn-buy-now px-6 py-3 text-sm flex items-center gap-2 shadow-lg">
+                        <i class="ph-bold ph-check-circle text-lg"></i>
+                        <span>Place Order & Sync with Store</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-      // 2. Calculate Financials & Silent Owner Profit
-      const grossItems = cart.reduce((s, c) => s + (c.price * c.qty), 0);
-      const insFee = Number(document.getElementById("insAmount").value || 0);
-      const discountGiven = Number(document.getElementById("billDiscountInput").value || 0);
-      const exchangeDeduction = activeExchange ? Number(activeExchange.buyBackPrice || 0) : 0;
-      const subTotalAfterDisc = Math.max(0, grossItems + insFee - discountGiven);
+    <!-- ================================================================= -->
+    <!-- MODAL 2: LIVE ORDER CONFIRMATION & TRACKING MODAL                 -->
+    <!-- ================================================================= -->
+    <div id="trackOrdersModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl border-2 border-blue-600 my-auto max-h-[95vh] overflow-y-auto space-y-4">
+            <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-blue-700">Live Order Tracking & Official Receipts</span>
+                    <h3 class="text-lg font-extrabold text-neutral-900">My Cell Planet Khammam Orders</h3>
+                </div>
+                <button onclick="closeTrackOrdersModal()" class="text-neutral-400 hover:text-neutral-800 text-2xl font-bold">&times;</button>
+            </div>
 
-      const taxableValue = gstEnabled ? Number((subTotalAfterDisc / 1.18).toFixed(2)) : subTotalAfterDisc;
-      const cgst = gstEnabled ? Number((taxableValue * 0.09).toFixed(2)) : 0;
-      const sgst = gstEnabled ? Number((taxableValue * 0.09).toFixed(2)) : 0;
-      const netPayable = Math.max(0, subTotalAfterDisc - exchangeDeduction);
+            <div id="myOrdersContainer" class="space-y-3 max-h-[65vh] overflow-y-auto pr-1"></div>
 
-      // Calculate True Purchase Cost from Admin Vault
-      let purchaseCostTotal = 0;
-      for (const item of cart) {
-        const secretCost = adminCostsMap[item.sku] ? Number(adminCostsMap[item.sku].purchaseCost || 0) : (item.price * 0.88);
-        purchaseCostTotal += secretCost * item.qty;
-      }
-      const netProfit = Number((subTotalAfterDisc - purchaseCostTotal).toFixed(2));
+            <!-- Hidden Printable Order Receipt -->
+            <div id="customerOrderPrintableReceipt" class="hidden"></div>
+        </div>
+    </div>
 
-      // 3. Deduct Stock & Remove Sold IMEI from /inventory_live/
-      for (const item of cart) {
-        if (liveInventory[item.sku]) {
-          const itemRef = ref(db, `inventory_live/${item.sku}`);
-          const currentQty = Math.max(0, Number(liveInventory[item.sku].currentStock || 1) - item.qty);
-          let updatedImeis = Array.isArray(liveInventory[item.sku].imeis) ? [...liveInventory[item.sku].imeis] : [];
-          if (item.imei) {
-            updatedImeis = updatedImeis.filter(i => i !== item.imei);
-          }
-          await update(itemRef, { currentStock: currentQty, imeis: updatedImeis });
+    <div id="toastStore" class="toast-store">✅ Added to Cart</div>
 
-          // Trigger Low Stock Notification to Admin Portal if threshold reached
-          const minAlert = Number(liveInventory[item.sku].minAlertQty || 2);
-          if (currentQty <= minAlert) {
-            await push(ref(db, "live_notifications"), {
-              type: "LOW_STOCK",
-              timestamp,
-              title: `⚠️ LOW STOCK ALERT: ${item.brand} ${item.model}`,
-              message: `Only ${currentQty} unit(s) left in stock (Min Alert: ${minAlert}). Sold by ${staffCode}.`
-            });
-          }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const STORE_INFO = {
+            name: "CELL PLANET KHAMMAM",
+            address: "Station Rd, opposite Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001",
+            phone: "9550677795",
+            gstin: "36ACVPK3564C1ZE"
+        };
+
+        function createDeviceSvgThumb(title, colorHex = "#1e293b", accentHex = "#c5a059", badgeText = "5G") {
+            const shortTitle = (title || "Phone").slice(0, 18);
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 160 160">
+                <defs>
+                    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="100%" stop-color="#f1f5f9"/>
+                    </linearGradient>
+                </defs>
+                <rect width="160" height="160" rx="20" fill="url(#bg)"/>
+                <rect x="46" y="14" width="68" height="116" rx="12" fill="${colorHex}" stroke="${accentHex}" stroke-width="2.5"/>
+                <rect x="51" y="20" width="58" height="104" rx="8" fill="#0f172a"/>
+                <circle cx="64" cy="34" r="6" fill="${accentHex}" opacity="0.9"/>
+                <circle cx="64" cy="49" r="6" fill="${accentHex}" opacity="0.75"/>
+                <circle cx="77" cy="41" r="4.5" fill="#38bdf8" opacity="0.8"/>
+                <rect x="104" y="12" width="42" height="20" rx="10" fill="${accentHex}"/>
+                <text x="125" y="26" font-family="sans-serif" font-size="10" font-weight="bold" fill="#fff" text-anchor="middle">${badgeText}</text>
+                <text x="80" y="148" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#1e293b" text-anchor="middle">${shortTitle}</text>
+            </svg>`;
+            return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
         }
-      }
 
-      // 4. If Exchange phone was part of bill, push to Pending Stock Queue for Owner Resale Pricing
-      if (activeExchange) {
-        await push(ref(db, "pending_stock_queue"), {
-          batchId: activeExchange.intakeId,
-          timestamp,
-          entryMode: "EXCHANGE_ON_BILL",
-          scannedBy: staffCode,
-          barcode: activeExchange.intakeId,
-          category: "PRE_OWNED",
-          brand: "Pre-Owned",
-          model: activeExchange.brandModel,
-          variant: activeExchange.conditionGrade,
-          qtyScanned: 1,
-          imeis: [activeExchange.imei1],
-          suggestedBuyCost: activeExchange.buyBackPrice,
-          kycDetails: activeExchange
+        const DEFAULT_STORE_CATALOG = [
+            {
+                id: "item-1",
+                barcode: "8901001",
+                name: "Apple iPhone 16 Pro Max",
+                category: "Smartphone",
+                color: "Desert Titanium",
+                variant: "8GB / 256GB",
+                imei: "359876104512890",
+                specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR ProMotion, 48MP Fusion Camera, 5G",
+                sellPrice: 137900,
+                mrpPrice: 144900,
+                stock: 6,
+                rating: "4.9",
+                reviews: 342,
+                image: createDeviceSvgThumb("iPhone 16 Pro Max", "#574a3d", "#c5a059", "A18 Pro")
+            },
+            {
+                id: "item-2",
+                barcode: "8901002",
+                name: "Samsung Galaxy S24 Ultra 5G",
+                category: "Smartphone",
+                color: "Titanium Gray",
+                variant: "12GB / 256GB",
+                imei: "354120987654321",
+                specs: "Snapdragon 8 Gen 3, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI, 5000mAh",
+                sellPrice: 119999,
+                mrpPrice: 129999,
+                stock: 5,
+                rating: "4.8",
+                reviews: 289,
+                image: createDeviceSvgThumb("Galaxy S24 Ultra", "#374151", "#d4af37", "200MP")
+            },
+            {
+                id: "item-3",
+                barcode: "8901003",
+                name: "Samsung Galaxy Z Fold 6 5G",
+                category: "Smartphone",
+                color: "Crafted Black",
+                variant: "12GB / 512GB",
+                imei: "357788990011223",
+                specs: "7.6-inch Dynamic AMOLED 2X Foldable Display, Snapdragon 8 Gen 3, IP48, Galaxy AI",
+                sellPrice: 164999,
+                mrpPrice: 176999,
+                stock: 3,
+                rating: "4.9",
+                reviews: 124,
+                image: createDeviceSvgThumb("Galaxy Z Fold 6", "#111827", "#c5a059", "FOLD")
+            },
+            {
+                id: "item-4",
+                barcode: "8901004",
+                name: "OnePlus 13 5G",
+                category: "Smartphone",
+                color: "Midnight Ocean",
+                variant: "16GB / 512GB",
+                imei: "864210987612340",
+                specs: "Snapdragon 8 Elite, Hasselblad Triple 50MP Camera, 6000mAh Silicon-Carbon, 100W SUPERVOOC",
+                sellPrice: 74999,
+                mrpPrice: 79999,
+                stock: 8,
+                rating: "4.8",
+                reviews: 410,
+                image: createDeviceSvgThumb("OnePlus 13 5G", "#1e3a8a", "#059669", "100W")
+            },
+            {
+                id: "item-5",
+                barcode: "8901005",
+                name: "Vivo X200 Pro 5G",
+                category: "Smartphone",
+                color: "Cosmos Black",
+                variant: "16GB / 512GB",
+                imei: "869911223344556",
+                specs: "MediaTek Dimensity 9400, 200MP ZEISS APO Telephoto, V3+ Imaging Chip, 6000mAh",
+                sellPrice: 94999,
+                mrpPrice: 99999,
+                stock: 4,
+                rating: "4.9",
+                reviews: 198,
+                image: createDeviceSvgThumb("Vivo X200 Pro", "#0f172a", "#2563eb", "ZEISS")
+            },
+            {
+                id: "item-6",
+                barcode: "8901006",
+                name: "Redmi Note 14 Pro+ 5G",
+                category: "Smartphone",
+                color: "Spectre Blue",
+                variant: "8GB / 256GB",
+                imei: "861122334455667",
+                specs: "1.5K Curved AMOLED 120Hz, 200MP OIS Camera, IP68 Water Resistant, 6200mAh Battery",
+                sellPrice: 30999,
+                mrpPrice: 34999,
+                stock: 12,
+                rating: "4.7",
+                reviews: 620,
+                image: createDeviceSvgThumb("Redmi Note 14 Pro+", "#0284c7", "#f59e0b", "200MP")
+            },
+            {
+                id: "item-7",
+                barcode: "8901007",
+                name: "Apple AirPods Pro (2nd Gen USB-C)",
+                category: "Accessory",
+                color: "White",
+                variant: "MagSafe USB-C Case",
+                imei: "SN-H0YLP9821Q",
+                specs: "H2 Chip, 2x Active Noise Cancellation, Adaptive Audio, Personalized Spatial Audio",
+                sellPrice: 22900,
+                mrpPrice: 24900,
+                stock: 10,
+                rating: "4.9",
+                reviews: 512,
+                image: createDeviceSvgThumb("AirPods Pro 2", "#475569", "#059669", "ANC")
+            },
+            {
+                id: "item-8",
+                barcode: "8901008",
+                name: "Sony Bravia 55-inch 4K Ultra HD Google TV",
+                category: "Smart TV",
+                color: "Matte Black",
+                variant: "55 Inch (KD-55X74L)",
+                imei: "SN-SONY55X74L901",
+                specs: "4K Processor X1, Dolby Audio 20W, Google TV, Apple AirPlay, ALLM Gaming",
+                sellPrice: 55990,
+                mrpPrice: 69990,
+                stock: 4,
+                rating: "4.8",
+                reviews: 175,
+                image: createDeviceSvgThumb("Sony Bravia 55 4K", "#111827", "#dc2626", "4K TV")
+            },
+            {
+                id: "item-9",
+                barcode: "8901009",
+                name: "Original 20W USB-C Fast Power Adapter + UV Glass Combo",
+                category: "Accessory",
+                color: "White / Clear",
+                variant: "20W PD + 9H UV Tempered",
+                imei: "ACC-20W-UV99",
+                specs: "Fast PD Charging Adapter + Edge-to-Edge Bubble-Free UV Screen Protector",
+                sellPrice: 1999,
+                mrpPrice: 2999,
+                stock: 35,
+                rating: "4.8",
+                reviews: 890,
+                image: createDeviceSvgThumb("20W + UV Combo", "#059669", "#c5a059", "COMBO")
+            },
+            {
+                id: "item-10",
+                barcode: "8901010",
+                name: "Pre-Owned Apple iPhone 14 Pro (Mint Certified)",
+                category: "Pre-Owned",
+                color: "Deep Purple",
+                variant: "6GB / 256GB",
+                imei: "356789102345612",
+                specs: "Certified Pre-Owned Grade A+, 92% Original Battery Health, FaceID & TrueTone OK",
+                sellPrice: 65999,
+                mrpPrice: 79999,
+                stock: 2,
+                rating: "4.9",
+                reviews: 94,
+                image: createDeviceSvgThumb("iPhone 14 Pro Used", "#581c87", "#c5a059", "MINT")
+            },
+            {
+                id: "item-11",
+                barcode: "8901011",
+                name: "Express OLED Display / Combo Replacement Service",
+                category: "Service",
+                color: "OEM Original",
+                variant: "Full Assembly + Fitting",
+                imei: "SRV-OLED-PRO",
+                specs: "Original Touch & Amoled Display Replacement with Frame Seal & Diagnostic Check",
+                sellPrice: 2999,
+                mrpPrice: 3999,
+                stock: 50,
+                rating: "4.9",
+                reviews: 310,
+                image: createDeviceSvgThumb("OLED Repair Pro", "#312e81", "#f59e0b", "REPAIR")
+            }
+        ];
+
+        let storeCatalog = [...DEFAULT_STORE_CATALOG];
+        let storeCart = [];
+        let customerOrders = [];
+        let activeCategory = "ALL";
+        let storePayMode = "PREPAID_UPI";
+
+        try {
+            const savedInv = JSON.parse(localStorage.getItem('cp_local_inventory') || 'null');
+            if (savedInv && Array.isArray(savedInv) && savedInv.length > 0) {
+                storeCatalog = savedInv.map(it => ({
+                    ...it,
+                    mrpPrice: it.mrpPrice || Math.round(Number(it.sellPrice) * 1.10),
+                    rating: it.rating || "4.8",
+                    reviews: it.reviews || 150,
+                    image: it.image || createDeviceSvgThumb(it.name)
+                }));
+            }
+            const savedOrd = JSON.parse(localStorage.getItem('cp_online_orders') || 'null');
+            if (savedOrd && Array.isArray(savedOrd)) customerOrders = savedOrd;
+        } catch (e) {}
+
+        // Firebase Live Sync with Admin ERP
+        let db = null;
+        let auth = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cell-planet-khammam-erp';
+
+        async function initCustomerStoreSync() {
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    const app = initializeApp(JSON.parse(__firebase_config));
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'inventory'), (snap) => {
+                        if (!snap.empty) {
+                            storeCatalog = snap.docs.map(d => {
+                                const it = d.data();
+                                return {
+                                    ...it,
+                                    mrpPrice: it.mrpPrice || Math.round(Number(it.sellPrice) * 1.10),
+                                    rating: it.rating || "4.8",
+                                    reviews: it.reviews || 150,
+                                    image: it.image || createDeviceSvgThumb(it.name)
+                                };
+                            });
+                            renderStoreProducts();
+                        }
+                    });
+
+                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'online_orders'), (snap) => {
+                        if (!snap.empty) {
+                            customerOrders = snap.docs.map(d => d.data()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            updateHeaderCounts();
+                            renderMyOrdersList();
+                        }
+                    });
+                }
+            } catch (e) {}
+        }
+
+        window.addEventListener('storage', (e) => {
+            try {
+                if (e.key === 'cp_local_inventory' && e.newValue) {
+                    storeCatalog = JSON.parse(e.newValue);
+                    renderStoreProducts();
+                } else if (e.key === 'cp_online_orders' && e.newValue) {
+                    customerOrders = JSON.parse(e.newValue);
+                    updateHeaderCounts();
+                    renderMyOrdersList();
+                }
+            } catch (err) {}
         });
-      }
 
-      const cashPaid = Number(document.getElementById("payCashAmt").value || 0);
-      const onlinePaid = Number(document.getElementById("payOnlineAmt").value || 0);
-      const financeAmount = Number(document.getElementById("payFinanceAmt").value || 0);
-      const financeInfo = financeAmount > 0
-        ? `${document.getElementById("financeProvider").value} (DO: ${document.getElementById("financeDoNumber").value || 'N/A'})`
-        : "NONE";
-      const insProvider = document.getElementById("insProvider").value.trim();
-      const insPolicy = document.getElementById("insPolicyNo").value.trim();
-      const insuranceInfo = insProvider ? `${insProvider} (Policy: ${insPolicy} | ₹${insFee})` : "NONE";
+        window.showStoreToast = function(msg) {
+            const t = document.getElementById('toastStore');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        };
 
-      const itemsSummary = cart.map(c => `${c.brand} ${c.model} (${c.variant}) x${c.qty}`).join("; ");
-      const imeiList = cart.map(c => c.imei).filter(Boolean).join(", ");
+        window.setStoreCategory = function(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.store-cat-chip').forEach(btn => {
+                btn.className = "store-cat-chip px-3 py-1 rounded-full hover:bg-white/10";
+            });
+            const activeBtn = document.getElementById(`catChip-${cat}`);
+            if (activeBtn) {
+                activeBtn.className = "store-cat-chip px-3 py-1 rounded-full bg-amber-400 text-neutral-950 font-bold";
+            }
+            renderStoreProducts();
+        };
 
-      const salePayload = {
-        action: "NEW_SALE",
-        invoiceId,
-        timestamp,
-        staffCode,
-        customerName: custName,
-        customerMobile: custMobile,
-        customerGstin: document.getElementById("custGstin").value.trim(),
-        itemsSummary,
-        imeiList,
-        gstMode: gstEnabled ? "GST_ON" : "GST_OFF",
-        hsnSummary: cart.map(c => c.hsn).join(","),
-        taxableValue,
-        cgst,
-        sgst,
-        discountGiven,
-        exchangeDeduction,
-        netPayable,
-        purchaseCostTotal,
-        netProfit,
-        payMode: paymentMode,
-        cashPaid,
-        onlinePaid,
-        financeAmount,
-        financeInfo,
-        insuranceInfo,
-        exchangeData: activeExchange
-      };
+        window.renderStoreProducts = function() {
+            const grid = document.getElementById('storeProductGrid');
+            const q = (document.getElementById('storeSearchInput')?.value || '').toLowerCase().trim();
+            const sortMode = document.getElementById('storeSortSelect')?.value || 'POPULAR';
 
-      // 5. Save to Firebase Recent Sales Cache & Push Instant Owner Notification
-      await push(ref(db, "recent_sales_cache"), salePayload);
-      await push(ref(db, "live_notifications"), {
-        type: "NEW_SALE",
-        timestamp,
-        title: `🔔 SALE CLEARED: ₹${netPayable.toLocaleString('en-IN')} (${paymentMode})`,
-        message: `${itemsSummary} | Sold by ${staffCode} to ${custName} | Owner Profit: ₹${netProfit.toLocaleString('en-IN')}`
-      });
+            let filtered = storeCatalog.filter(item => {
+                const matchCat = activeCategory === 'ALL' || item.category === activeCategory;
+                const matchQ = !q ||
+                    item.name.toLowerCase().includes(q) ||
+                    item.color.toLowerCase().includes(q) ||
+                    item.variant.toLowerCase().includes(q) ||
+                    (item.specs && item.specs.toLowerCase().includes(q));
+                return matchCat && matchQ;
+            });
 
-      // 6. Push to Google Sheets in background
-      syncToGoogleSheet(salePayload);
+            if (sortMode === 'PRICE_LOW') filtered.sort((a, b) => a.sellPrice - b.sellPrice);
+            else if (sortMode === 'PRICE_HIGH') filtered.sort((a, b) => b.sellPrice - a.sellPrice);
 
-      // 7. Populate & Trigger Print Layout
-      populatePrintInvoice(salePayload);
-      window.print();
+            document.getElementById('storeResultCountText').innerText = `Showing ${filtered.length} Genuine Devices`;
 
-      // 8. Reset Cart for Next Customer
-      cart = [];
-      clearExchangeData();
-      document.getElementById("custName").value = "";
-      document.getElementById("custMobile").value = "";
-      document.getElementById("custGstin").value = "";
-      document.getElementById("billDiscountInput").value = "0";
-      document.getElementById("insProvider").value = "";
-      document.getElementById("insPolicyNo").value = "";
-      document.getElementById("insAmount").value = "";
-      document.getElementById("crmStatusBanner").classList.add("hidden");
-      renderCart();
-    };
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-10 text-center text-sm text-neutral-500">No matching products found. Try another search term!</div>`;
+                return;
+            }
 
-    function populatePrintInvoice(d) {
-      const area = document.getElementById("printInvoiceArea");
-      const size = document.getElementById("printSizeSelect").value;
-      if (size === "80MM") {
-        area.classList.add("thermal-80mm");
-      } else {
-        area.classList.remove("thermal-80mm");
-      }
+            grid.innerHTML = filtered.map(item => {
+                const price = Number(item.sellPrice) || 0;
+                const mrp = Number(item.mrpPrice) || Math.round(price * 1.12);
+                const offPct = Math.max(5, Math.round(((mrp - price) / mrp) * 100));
+                const monthlyEmi = Math.round(price / 12);
+                const imgSrc = item.image || createDeviceSvgThumb(item.name);
 
-      document.getElementById("prShopName").textContent = shopConfig.name;
-      document.getElementById("prSignShopName").textContent = shopConfig.name;
-      document.getElementById("prShopTagline").textContent = shopConfig.tagline;
-      document.getElementById("prShopAddress").textContent = shopConfig.address;
-      document.getElementById("prShopPhone").textContent = `Ph: ${shopConfig.phone}`;
+                return `
+                <div class="product-card p-4">
+                    <div>
+                        <div class="relative flex items-center justify-center bg-neutral-50 rounded-xl p-3 mb-3">
+                            <span class="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded">
+                                ${offPct}% OFF
+                            </span>
+                            <span class="absolute top-2 right-2 assured-badge">
+                                <i class="ph-fill ph-seal-check text-amber-300"></i> Assured
+                            </span>
+                            <img src="${imgSrc}" alt="${item.name}" class="w-36 h-36 object-contain">
+                        </div>
 
-      const gstEl = document.getElementById("prShopGstin");
-      const badgeEl = document.getElementById("prInvoiceTypeBadge");
-      if (gstEnabled) {
-        gstEl.textContent = `GSTIN: ${shopConfig.gstin}`;
-        gstEl.classList.remove("hidden");
-        badgeEl.textContent = "GST TAX INVOICE";
-        document.getElementById("prHsnHeader").classList.remove("hidden");
-        document.getElementById("prTaxableRow").classList.remove("hidden");
-        document.getElementById("prCgstRow").classList.remove("hidden");
-        document.getElementById("prSgstRow").classList.remove("hidden");
-      } else {
-        gstEl.classList.add("hidden");
-        badgeEl.textContent = "RETAIL WARRANTY INVOICE";
-        document.getElementById("prHsnHeader").classList.add("hidden");
-        document.getElementById("prTaxableRow").classList.add("hidden");
-        document.getElementById("prCgstRow").classList.add("hidden");
-        document.getElementById("prSgstRow").classList.add("hidden");
-      }
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="bg-emerald-700 text-white text-[11px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                ${item.rating || '4.8'} ★
+                            </span>
+                            <span class="text-[11px] text-neutral-500 font-medium">(${item.reviews || 140} Ratings)</span>
+                            <span class="ml-auto text-[10px] font-bold ${item.stock > 2 ? 'text-emerald-700' : 'text-rose-600'}">
+                                ${item.stock > 0 ? `${item.stock} In Stock` : 'Out of Stock'}
+                            </span>
+                        </div>
 
-      document.getElementById("prInvoiceNo").textContent = d.invoiceId;
-      document.getElementById("prDateTime").textContent = d.timestamp;
-      document.getElementById("prStaffCode").textContent = d.staffCode;
-      document.getElementById("prCustName").textContent = d.customerName;
-      document.getElementById("prCustMobile").textContent = `+91 ${d.customerMobile}`;
+                        <h3 class="text-sm font-extrabold text-neutral-900 leading-snug">${item.name}</h3>
 
-      if (d.customerGstin) {
-        document.getElementById("prCustGstinRow").classList.remove("hidden");
-        document.getElementById("prCustGstin").textContent = d.customerGstin;
-      } else {
-        document.getElementById("prCustGstinRow").classList.add("hidden");
-      }
+                        <div class="flex flex-wrap gap-1 mt-1.5">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200">${item.color}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-neutral-100 text-neutral-800">${item.variant}</span>
+                        </div>
 
-      document.getElementById("prItemsBody").innerHTML = cart.map((c, i) => `
-        <tr>
-          <td class="py-1.5 px-1 mono">${i + 1}</td>
-          <td class="py-1.5 px-1">
-            <div class="font-bold">${c.brand} ${c.model} (${c.variant})</div>
-            ${c.imei ? `<div class="mono text-[11px] font-bold">IMEI/SN: ${c.imei}</div>` : ''}
-          </td>
-          <td class="py-1.5 px-1 text-center mono ${gstEnabled ? '' : 'hidden'}">${c.hsn}</td>
-          <td class="py-1.5 px-1 text-center mono">${c.qty}</td>
-          <td class="py-1.5 px-1 text-right mono">₹${c.price.toLocaleString('en-IN')}</td>
-          <td class="py-1.5 px-1 text-right mono font-bold">₹${(c.price * c.qty).toLocaleString('en-IN')}</td>
-        </tr>
-      `).join("");
+                        <p class="text-[11px] text-neutral-500 mt-2 line-clamp-2">${item.specs}</p>
+                    </div>
 
-      document.getElementById("prTaxableVal").textContent = `₹${d.taxableValue.toLocaleString('en-IN')}`;
-      document.getElementById("prCgstVal").textContent = `₹${d.cgst.toLocaleString('en-IN')}`;
-      document.getElementById("prSgstVal").textContent = `₹${d.sgst.toLocaleString('en-IN')}`;
-      document.getElementById("prNetPayableVal").textContent = `₹${d.netPayable.toLocaleString('en-IN')}`;
+                    <div class="pt-3 mt-3 border-t border-neutral-100 space-y-2">
+                        <div>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-xl font-extrabold text-neutral-900">₹${price.toLocaleString('en-IN')}</span>
+                                <span class="text-xs text-neutral-400 line-through">₹${mrp.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div class="text-[11px] font-bold text-emerald-700">
+                                🏦 No-Cost EMI from ₹${monthlyEmi.toLocaleString('en-IN')}/mo (Poonawalla, IDBI, ICICI, Bajaj)
+                            </div>
+                            <div class="text-[10px] text-neutral-500">
+                                🚚 Free 2-Hr Delivery in Khammam • Extra ₹1,000 Off on Prepaid
+                            </div>
+                        </div>
 
-      if (d.discountGiven > 0) {
-        document.getElementById("prDiscountRow").classList.remove("hidden");
-        document.getElementById("prDiscountVal").textContent = `-₹${d.discountGiven.toLocaleString('en-IN')}`;
-      } else {
-        document.getElementById("prDiscountRow").classList.add("hidden");
-      }
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <button onclick="addToStoreCart('${item.id}', false)" class="btn-add-cart py-2.5 px-3 text-xs flex items-center justify-center gap-1">
+                                <i class="ph-bold ph-shopping-cart"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                            <button onclick="addToStoreCart('${item.id}', true)" class="btn-buy-now py-2.5 px-3 text-xs flex items-center justify-center gap-1">
+                                <i class="ph-bold ph-lightning"></i>
+                                <span>Buy Now</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        };
 
-      if (d.exchangeDeduction > 0 && d.exchangeData) {
-        document.getElementById("prExchangeDedRow").classList.remove("hidden");
-        document.getElementById("prExchangeDedVal").textContent = `-₹${d.exchangeDeduction.toLocaleString('en-IN')}`;
-        const exRow = document.getElementById("prExchangePrintRow");
-        exRow.classList.remove("hidden");
-        exRow.textContent = `OLD PHONE EXCHANGE BUY-BACK: ${d.exchangeData.brandModel} (${d.exchangeData.conditionGrade}) | IMEI: ${d.exchangeData.imei1} | Value: ₹${d.exchangeDeduction} | KYC Verified`;
-      } else {
-        document.getElementById("prExchangeDedRow").classList.add("hidden");
-        document.getElementById("prExchangePrintRow").classList.add("hidden");
-      }
+        window.addToStoreCart = function(itemId, openCheckoutImmediately = false) {
+            const item = storeCatalog.find(x => x.id === itemId);
+            if (!item) return;
 
-      if (d.insuranceInfo !== "NONE") {
-        const insRow = document.getElementById("prInsurancePrintRow");
-        insRow.classList.remove("hidden");
-        insRow.textContent = `DEVICE PROTECTION / INSURANCE: ${d.insuranceInfo}`;
-        document.getElementById("prInsuranceTermsText").textContent = `2. ${shopConfig.insuranceClause}`;
-      } else {
-        document.getElementById("prInsurancePrintRow").classList.add("hidden");
-      }
+            const existing = storeCart.find(c => c.id === itemId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                storeCart.push({ ...item, qty: 1 });
+            }
+            updateHeaderCounts();
+            showStoreToast(`🛒 Added ${item.name} to Cart!`);
 
-      document.getElementById("prPaymentBreakdown").textContent =
-        `Mode: ${d.payMode} | Cash: ₹${d.cashPaid} | UPI/Online: ₹${d.onlinePaid} | Finance: ₹${d.financeAmount} (${d.financeInfo})`;
-    }
+            if (openCheckoutImmediately) {
+                openCartDrawer();
+            }
+        };
 
-    // ========================================================================
-    // TAB 2: DAILY SERVICES SUBMISSION
-    // ========================================================================
-    window.submitServiceTicket = async () => {
-      const customerName = document.getElementById("srvCustName").value.trim();
-      const customerMobile = document.getElementById("srvCustMobile").value.trim();
-      const deviceModel = document.getElementById("srvDeviceModel").value.trim();
-      const devicePasscodeOrImei = document.getElementById("srvImeiOrLock").value.trim();
-      const issueReported = document.getElementById("srvIssue").value.trim();
-      const jobStatus = document.getElementById("srvStatus").value;
-      const spareCost = Number(document.getElementById("srvSpareCost").value || 0);
-      const serviceCharge = Number(document.getElementById("srvChargeTotal").value || 0);
-      const payMode = document.getElementById("srvPayMode").value;
-      const staffCode = document.getElementById("activeStaffSelect").value;
+        function updateHeaderCounts() {
+            const totalCart = storeCart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('headerCartCount').innerText = String(totalCart);
+            document.getElementById('headerMyOrdersCount').innerText = String(customerOrders.length);
+        }
 
-      if (!customerName || !customerMobile || !deviceModel || !issueReported || serviceCharge <= 0) {
-        alert("Please fill Customer Name, Mobile, Device Model, Repair Done, and Service Charge.");
-        return;
-      }
+        window.openCartDrawer = function() {
+            renderStoreCartModal();
+            selectStorePaymentMode(storePayMode);
+            updateStoreCheckoutTotals();
+            const modal = document.getElementById('checkoutModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
 
-      const seqSnap = await runTransaction(ref(db, "counters/service_seq"), (curr) => (curr || 100) + 1);
-      const jobId = `SRV-${seqSnap.snapshot.val()}`;
-      const timestamp = new Date().toLocaleString("en-IN");
-      const serviceProfit = serviceCharge - spareCost;
+        window.closeCartDrawer = function() {
+            const modal = document.getElementById('checkoutModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
 
-      const payload = {
-        action: "NEW_SERVICE",
-        jobId,
-        timestamp,
-        staffCode,
-        customerName,
-        customerMobile,
-        deviceModel,
-        devicePasscodeOrImei,
-        issueReported,
-        jobStatus,
-        spareCost,
-        serviceCharge,
-        serviceProfit,
-        payMode
-      };
+        function renderStoreCartModal() {
+            const list = document.getElementById('storeCartItemsList');
+            if (storeCart.length === 0) {
+                list.innerHTML = `<div class="p-6 text-center bg-neutral-50 rounded-2xl text-xs text-neutral-500">Your cart is empty. Click "Buy Now" or "Add to Cart" on any smartphone!</div>`;
+                return;
+            }
 
-      await push(ref(db, "completed_service_cache"), payload);
-      await push(ref(db, "live_notifications"), {
-        type: "NEW_SERVICE",
-        timestamp,
-        title: `🛠️ SERVICE LOGGED: ${deviceModel} (₹${serviceCharge})`,
-        message: `${issueReported} by ${staffCode} | Mode: ${payMode} | Net Service Profit: ₹${serviceProfit}`
-      });
+            list.innerHTML = storeCart.map(it => `
+                <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-3">
+                        <img src="${it.image || createDeviceSvgThumb(it.name)}" alt="${it.name}" class="w-12 h-12 rounded-lg object-contain bg-white border">
+                        <div>
+                            <div class="font-bold text-neutral-900">${it.name}</div>
+                            <div class="text-[11px] text-neutral-500">${it.color} • ${it.variant}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center border rounded-lg bg-white">
+                            <button type="button" onclick="changeStoreCartQty('${it.id}', -1)" class="px-2 py-1 font-bold">-</button>
+                            <span class="px-2 font-bold">${it.qty}</span>
+                            <button type="button" onclick="changeStoreCartQty('${it.id}', 1)" class="px-2 py-1 font-bold">+</button>
+                        </div>
+                        <div class="font-extrabold text-sm text-neutral-900">₹${(it.sellPrice * it.qty).toLocaleString('en-IN')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-      syncToGoogleSheet(payload);
-      alert(`Service Ticket ${jobId} Saved & Synced to Admin Portal + Google Sheets!`);
+        window.changeStoreCartQty = function(itemId, delta) {
+            const idx = storeCart.findIndex(x => x.id === itemId);
+            if (idx === -1) return;
+            storeCart[idx].qty += delta;
+            if (storeCart[idx].qty <= 0) storeCart.splice(idx, 1);
+            updateHeaderCounts();
+            renderStoreCartModal();
+            updateStoreCheckoutTotals();
+        };
 
-      document.getElementById("srvCustName").value = "";
-      document.getElementById("srvCustMobile").value = "";
-      document.getElementById("srvDeviceModel").value = "";
-      document.getElementById("srvImeiOrLock").value = "";
-      document.getElementById("srvIssue").value = "";
-      document.getElementById("srvSpareCost").value = "";
-      document.getElementById("srvChargeTotal").value = "";
-    };
+        window.selectStorePaymentMode = function(mode) {
+            storePayMode = mode;
+            ['PREPAID_UPI', 'BANK_EMI', 'PREPAID_CARD', 'COD'].forEach(m => {
+                const btn = document.getElementById(`stPay-${m}`);
+                if (!btn) return;
+                if (m === mode) {
+                    btn.className = "p-2.5 rounded-xl border-2 border-blue-600 bg-blue-50/70 text-blue-950 font-bold text-left shadow-sm";
+                } else {
+                    btn.className = "p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left";
+                }
+            });
 
-    // ========================================================================
-    // TAB 3: STAFF BLIND STOCK INWARD SUBMISSION
-    // ========================================================================
-    window.syncInwardQtyFromImeis = () => {
-      const raw = document.getElementById("inwImeiList").value.trim();
-      if (!raw) return;
-      const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-      if (lines.length > 0) {
-        document.getElementById("inwQty").value = lines.length;
-      }
-    };
+            const sub = document.getElementById('storePaymentSubBox');
+            if (mode === 'PREPAID_UPI') {
+                sub.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                        <div>
+                            <div class="font-bold text-emerald-900">⚡ Instant Prepaid UPI (Extra ₹1,000 Off Applied!)</div>
+                            <p class="text-[11px] text-neutral-600 mt-0.5">Pay to Store Merchant UPI: <strong>9550677795@ybl</strong> (Cell Planet Khammam)</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <select id="stUpiApp" class="border border-neutral-300 rounded-lg px-2.5 py-2 font-bold bg-white">
+                                <option value="PhonePe">PhonePe</option>
+                                <option value="Google Pay">Google Pay</option>
+                                <option value="Paytm">Paytm</option>
+                            </select>
+                            <input type="text" id="stUpiRef" placeholder="UTR / Last 4 Digits" class="border border-neutral-300 rounded-lg px-2.5 py-2 font-mono bg-white">
+                        </div>
+                    </div>
+                `;
+            } else if (mode === 'BANK_EMI') {
+                sub.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <div>
+                            <label class="font-bold text-neutral-700 block mb-1">Select Bank / NBFC Finance *</label>
+                            <select id="stEmiBank" class="w-full border border-blue-400 rounded-lg px-2.5 py-2 font-bold bg-white">
+                                <option value="Poonawalla Fincorp">Poonawalla Fincorp (0% EMI)</option>
+                                <option value="IDBI Bank Finance">IDBI Bank Finance / EMI</option>
+                                <option value="ICICI Bank Insta EMI">ICICI Bank Insta EMI</option>
+                                <option value="Bajaj Finserv">Bajaj Finserv No-Cost EMI</option>
+                                <option value="IDFC First Bank">IDFC First Bank</option>
+                                <option value="HDFC Bank EasyEMI">HDFC Bank EasyEMI</option>
+                                <option value="SBI Card EMI">SBI Card EasyEMI</option>
+                                <option value="Axis Bank EMI">Axis Bank Instant EMI</option>
+                                <option value="Kotak Bank EMI">Kotak Mahindra Bank EMI</option>
+                                <option value="HDB Financial">HDB Financial Services</option>
+                                <option value="TVS Credit">TVS Credit</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-neutral-700 block mb-1">EMI Tenure</label>
+                            <select id="stEmiTenure" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 font-bold bg-white">
+                                <option value="3 Months">3 Months No-Cost EMI</option>
+                                <option value="6 Months" selected>6 Months No-Cost EMI</option>
+                                <option value="9 Months">9 Months Low-Cost EMI</option>
+                                <option value="12 Months">12 Months Easy EMI</option>
+                                <option value="18 Months">18 Months EMI</option>
+                                <option value="24 Months">24 Months EMI</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-neutral-700 block mb-1">Card / PAN / Approval Note</label>
+                            <input type="text" id="stEmiRef" placeholder="Last 4 digits or Mobile linked" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 bg-white">
+                        </div>
+                    </div>
+                `;
+            } else if (mode === 'PREPAID_CARD') {
+                sub.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="font-bold text-neutral-700 block mb-1">Select Card Bank (Extra ₹1,000 Off Applied!)</label>
+                            <select id="stCardBank" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 font-bold bg-white">
+                                <option value="ICICI Bank Card">ICICI Bank Credit/Debit Card</option>
+                                <option value="IDBI Bank Card">IDBI Bank Credit/Debit Card</option>
+                                <option value="HDFC Bank Card">HDFC Bank Credit/Debit Card</option>
+                                <option value="SBI Card">SBI Credit/Debit Card</option>
+                                <option value="Axis Bank Card">Axis Bank Card</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-neutral-700 block mb-1">Card Last 4 Digits / Auth Ref</label>
+                            <input type="text" id="stCardRef" maxlength="8" placeholder="e.g. 4921" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 font-mono bg-white">
+                        </div>
+                    </div>
+                `;
+            } else {
+                sub.innerHTML = `
+                    <div class="text-xs text-neutral-700 font-semibold">
+                        🚚 <strong>Pay on Delivery in Khammam:</strong> Our store executive will deliver the sealed box to your doorstep and collect Cash, UPI, or Card Swipe at delivery!
+                    </div>
+                `;
+            }
+            updateStoreCheckoutTotals();
+        };
 
-    window.submitStaffBlindStock = async () => {
-      const barcode = document.getElementById("inwBarcode").value.trim();
-      const category = document.getElementById("inwCategory").value;
-      const brand = document.getElementById("inwBrand").value;
-      const model = document.getElementById("inwModel").value.trim();
-      const variant = document.getElementById("inwVariant").value.trim();
-      const qtyScanned = Number(document.getElementById("inwQty").value || 1);
-      const rawImeis = document.getElementById("inwImeiList").value.trim();
-      const imeis = rawImeis ? rawImeis.split(/\r?\n/).map(s => s.trim()).filter(Boolean) : [];
-      const scannedBy = document.getElementById("activeStaffSelect").value;
+        window.updateStoreCheckoutTotals = function() {
+            const rawSum = storeCart.reduce((s, i) => s + (i.sellPrice * i.qty), 0);
+            const isExch = document.getElementById('chkExchangeToggle')?.checked;
+            const exFields = document.getElementById('chkExchangeFields');
+            const exBadge = document.getElementById('chkExchangeSavedBadge');
+            const exRow = document.getElementById('chkExchangeRow');
 
-      if (!barcode || !model || qtyScanned <= 0) {
-        alert("Please scan Box Barcode and enter Model Name & Quantity.");
-        return;
-      }
+            let exVal = 0;
+            if (isExch && rawSum > 0) {
+                exFields.classList.remove('hidden');
+                exBadge.classList.remove('hidden');
+                exRow.classList.remove('hidden');
+                exVal = Number(document.getElementById('chkOldValue')?.value) || 8000;
+                exBadge.innerText = `-₹${exVal.toLocaleString('en-IN')}`;
+                document.getElementById('chkSumExchange').innerText = `-₹${exVal.toLocaleString('en-IN')}`;
+            } else {
+                exFields?.classList.add('hidden');
+                exBadge?.classList.add('hidden');
+                exRow?.classList.add('hidden');
+            }
 
-      const batchId = "INW-" + Date.now().toString().slice(-6);
-      const timestamp = new Date().toLocaleString("en-IN");
+            const isPrepaidDiscount = (storePayMode === 'PREPAID_UPI' || storePayMode === 'PREPAID_CARD') && rawSum > 5000;
+            const prepaidDisc = isPrepaidDiscount ? 1000 : 0;
+            const prepRow = document.getElementById('chkPrepaidRow');
+            if (isPrepaidDiscount) {
+                prepRow.classList.remove('hidden');
+            } else {
+                prepRow.classList.add('hidden');
+            }
 
-      await push(ref(db, "pending_stock_queue"), {
-        batchId,
-        timestamp,
-        entryMode: "STAFF_BLIND_SCAN",
-        scannedBy,
-        barcode,
-        category,
-        brand,
-        model,
-        variant,
-        qtyScanned,
-        imeis
-      });
+            const net = Math.max(0, rawSum - exVal - prepaidDisc);
+            document.getElementById('chkSumItems').innerText = `₹${rawSum.toLocaleString('en-IN')}`;
+            document.getElementById('chkSumNetPayable').innerText = `₹${net.toLocaleString('en-IN')}`;
+            return { rawSum, exVal, prepaidDisc, net };
+        };
 
-      await push(ref(db, "live_notifications"), {
-        type: "STOCK_PENDING",
-        timestamp,
-        title: `📦 NEW STOCK SCANNED BY ${scannedBy}`,
-        message: `${qtyScanned}x ${brand} ${model} (${variant}) waiting in Admin Portal for Purchase Cost & Approval.`
-      });
+        window.submitCustomerOnlineOrder = async function(e) {
+            e.preventDefault();
+            if (storeCart.length === 0) {
+                showStoreToast("⚠️ Your cart is empty!");
+                return;
+            }
 
-      alert(`Batch ${batchId} submitted! Owner has been notified to enter cost & approve.`);
-      document.getElementById("inwBarcode").value = "";
-      document.getElementById("inwModel").value = "";
-      document.getElementById("inwVariant").value = "";
-      document.getElementById("inwQty").value = "1";
-      document.getElementById("inwImeiList").value = "";
-    };
+            const totals = updateStoreCheckoutTotals();
+            const custName = document.getElementById('chkCustName').value.trim();
+            const custPhone = document.getElementById('chkCustPhone').value.trim();
+            const address = document.getElementById('chkCustAddress').value.trim();
 
-    // Tab Switcher
-    window.switchTab = (tab) => {
-      ["pos", "service", "inward", "warranty"].forEach(t => {
-        document.getElementById("tab_" + t).classList.toggle("hidden", t !== tab);
-        const btn = document.getElementById("tabBtn_" + t);
-        btn.className = t === tab
-          ? "px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 transition"
-          : "px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
-      });
-    };
-  </script>
+            let paymentType = "CASH ON DELIVERY (Khammam)";
+            let paymentRef = "Pay at Doorstep";
+            let isPrepaid = false;
+            let isEmi = false;
+
+            if (storePayMode === 'PREPAID_UPI') {
+                const app = document.getElementById('stUpiApp')?.value || 'UPI';
+                const ref = document.getElementById('stUpiRef')?.value || 'Verified';
+                paymentType = `PREPAID UPI (${app})`;
+                paymentRef = `UTR: ${ref} (₹1,000 Prepaid Off)`;
+                isPrepaid = true;
+            } else if (storePayMode === 'BANK_EMI') {
+                const bank = document.getElementById('stEmiBank')?.value || 'Poonawalla Fincorp';
+                const tenure = document.getElementById('stEmiTenure')?.value || '6 Months';
+                const ref = document.getElementById('stEmiRef')?.value || 'Instant Approval';
+                paymentType = `HOME EMI - ${bank}`;
+                paymentRef = `${tenure} | Ref: ${ref}`;
+                isPrepaid = true;
+                isEmi = true;
+            } else if (storePayMode === 'PREPAID_CARD') {
+                const bank = document.getElementById('stCardBank')?.value || 'Card';
+                const ref = document.getElementById('stCardRef')?.value || 'XXXX';
+                paymentType = `PREPAID CARD (${bank})`;
+                paymentRef = `Card xx${ref} (₹1,000 Prepaid Off)`;
+                isPrepaid = true;
+            }
+
+            const mainItem = storeCart[0];
+            const allNames = storeCart.map(i => `${i.name} x${i.qty}`).join(' + ');
+            const isExch = document.getElementById('chkExchangeToggle')?.checked;
+            const oldModel = document.getElementById('chkOldModel')?.value || 'Old Smartphone';
+
+            const now = new Date();
+            const orderRecord = {
+                orderId: `ORD-CP-${501 + customerOrders.length}`,
+                timestamp: now.getTime(),
+                dateStr: now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                timeStr: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+                custName,
+                custPhone,
+                address,
+                itemId: mainItem.id,
+                itemName: allNames,
+                color: mainItem.color,
+                variant: mainItem.variant,
+                imei: mainItem.imei || 'Assigned at Dispatch',
+                specs: mainItem.specs,
+                price: totals.rawSum,
+                exchangeDeduction: totals.exVal,
+                exchangeInfo: isExch ? oldModel : '',
+                netPayable: totals.net,
+                paymentType,
+                paymentRef,
+                isPrepaid,
+                isEmi,
+                status: "NEW"
+            };
+
+            customerOrders.unshift(orderRecord);
+            try {
+                localStorage.setItem('cp_online_orders', JSON.stringify(customerOrders));
+            } catch (err) {}
+
+            if (db) {
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_orders', orderRecord.orderId), orderRecord);
+                } catch (err) {}
+            }
+
+            storeCart = [];
+            updateHeaderCounts();
+            closeCartDrawer();
+            openTrackOrdersModal();
+            showStoreToast(`🎉 Order ${orderRecord.orderId} Placed & Synced with Cell Planet Khammam!`);
+        };
+
+        window.openTrackOrdersModal = function() {
+            renderMyOrdersList();
+            const modal = document.getElementById('trackOrdersModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closeTrackOrdersModal = function() {
+            const modal = document.getElementById('trackOrdersModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        };
+
+        function renderMyOrdersList() {
+            const container = document.getElementById('myOrdersContainer');
+            if (!container) return;
+
+            if (customerOrders.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-xs text-neutral-500">You haven't placed any orders yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = customerOrders.map(ord => `
+                <div class="p-4 rounded-2xl border border-neutral-200 bg-neutral-50 space-y-2 text-xs">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-2">
+                        <div>
+                            <span class="font-extrabold text-sm text-blue-900">${ord.orderId}</span>
+                            <span class="text-neutral-500 ml-2">${ord.dateStr} • ${ord.timeStr}</span>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-extrabold text-[11px]">
+                            🚚 Status: ${ord.status.replace(/_/g, ' ')}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <div class="font-bold text-neutral-900">${ord.itemName}</div>
+                            <div class="text-neutral-600">Variant: ${ord.color} | ${ord.variant}</div>
+                            <div class="text-neutral-500">Deliver To: ${ord.custName} (${ord.custPhone}) — ${ord.address}</div>
+                        </div>
+                        <div class="sm:text-right">
+                            <div class="text-base font-extrabold text-neutral-900">₹${Number(ord.netPayable).toLocaleString('en-IN')}</div>
+                            <div class="font-semibold text-blue-800">${ord.paymentType}</div>
+                            <div class="text-[11px] text-neutral-500">${ord.paymentRef}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-2">
+                        <button onclick="sendCustomerOrderToStoreWhatsApp('${ord.orderId}')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-1">
+                            <i class="ph-bold ph-whatsapp-logo"></i>
+                            <span>Send Order to Store WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.sendCustomerOrderToStoreWhatsApp = function(orderId) {
+            const ord = customerOrders.find(x => x.orderId === orderId);
+            if (!ord) return;
+            const msg =
+`🛒 *NEW ONLINE HOME ORDER — ${STORE_INFO.name}*
+📦 *Order ID:* ${ord.orderId}
+👤 *Customer:* ${ord.custName} (${ord.custPhone})
+📍 *Delivery Address:* ${ord.address}
+--------------------------------
+📱 *Ordered Item:* ${ord.itemName} (${ord.color} • ${ord.variant})
+${ord.exchangeDeduction > 0 ? `🔄 *Old Phone Exchange:* -₹${ord.exchangeDeduction.toLocaleString('en-IN')} (${ord.exchangeInfo})\n` : ''}💳 *Payment / Finance:* ${ord.paymentType} (${ord.paymentRef})
+💰 *NET PAYABLE TOTAL: ₹${Number(ord.netPayable).toLocaleString('en-IN')}*
+--------------------------------
+Please confirm express Khammam delivery!`;
+
+            window.open(`https://wa.me/91${STORE_INFO.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderStoreProducts();
+            updateHeaderCounts();
+            initCustomerStoreSync();
+        });
+    </script>
 </body>
 </html>
