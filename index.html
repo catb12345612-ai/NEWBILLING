@@ -757,55 +757,128 @@
         };
 
         // Generates Sealed Retail Box + Handset Variant Picture (NO IMEI SHOWN ON ONLINE STORE)
-        function createBoxAndVariantSvgThumb(title, variantText = "8GB/256GB", colorName = "Titanium", colorHex = "#1e293b", accentHex = "#c5a059", mode = "BOX") {
-            const shortTitle = (title || "Smartphone").slice(0, 20);
+        function getStoreDeviceColorPalette(colorName = "", category = "Smartphone", modelName = "") {
+            const c = (colorName || "").toLowerCase();
+            const m = (modelName || "").toLowerCase();
+            let bodyHex = "#334155";
+            let accentHex = "#c5a059";
+            let screenHex = "#0f172a";
+            let boxHex = "#1e293b";
+
+            if (c.includes("desert") || c.includes("gold") || c.includes("sand")) {
+                bodyHex = "#785c42"; accentHex = "#d4af37"; screenHex = "#1c1917"; boxHex = "#292524";
+            } else if (c.includes("gray") || c.includes("grey") || c.includes("natural") || c.includes("titanium")) {
+                bodyHex = "#4b5563"; accentHex = "#c5a059"; screenHex = "#111827"; boxHex = "#1f2937";
+            } else if (c.includes("ocean") || c.includes("blue") || c.includes("spectre") || c.includes("sky")) {
+                bodyHex = "#0369a1"; accentHex = "#38bdf8"; screenHex = "#082f49"; boxHex = "#0f172a";
+            } else if (c.includes("purple") || c.includes("violet") || c.includes("lavender")) {
+                bodyHex = "#581c87"; accentHex = "#c084fc"; screenHex = "#2e1065"; boxHex = "#1e1b4b";
+            } else if (c.includes("white") || c.includes("silver") || c.includes("clear")) {
+                bodyHex = "#e2e8f0"; accentHex = "#0284c7"; screenHex = "#1e293b"; boxHex = "#334155";
+            } else if (c.includes("green") || c.includes("emerald") || c.includes("mint")) {
+                bodyHex = "#047857"; accentHex = "#34d399"; screenHex = "#064e3b"; boxHex = "#0f172a";
+            } else if (c.includes("red") || c.includes("rose") || c.includes("coral") || c.includes("orange")) {
+                bodyHex = "#b91c1c"; accentHex = "#fbbf24"; screenHex = "#450a0a"; boxHex = "#1c1917";
+            } else if (c.includes("black") || c.includes("cosmos") || c.includes("crafted") || c.includes("midnight")) {
+                bodyHex = "#18181b"; accentHex = "#f59e0b"; screenHex = "#09090b"; boxHex = "#0f172a";
+            }
+
+            let formFactor = "PHONE";
+            if (m.includes("fold")) formFactor = "FOLD";
+            else if (m.includes("ultra")) formFactor = "ULTRA";
+            else if (category === "Smart TV" || m.includes("bravia") || m.includes("tv")) formFactor = "TV";
+            else if (m.includes("airpods") || m.includes("buds")) formFactor = "EARBUDS";
+            else if (category === "Accessory" || m.includes("adapter") || m.includes("charger")) formFactor = "ACCESSORY";
+            else if (category === "Service" || m.includes("repair") || m.includes("display")) formFactor = "SERVICE";
+
+            return { bodyHex, accentHex, screenHex, boxHex, formFactor };
+        }
+
+        function createBoxAndVariantSvgThumb(title, variantText = "8GB/256GB", colorName = "Titanium", colorHex = null, accentHex = null, mode = "BOX", category = "Smartphone") {
+            const pal = getStoreDeviceColorPalette(colorName, category, title);
+            const finalBodyHex = (colorHex && colorHex !== "#1e293b") ? colorHex : pal.bodyHex;
+            const finalAccentHex = (accentHex && accentHex !== "#c5a059") ? accentHex : pal.accentHex;
+            const shortTitle = (title || "Smartphone").replace(/^\[Pre-Owned\]\s*/i, "").slice(0, 20);
             const shortVar = (variantText || "5G").slice(0, 14);
             const shortCol = (colorName || "Official").slice(0, 16);
+
             if (mode === "VARIANT") {
                 const svgVar = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
                     <defs>
                         <linearGradient id="vbg" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#f8fafc"/>
-                            <stop offset="100%" stop-color="#e2e8f0"/>
+                            <stop offset="0%" stop-color="#eff6ff"/>
+                            <stop offset="100%" stop-color="#dbeafe"/>
                         </linearGradient>
                     </defs>
-                    <rect width="180" height="180" rx="22" fill="url(#vbg)"/>
-                    <rect x="34" y="16" width="64" height="114" rx="12" fill="${colorHex}" stroke="${accentHex}" stroke-width="2.5"/>
-                    <rect x="82" y="22" width="64" height="108" rx="12" fill="#0f172a" stroke="${accentHex}" stroke-width="2"/>
-                    <circle cx="50" cy="34" r="6" fill="${accentHex}"/>
-                    <circle cx="50" cy="50" r="6" fill="${accentHex}" opacity="0.8"/>
-                    <rect x="14" y="138" width="152" height="28" rx="8" fill="#1e3a8a"/>
-                    <text x="90" y="150" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">${shortCol} • ${shortVar}</text>
-                    <text x="90" y="161" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortTitle}</text>
+                    <rect width="180" height="180" rx="22" fill="url(#vbg)" stroke="#3b82f6" stroke-width="2"/>
+                    <rect x="30" y="16" width="64" height="112" rx="13" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2.5"/>
+                    <rect x="84" y="22" width="64" height="106" rx="13" fill="${pal.screenHex}" stroke="${finalAccentHex}" stroke-width="2"/>
+                    <circle cx="46" cy="34" r="6" fill="${finalAccentHex}"/>
+                    <circle cx="46" cy="50" r="6" fill="${finalAccentHex}" opacity="0.85"/>
+                    <rect x="12" y="136" width="156" height="32" rx="9" fill="#1e3a8a"/>
+                    <text x="90" y="150" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">🎨 ${shortCol} • ${shortVar}</text>
+                    <text x="90" y="162" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortTitle}</text>
                 </svg>`;
                 return "data:image/svg+xml;utf8," + encodeURIComponent(svgVar);
             }
+
+            let centerArt = "";
+            if (pal.formFactor === "TV") {
+                centerArt = `
+                    <rect x="16" y="20" width="108" height="70" rx="6" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+                    <text x="70" y="46" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED 4K TV BOX</text>
+                    <rect x="52" y="38" width="112" height="74" rx="6" fill="#1e3a8a" stroke="#ef4444" stroke-width="2.5"/>
+                    <text x="108" y="76" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">4K GOOGLE TV</text>
+                    <text x="108" y="92" font-family="sans-serif" font-size="8.5" fill="#fde68a" text-anchor="middle">${shortVar}</text>
+                `;
+            } else if (pal.formFactor === "FOLD") {
+                centerArt = `
+                    <rect x="20" y="14" width="72" height="112" rx="8" fill="${pal.boxHex}" stroke="#c5a059" stroke-width="2"/>
+                    <text x="56" y="34" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">GALAXY FOLD BOX</text>
+                    <rect x="74" y="22" width="44" height="104" rx="9" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2"/>
+                    <rect x="116" y="22" width="44" height="104" rx="9" fill="${pal.screenHex}" stroke="${finalAccentHex}" stroke-width="2"/>
+                    <line x1="116" y1="22" x2="116" y2="126" stroke="#fbbf24" stroke-width="2"/>
+                `;
+            } else {
+                centerArt = `
+                    <!-- Sealed Retail Box at Back -->
+                    <rect x="22" y="14" width="76" height="112" rx="8" fill="${pal.boxHex}" stroke="#c5a059" stroke-width="2"/>
+                    <text x="60" y="32" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED RETAIL BOX</text>
+                    <rect x="32" y="40" width="56" height="3.5" rx="1.5" fill="#c5a059"/>
+                    <text x="60" y="60" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
+                    <text x="60" y="74" font-family="sans-serif" font-size="7.5" fill="#cbd5e1" text-anchor="middle">${shortCol}</text>
+                    <!-- Handset Variant in Front -->
+                    <rect x="80" y="22" width="70" height="108" rx="13" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2.5"/>
+                    <rect x="86" y="28" width="58" height="96" rx="9" fill="${pal.screenHex}"/>
+                    <circle cx="98" cy="40" r="5.5" fill="${finalAccentHex}"/>
+                    <circle cx="98" cy="54" r="5.5" fill="${finalAccentHex}" opacity="0.85"/>
+                    <circle cx="110" cy="47" r="4" fill="#38bdf8"/>
+                    <rect x="106" y="10" width="62" height="18" rx="9" fill="#1d4ed8"/>
+                    <text x="137" y="22" font-family="sans-serif" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
+                `;
+            }
+
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
                 <defs>
                     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="100%" stop-color="#f1f5f9"/>
+                        <stop offset="100%" stop-color="#eff6ff"/>
                     </linearGradient>
                 </defs>
-                <rect width="180" height="180" rx="22" fill="url(#bg)"/>
-                <!-- Sealed Retail Box at Back -->
-                <rect x="24" y="14" width="76" height="114" rx="8" fill="#0f172a" stroke="#c5a059" stroke-width="2"/>
-                <text x="62" y="34" font-family="sans-serif" font-size="8" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED BOX</text>
-                <rect x="34" y="42" width="56" height="4" rx="2" fill="#c5a059"/>
-                <text x="62" y="64" font-family="sans-serif" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-                <text x="62" y="78" font-family="sans-serif" font-size="7.5" fill="#cbd5e1" text-anchor="middle">${shortCol}</text>
-                <!-- Handset Variant in Front -->
-                <rect x="78" y="22" width="68" height="110" rx="12" fill="${colorHex}" stroke="${accentHex}" stroke-width="2.5"/>
-                <rect x="83" y="28" width="58" height="98" rx="8" fill="#111827"/>
-                <circle cx="96" cy="40" r="5.5" fill="${accentHex}"/>
-                <circle cx="96" cy="54" r="5.5" fill="${accentHex}" opacity="0.8"/>
-                <circle cx="108" cy="47" r="4" fill="#38bdf8"/>
-                <rect x="108" y="10" width="60" height="18" rx="9" fill="#1e40af"/>
-                <text x="138" y="22" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-                <text x="90" y="150" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">${shortTitle}</text>
-                <text x="90" y="164" font-family="sans-serif" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">📦 Box + ${shortCol}</text>
+                <rect width="180" height="180" rx="22" fill="url(#bg)" stroke="#bfdbfe" stroke-width="2"/>
+                ${centerArt}
+                <text x="90" y="148" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">${shortTitle}</text>
+                <text x="90" y="163" font-family="sans-serif" font-size="9" font-weight="bold" fill="#1d4ed8" text-anchor="middle">📦 Box + ${shortCol}</text>
             </svg>`;
             return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+        }
+
+        function resolveOnlineProductImage(item, mode = "BOX") {
+            if (mode === "BOX" && item.onlineImage && !item.onlineImage.includes("POS #")) {
+                // If custom raster onlineImage was uploaded or valid online SVG, use it; otherwise generate color-accurate SVG
+                if (!item.onlineImage.includes("svg+xml")) return item.onlineImage;
+            }
+            return createBoxAndVariantSvgThumb(item.name, item.variant, item.color, null, null, mode, item.category);
         }
 
         const DEFAULT_STORE_CATALOG = [
@@ -1016,7 +1089,7 @@
                     mrpPrice: it.mrpPrice || Math.round((Number(it.sellPrice) || 0) * 1.10),
                     rating: it.rating || "4.8",
                     reviews: it.reviews || 150,
-                    image: createBoxAndVariantSvgThumb(it.name, it.variant, it.color, "#1e293b", "#c5a059", "BOX")
+                    image: resolveOnlineProductImage(it, "BOX")
                 }));
             }
             const savedOrd = JSON.parse(localStorage.getItem('cp_online_orders') || 'null');
@@ -1058,7 +1131,7 @@
                                     mrpPrice: it.mrpPrice || Math.round((Number(it.sellPrice) || 0) * 1.10),
                                     rating: it.rating || "4.8",
                                     reviews: it.reviews || 150,
-                                    image: createBoxAndVariantSvgThumb(it.name, it.variant, it.color, "#1e293b", "#c5a059", "BOX")
+                                    image: resolveOnlineProductImage(it, "BOX")
                                 };
                             });
                             renderStoreProducts();
@@ -1083,7 +1156,7 @@
                     storeCatalog = raw.map(it => ({
                         ...it,
                         onlinePrice: Number(it.onlinePrice) || Number(it.sellPrice) || 0,
-                        image: createBoxAndVariantSvgThumb(it.name, it.variant, it.color, "#1e293b", "#c5a059", "BOX")
+                        image: resolveOnlineProductImage(it, "BOX")
                     }));
                     renderStoreProducts();
                 } else if (e.key === 'cp_online_orders' && e.newValue) {
@@ -1357,7 +1430,7 @@
             if (!currentInspectedOnlineItem) return;
             const it = currentInspectedOnlineItem;
             const imgEl = document.getElementById('onlineInspectMainImg');
-            imgEl.src = createBoxAndVariantSvgThumb(it.name, it.variant, it.color, "#1e293b", "#c5a059", mode);
+            imgEl.src = resolveOnlineProductImage(it, mode);
 
             document.getElementById('onlineGalBtn-BOX').className = mode === 'BOX'
                 ? "py-1.5 px-2 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-900"
@@ -1416,7 +1489,7 @@
                 const mrp = Number(item.mrpPrice) || Math.round(onlinePrice * 1.12);
                 const offPct = Math.max(5, Math.round(((mrp - onlinePrice) / mrp) * 100));
                 const monthlyEmi = Math.round(onlinePrice / 12);
-                const boxImgSrc = createBoxAndVariantSvgThumb(item.name, item.variant, item.color, "#1e293b", "#c5a059", "BOX");
+                const boxImgSrc = resolveOnlineProductImage(item, "BOX");
 
                 return `
                 <div class="product-card p-4">
@@ -1551,7 +1624,7 @@
             list.innerHTML = storeCart.map(it => `
                 <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between gap-3 text-xs">
                     <div class="flex items-center gap-3">
-                        <img src="${createBoxAndVariantSvgThumb(it.name, it.variant, it.color)}" alt="${it.name}" class="w-12 h-12 rounded-lg object-contain bg-white border">
+                        <img src="${resolveOnlineProductImage(it, 'BOX')}" alt="${it.name}" class="w-12 h-12 rounded-lg object-contain bg-white border">
                         <div>
                             <div class="font-bold text-neutral-900">${it.name}</div>
                             <div class="text-[11px] text-neutral-500">🎨 ${it.color} • 📦 ${it.variant} (Sealed Box)</div>
