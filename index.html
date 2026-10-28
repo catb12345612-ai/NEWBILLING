@@ -100,6 +100,14 @@
             transform: translateY(-1px);
         }
 
+        .is-disabled {
+            opacity: 0.45 !important;
+            cursor: not-allowed !important;
+            filter: grayscale(0.4);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         .assured-badge {
             background: linear-gradient(90deg, #1e40af 0%, #1d4ed8 100%);
             color: #fff;
@@ -227,7 +235,7 @@
                 <button type="button" onclick="openSavedAddressesModal()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 border border-white/15" title="Manage Saved Delivery Addresses">
                     <i class="ph-bold ph-map-pin-line text-base text-emerald-400"></i>
                     <span class="hidden md:inline">Addresses</span>
-                    <span class="px-1.5 py-0.2 bg-emerald-500/30 text-emerald-200 rounded-full text-[10px]" id="headerSavedAddrCount">0</span>
+                    <span class="px-1.5 py-0.5 bg-emerald-500/30 text-emerald-200 rounded-full text-[10px]" id="headerSavedAddrCount">0</span>
                 </button>
                 <button type="button" onclick="openTrackOrdersModal()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 border border-white/15">
                     <i class="ph-bold ph-package text-base text-amber-400"></i>
@@ -294,7 +302,7 @@
     <!-- ================================================================= -->
     <main class="max-w-[1440px] mx-auto px-3 sm:px-6 py-5 space-y-6">
 
-        <!-- HERO MEGA DEAL BANNER (Amazon Great Indian / Flipkart Big Billion Style) -->
+        <!-- HERO MEGA DEAL BANNER -->
         <div class="rounded-3xl bg-gradient-to-r from-[#0f172a] via-[#1e3a8a] to-[#311042] text-white p-5 sm:p-7 shadow-xl border border-amber-400/40 flex flex-col lg:flex-row items-center justify-between gap-6">
             <div class="space-y-3 max-w-2xl">
                 <div class="inline-flex flex-wrap items-center gap-2">
@@ -369,9 +377,7 @@
             <!-- Dynamically Populated -->
         </div>
 
-        <!-- ================================================================= -->
-        <!-- PRESERVED STORE LINKS & DEVELOPER FOOTER BLOCK                    -->
-        <!-- ================================================================= -->
+        <!-- PRESERVED STORE LINKS & DEVELOPER FOOTER BLOCK -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
             <div class="bg-white rounded-2xl border border-amber-300 p-4 md:col-span-7 flex flex-wrap items-center justify-around gap-3 shadow-sm">
                 <a href="tel:9550677795" class="px-4 py-2.5 rounded-xl border border-amber-300 font-bold text-xs text-neutral-800 hover:bg-amber-50 flex items-center gap-2 no-underline">
@@ -432,7 +438,7 @@
                     </div>
                 </div>
 
-                <!-- Right: Complete Non-Truncated Name, Variant, Specs & Online Rate -->
+                <!-- Right: Complete Name, Variant, Specs & Online Rate -->
                 <div class="md:col-span-7 space-y-3 text-xs">
                     <div class="flex flex-wrap items-center gap-2">
                         <span id="onlineInspectCategory" class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 font-bold">Smartphone</span>
@@ -450,6 +456,7 @@
                         <div id="onlineInspectEmi" class="text-[11px] text-amber-300 font-semibold">
                             🏦 0% No-Cost EMI from ₹11,492/mo (Poonawalla, IDBI, ICICI, Bajaj)
                         </div>
+                        <div id="onlineInspectStock" class="text-[11px] font-bold text-emerald-300"></div>
                     </div>
 
                     <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
@@ -653,7 +660,7 @@
                     </div>
                 </div>
 
-                <!-- Payment Method Selector (Prepaid UPI, All-Bank EMI, Prepaid Card, COD) -->
+                <!-- Payment Method Selector -->
                 <div class="space-y-2">
                     <label class="font-extrabold text-neutral-800 uppercase tracking-wider block">
                         Select Payment / Bank Finance Option:
@@ -745,9 +752,9 @@
     <div id="toastStore" class="toast-store">✅ Added to Cart</div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const STORE_INFO = {
             name: "CELL PLANET KHAMMAM",
@@ -756,461 +763,292 @@
             gstin: "36ACVPK3564C1ZE"
         };
 
-        // Generates Sealed Retail Box + Handset Variant Picture (NO IMEI SHOWN ON ONLINE STORE)
-        function getStoreDeviceColorPalette(colorName = "", category = "Smartphone", modelName = "") {
-            const c = (colorName || "").toLowerCase();
-            const m = (modelName || "").toLowerCase();
-            let bodyHex = "#334155";
-            let accentHex = "#c5a059";
-            let screenHex = "#0f172a";
-            let boxHex = "#1e293b";
+        // =================================================================
+        // HELPERS
+        // =================================================================
+        const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const inr = v => `₹${Math.round(Number(v) || 0).toLocaleString('en-IN')}`;
+        const stockOf = it => Math.max(0, Math.floor(Number(it && it.stock) || 0));
+        const onlineRateOf = it => Number(it && it.onlinePrice) || Number(it && it.sellPrice) || 0;
+        const safeId = v => String(v ?? '').replace(/[^\w-]/g, '_');
+        const digitsOnly = v => String(v ?? '').replace(/\D/g, '');
+        const isOpen = id => document.getElementById(id)?.classList.contains('flex');
 
-            if (c.includes("desert") || c.includes("gold") || c.includes("sand")) {
-                bodyHex = "#785c42"; accentHex = "#d4af37"; screenHex = "#1c1917"; boxHex = "#292524";
-            } else if (c.includes("gray") || c.includes("grey") || c.includes("natural") || c.includes("titanium")) {
-                bodyHex = "#4b5563"; accentHex = "#c5a059"; screenHex = "#111827"; boxHex = "#1f2937";
-            } else if (c.includes("ocean") || c.includes("blue") || c.includes("spectre") || c.includes("sky")) {
-                bodyHex = "#0369a1"; accentHex = "#38bdf8"; screenHex = "#082f49"; boxHex = "#0f172a";
-            } else if (c.includes("purple") || c.includes("violet") || c.includes("lavender")) {
-                bodyHex = "#581c87"; accentHex = "#c084fc"; screenHex = "#2e1065"; boxHex = "#1e1b4b";
-            } else if (c.includes("white") || c.includes("silver") || c.includes("clear")) {
-                bodyHex = "#e2e8f0"; accentHex = "#0284c7"; screenHex = "#1e293b"; boxHex = "#334155";
-            } else if (c.includes("green") || c.includes("emerald") || c.includes("mint")) {
-                bodyHex = "#047857"; accentHex = "#34d399"; screenHex = "#064e3b"; boxHex = "#0f172a";
-            } else if (c.includes("red") || c.includes("rose") || c.includes("coral") || c.includes("orange")) {
-                bodyHex = "#b91c1c"; accentHex = "#fbbf24"; screenHex = "#450a0a"; boxHex = "#1c1917";
-            } else if (c.includes("black") || c.includes("cosmos") || c.includes("crafted") || c.includes("midnight")) {
-                bodyHex = "#18181b"; accentHex = "#f59e0b"; screenHex = "#09090b"; boxHex = "#0f172a";
-            }
-
-            let formFactor = "PHONE";
-            if (m.includes("fold")) formFactor = "FOLD";
-            else if (m.includes("ultra")) formFactor = "ULTRA";
-            else if (category === "Smart TV" || m.includes("bravia") || m.includes("tv")) formFactor = "TV";
-            else if (m.includes("airpods") || m.includes("buds")) formFactor = "EARBUDS";
-            else if (category === "Accessory" || m.includes("adapter") || m.includes("charger")) formFactor = "ACCESSORY";
-            else if (category === "Service" || m.includes("repair") || m.includes("display")) formFactor = "SERVICE";
-
-            return { bodyHex, accentHex, screenHex, boxHex, formFactor };
+        function readJSON(key, fallback) {
+            try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v ?? fallback; }
+            catch (e) { return fallback; }
+        }
+        function writeJSON(key, value) {
+            try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+            catch (e) { return false; }
         }
 
-        function createBoxAndVariantSvgThumb(title, variantText = "8GB/256GB", colorName = "Titanium", colorHex = null, accentHex = null, mode = "BOX", category = "Smartphone") {
-            const pal = getStoreDeviceColorPalette(colorName, category, title);
-            const finalBodyHex = (colorHex && colorHex !== "#1e293b") ? colorHex : pal.bodyHex;
-            const finalAccentHex = (accentHex && accentHex !== "#c5a059") ? accentHex : pal.accentHex;
-            const shortTitle = (title || "Smartphone").replace(/^\[Pre-Owned\]\s*/i, "").slice(0, 20);
-            const shortVar = (variantText || "5G").slice(0, 14);
-            const shortCol = (colorName || "Official").slice(0, 16);
+        const STATUS_LABEL = {
+            NEW: 'Order received — awaiting confirmation',
+            PACKED: 'Packed & confirmed',
+            OUT_FOR_DELIVERY: 'Out for delivery',
+            DELIVERED: 'Delivered'
+        };
 
-            if (mode === "VARIANT") {
-                const svgVar = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
-                    <defs>
-                        <linearGradient id="vbg" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#eff6ff"/>
-                            <stop offset="100%" stop-color="#dbeafe"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="180" height="180" rx="22" fill="url(#vbg)" stroke="#3b82f6" stroke-width="2"/>
-                    <rect x="30" y="16" width="64" height="112" rx="13" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2.5"/>
-                    <rect x="84" y="22" width="64" height="106" rx="13" fill="${pal.screenHex}" stroke="${finalAccentHex}" stroke-width="2"/>
-                    <circle cx="46" cy="34" r="6" fill="${finalAccentHex}"/>
-                    <circle cx="46" cy="50" r="6" fill="${finalAccentHex}" opacity="0.85"/>
-                    <rect x="12" y="136" width="156" height="32" rx="9" fill="#1e3a8a"/>
-                    <text x="90" y="150" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">🎨 ${shortCol} • ${shortVar}</text>
-                    <text x="90" y="162" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortTitle}</text>
+        // =================================================================
+        // ARTWORK: sealed box + handset variant picture (no IMEI shown online)
+        // =================================================================
+        function storePalette(colorName = '') {
+            const c = String(colorName).toLowerCase();
+            if (c.includes('desert') || c.includes('gold') || c.includes('sand')) return { body: '#785c42', accent: '#d4af37' };
+            if (c.includes('gray') || c.includes('grey') || c.includes('natural') || c.includes('titanium')) return { body: '#4b5563', accent: '#c5a059' };
+            if (c.includes('ocean') || c.includes('blue') || c.includes('spectre') || c.includes('sky')) return { body: '#0369a1', accent: '#38bdf8' };
+            if (c.includes('purple') || c.includes('violet') || c.includes('lavender')) return { body: '#581c87', accent: '#c084fc' };
+            if (c.includes('white') || c.includes('silver') || c.includes('clear')) return { body: '#e2e8f0', accent: '#0284c7' };
+            if (c.includes('green') || c.includes('emerald') || c.includes('mint')) return { body: '#047857', accent: '#34d399' };
+            if (c.includes('red') || c.includes('rose') || c.includes('coral') || c.includes('orange')) return { body: '#b91c1c', accent: '#fbbf24' };
+            if (c.includes('black') || c.includes('cosmos') || c.includes('crafted') || c.includes('midnight')) return { body: '#18181b', accent: '#f59e0b' };
+            return { body: '#334155', accent: '#c5a059' };
+        }
+
+        function createBoxAndVariantSvgThumb(title, variantText = '', colorName = '', mode = 'BOX') {
+            const p = storePalette(colorName);
+            const shortTitle = esc(String(title || 'Smartphone').slice(0, 20));
+            const shortVar = esc(String(variantText || '5G').slice(0, 14));
+            const shortCol = esc(String(colorName || 'Official').slice(0, 16));
+            let svg;
+            if (mode === 'VARIANT') {
+                svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
+                    <rect width="180" height="180" rx="22" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
+                    <rect x="34" y="16" width="64" height="114" rx="12" fill="${p.body}" stroke="${p.accent}" stroke-width="2.5"/>
+                    <rect x="82" y="22" width="64" height="108" rx="12" fill="#0f172a" stroke="${p.accent}" stroke-width="2"/>
+                    <circle cx="50" cy="34" r="6" fill="${p.accent}"/>
+                    <circle cx="50" cy="50" r="6" fill="${p.accent}" opacity="0.8"/>
+                    <rect x="14" y="138" width="152" height="28" rx="8" fill="#1e3a8a"/>
+                    <text x="90" y="150" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">${shortCol} • ${shortVar}</text>
+                    <text x="90" y="161" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortTitle}</text>
                 </svg>`;
-                return "data:image/svg+xml;utf8," + encodeURIComponent(svgVar);
-            }
-
-            let centerArt = "";
-            if (pal.formFactor === "TV") {
-                centerArt = `
-                    <rect x="16" y="20" width="108" height="70" rx="6" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
-                    <text x="70" y="46" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED 4K TV BOX</text>
-                    <rect x="52" y="38" width="112" height="74" rx="6" fill="#1e3a8a" stroke="#ef4444" stroke-width="2.5"/>
-                    <text x="108" y="76" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">4K GOOGLE TV</text>
-                    <text x="108" y="92" font-family="sans-serif" font-size="8.5" fill="#fde68a" text-anchor="middle">${shortVar}</text>
-                `;
-            } else if (pal.formFactor === "FOLD") {
-                centerArt = `
-                    <rect x="20" y="14" width="72" height="112" rx="8" fill="${pal.boxHex}" stroke="#c5a059" stroke-width="2"/>
-                    <text x="56" y="34" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">GALAXY FOLD BOX</text>
-                    <rect x="74" y="22" width="44" height="104" rx="9" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2"/>
-                    <rect x="116" y="22" width="44" height="104" rx="9" fill="${pal.screenHex}" stroke="${finalAccentHex}" stroke-width="2"/>
-                    <line x1="116" y1="22" x2="116" y2="126" stroke="#fbbf24" stroke-width="2"/>
-                `;
             } else {
-                centerArt = `
-                    <!-- Sealed Retail Box at Back -->
-                    <rect x="22" y="14" width="76" height="112" rx="8" fill="${pal.boxHex}" stroke="#c5a059" stroke-width="2"/>
-                    <text x="60" y="32" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED RETAIL BOX</text>
-                    <rect x="32" y="40" width="56" height="3.5" rx="1.5" fill="#c5a059"/>
-                    <text x="60" y="60" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-                    <text x="60" y="74" font-family="sans-serif" font-size="7.5" fill="#cbd5e1" text-anchor="middle">${shortCol}</text>
-                    <!-- Handset Variant in Front -->
-                    <rect x="80" y="22" width="70" height="108" rx="13" fill="${finalBodyHex}" stroke="${finalAccentHex}" stroke-width="2.5"/>
-                    <rect x="86" y="28" width="58" height="96" rx="9" fill="${pal.screenHex}"/>
-                    <circle cx="98" cy="40" r="5.5" fill="${finalAccentHex}"/>
-                    <circle cx="98" cy="54" r="5.5" fill="${finalAccentHex}" opacity="0.85"/>
-                    <circle cx="110" cy="47" r="4" fill="#38bdf8"/>
-                    <rect x="106" y="10" width="62" height="18" rx="9" fill="#1d4ed8"/>
-                    <text x="137" y="22" font-family="sans-serif" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-                `;
+                svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
+                    <rect width="180" height="180" rx="22" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+                    <rect x="24" y="14" width="76" height="114" rx="8" fill="#0f172a" stroke="#c5a059" stroke-width="2"/>
+                    <text x="62" y="34" font-family="sans-serif" font-size="8" font-weight="bold" fill="#fbbf24" text-anchor="middle">SEALED BOX</text>
+                    <rect x="34" y="42" width="56" height="4" rx="2" fill="#c5a059"/>
+                    <text x="62" y="64" font-family="sans-serif" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
+                    <text x="62" y="78" font-family="sans-serif" font-size="7.5" fill="#cbd5e1" text-anchor="middle">${shortCol}</text>
+                    <rect x="78" y="22" width="68" height="110" rx="12" fill="${p.body}" stroke="${p.accent}" stroke-width="2.5"/>
+                    <rect x="83" y="28" width="58" height="98" rx="8" fill="#111827"/>
+                    <circle cx="96" cy="40" r="5.5" fill="${p.accent}"/>
+                    <circle cx="96" cy="54" r="5.5" fill="${p.accent}" opacity="0.8"/>
+                    <circle cx="108" cy="47" r="4" fill="#38bdf8"/>
+                    <rect x="108" y="10" width="60" height="18" rx="9" fill="#1e40af"/>
+                    <text x="138" y="22" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
+                    <text x="90" y="150" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">${shortTitle}</text>
+                    <text x="90" y="164" font-family="sans-serif" font-size="9" font-weight="bold" fill="#047857" text-anchor="middle">📦 Box + ${shortCol}</text>
+                </svg>`;
             }
-
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
-                <defs>
-                    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="100%" stop-color="#eff6ff"/>
-                    </linearGradient>
-                </defs>
-                <rect width="180" height="180" rx="22" fill="url(#bg)" stroke="#bfdbfe" stroke-width="2"/>
-                ${centerArt}
-                <text x="90" y="148" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">${shortTitle}</text>
-                <text x="90" y="163" font-family="sans-serif" font-size="9" font-weight="bold" fill="#1d4ed8" text-anchor="middle">📦 Box + ${shortCol}</text>
-            </svg>`;
-            return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+            return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
         }
 
-        function resolveOnlineProductImage(item, mode = "BOX") {
-            if (mode === "BOX" && item.onlineImage && !item.onlineImage.includes("POS #")) {
-                // If custom raster onlineImage was uploaded or valid online SVG, use it; otherwise generate color-accurate SVG
-                if (!item.onlineImage.includes("svg+xml")) return item.onlineImage;
-            }
-            return createBoxAndVariantSvgThumb(item.name, item.variant, item.color, null, null, mode, item.category);
+        const productImg = (item, mode = 'BOX') => createBoxAndVariantSvgThumb(item.name, item.variant, item.color, mode);
+
+        // =================================================================
+        // CATALOG
+        // =================================================================
+        function normalizeItem(raw = {}) {
+            const sell = Number(raw.sellPrice) || 0;
+            const online = Number(raw.onlinePrice) || sell;
+            return {
+                id: safeId(raw.id || raw.barcode || `item-${Math.random().toString(36).slice(2, 8)}`),
+                barcode: String(raw.barcode || ''),
+                name: String(raw.name || 'Smartphone'),
+                category: raw.category || 'Smartphone',
+                color: String(raw.color || 'Standard'),
+                variant: String(raw.variant || 'Standard'),
+                specs: String(raw.specs || ''),
+                sellPrice: sell,
+                onlinePrice: online,
+                mrpPrice: Number(raw.mrpPrice) || Math.round(online * 1.12),
+                stock: stockOf(raw),
+                rating: raw.rating || '4.8',
+                reviews: Number(raw.reviews) || 150
+            };
         }
 
         const DEFAULT_STORE_CATALOG = [
-            {
-                id: "item-1",
-                barcode: "8901001",
-                name: "Apple iPhone 16 Pro Max",
-                category: "Smartphone",
-                color: "Desert Titanium",
-                variant: "8GB / 256GB",
-                specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR ProMotion, 48MP Fusion Camera, 5G",
-                sellPrice: 137900,
-                onlinePrice: 135900,
-                mrpPrice: 144900,
-                stock: 6,
-                rating: "4.9",
-                reviews: 342,
-                image: createBoxAndVariantSvgThumb("iPhone 16 Pro Max", "8GB/256GB", "Desert Titanium", "#574a3d", "#c5a059", "BOX")
-            },
-            {
-                id: "item-2",
-                barcode: "8901002",
-                name: "Samsung Galaxy S24 Ultra 5G",
-                category: "Smartphone",
-                color: "Titanium Gray",
-                variant: "12GB / 256GB",
-                specs: "Snapdragon 8 Gen 3, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI, 5000mAh",
-                sellPrice: 119999,
-                onlinePrice: 117999,
-                mrpPrice: 129999,
-                stock: 5,
-                rating: "4.8",
-                reviews: 289,
-                image: createBoxAndVariantSvgThumb("Galaxy S24 Ultra", "12GB/256GB", "Titanium Gray", "#374151", "#d4af37", "BOX")
-            },
-            {
-                id: "item-3",
-                barcode: "8901003",
-                name: "Samsung Galaxy Z Fold 6 5G",
-                category: "Smartphone",
-                color: "Crafted Black",
-                variant: "12GB / 512GB",
-                specs: "7.6-inch Dynamic AMOLED 2X Foldable Display, Snapdragon 8 Gen 3, IP48, Galaxy AI",
-                sellPrice: 164999,
-                onlinePrice: 162999,
-                mrpPrice: 176999,
-                stock: 3,
-                rating: "4.9",
-                reviews: 124,
-                image: createBoxAndVariantSvgThumb("Galaxy Z Fold 6", "12GB/512GB", "Crafted Black", "#111827", "#c5a059", "BOX")
-            },
-            {
-                id: "item-4",
-                barcode: "8901004",
-                name: "OnePlus 13 5G",
-                category: "Smartphone",
-                color: "Midnight Ocean",
-                variant: "16GB / 512GB",
-                specs: "Snapdragon 8 Elite, Hasselblad Triple 50MP Camera, 6000mAh Silicon-Carbon, 100W SUPERVOOC",
-                sellPrice: 74999,
-                onlinePrice: 73499,
-                mrpPrice: 79999,
-                stock: 8,
-                rating: "4.8",
-                reviews: 410,
-                image: createBoxAndVariantSvgThumb("OnePlus 13 5G", "16GB/512GB", "Midnight Ocean", "#1e3a8a", "#059669", "BOX")
-            },
-            {
-                id: "item-5",
-                barcode: "8901005",
-                name: "Vivo X200 Pro 5G",
-                category: "Smartphone",
-                color: "Cosmos Black",
-                variant: "16GB / 512GB",
-                specs: "MediaTek Dimensity 9400, 200MP ZEISS APO Telephoto, V3+ Imaging Chip, 6000mAh",
-                sellPrice: 94999,
-                onlinePrice: 92999,
-                mrpPrice: 99999,
-                stock: 4,
-                rating: "4.9",
-                reviews: 198,
-                image: createBoxAndVariantSvgThumb("Vivo X200 Pro", "16GB/512GB", "Cosmos Black", "#0f172a", "#2563eb", "BOX")
-            },
-            {
-                id: "item-6",
-                barcode: "8901006",
-                name: "Redmi Note 14 Pro+ 5G",
-                category: "Smartphone",
-                color: "Spectre Blue",
-                variant: "8GB / 256GB",
-                specs: "1.5K Curved AMOLED 120Hz, 200MP OIS Camera, IP68 Water Resistant, 6200mAh Battery",
-                sellPrice: 30999,
-                onlinePrice: 29999,
-                mrpPrice: 34999,
-                stock: 12,
-                rating: "4.7",
-                reviews: 620,
-                image: createBoxAndVariantSvgThumb("Redmi Note 14 Pro+", "8GB/256GB", "Spectre Blue", "#0284c7", "#f59e0b", "BOX")
-            },
-            {
-                id: "item-7",
-                barcode: "8901007",
-                name: "Apple AirPods Pro (2nd Gen USB-C)",
-                category: "Accessory",
-                color: "White",
-                variant: "MagSafe USB-C Case",
-                specs: "H2 Chip, 2x Active Noise Cancellation, Adaptive Audio, Personalized Spatial Audio",
-                sellPrice: 22900,
-                onlinePrice: 21900,
-                mrpPrice: 24900,
-                stock: 10,
-                rating: "4.9",
-                reviews: 512,
-                image: createBoxAndVariantSvgThumb("AirPods Pro 2", "USB-C Case", "White", "#475569", "#059669", "BOX")
-            },
-            {
-                id: "item-8",
-                barcode: "8901008",
-                name: "Sony Bravia 55-inch 4K Ultra HD Google TV",
-                category: "Smart TV",
-                color: "Matte Black",
-                variant: "55 Inch (KD-55X74L)",
-                specs: "4K Processor X1, Dolby Audio 20W, Google TV, Apple AirPlay, ALLM Gaming",
-                sellPrice: 55990,
-                onlinePrice: 54490,
-                mrpPrice: 69990,
-                stock: 4,
-                rating: "4.8",
-                reviews: 175,
-                image: createBoxAndVariantSvgThumb("Sony Bravia 55 4K", "55 Inch 4K", "Matte Black", "#111827", "#dc2626", "BOX")
-            },
-            {
-                id: "item-9",
-                barcode: "8901009",
-                name: "Original 20W USB-C Fast Power Adapter + UV Glass Combo",
-                category: "Accessory",
-                color: "White / Clear",
-                variant: "20W PD + 9H UV Tempered",
-                specs: "Fast PD Charging Adapter + Edge-to-Edge Bubble-Free UV Screen Protector",
-                sellPrice: 1999,
-                onlinePrice: 1799,
-                mrpPrice: 2999,
-                stock: 35,
-                rating: "4.8",
-                reviews: 890,
-                image: createBoxAndVariantSvgThumb("20W + UV Combo", "20W + UV", "White", "#059669", "#c5a059", "BOX")
-            },
-            {
-                id: "item-10",
-                barcode: "8901010",
-                name: "Pre-Owned Apple iPhone 14 Pro (Mint Certified)",
-                category: "Pre-Owned",
-                color: "Deep Purple",
-                variant: "6GB / 256GB",
-                specs: "Certified Pre-Owned Grade A+, 92% Original Battery Health, FaceID & TrueTone OK",
-                sellPrice: 65999,
-                onlinePrice: 64499,
-                mrpPrice: 79999,
-                stock: 2,
-                rating: "4.9",
-                reviews: 94,
-                image: createBoxAndVariantSvgThumb("iPhone 14 Pro Mint", "6GB/256GB", "Deep Purple", "#581c87", "#c5a059", "BOX")
-            },
-            {
-                id: "item-11",
-                barcode: "8901011",
-                name: "Express OLED Display / Combo Replacement Service",
-                category: "Service",
-                color: "OEM Original",
-                variant: "Full Assembly + Fitting",
-                specs: "Original Touch & Amoled Display Replacement with Frame Seal & Diagnostic Check",
-                sellPrice: 2999,
-                onlinePrice: 2799,
-                mrpPrice: 3999,
-                stock: 50,
-                rating: "4.9",
-                reviews: 310,
-                image: createBoxAndVariantSvgThumb("OLED Repair Pro", "OEM Combo", "Original", "#312e81", "#f59e0b", "BOX")
-            }
+            { id: "item-1", barcode: "8901001", name: "Apple iPhone 16 Pro Max", category: "Smartphone", color: "Desert Titanium", variant: "8GB / 256GB", specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR ProMotion, 48MP Fusion Camera, 5G", sellPrice: 137900, onlinePrice: 135900, mrpPrice: 144900, stock: 6, rating: "4.9", reviews: 342 },
+            { id: "item-2", barcode: "8901002", name: "Samsung Galaxy S24 Ultra 5G", category: "Smartphone", color: "Titanium Gray", variant: "12GB / 256GB", specs: "Snapdragon 8 Gen 3, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI, 5000mAh", sellPrice: 119999, onlinePrice: 117999, mrpPrice: 129999, stock: 5, rating: "4.8", reviews: 289 },
+            { id: "item-3", barcode: "8901003", name: "Samsung Galaxy Z Fold 6 5G", category: "Smartphone", color: "Crafted Black", variant: "12GB / 512GB", specs: "7.6-inch Dynamic AMOLED 2X Foldable Display, Snapdragon 8 Gen 3, IP48, Galaxy AI", sellPrice: 164999, onlinePrice: 162999, mrpPrice: 176999, stock: 3, rating: "4.9", reviews: 124 },
+            { id: "item-4", barcode: "8901004", name: "OnePlus 13 5G", category: "Smartphone", color: "Midnight Ocean", variant: "16GB / 512GB", specs: "Snapdragon 8 Elite, Hasselblad Triple 50MP Camera, 6000mAh Silicon-Carbon, 100W SUPERVOOC", sellPrice: 74999, onlinePrice: 73499, mrpPrice: 79999, stock: 8, rating: "4.8", reviews: 410 },
+            { id: "item-5", barcode: "8901005", name: "Vivo X200 Pro 5G", category: "Smartphone", color: "Cosmos Black", variant: "16GB / 512GB", specs: "MediaTek Dimensity 9400, 200MP ZEISS APO Telephoto, V3+ Imaging Chip, 6000mAh", sellPrice: 94999, onlinePrice: 92999, mrpPrice: 99999, stock: 4, rating: "4.9", reviews: 198 },
+            { id: "item-6", barcode: "8901006", name: "Redmi Note 14 Pro+ 5G", category: "Smartphone", color: "Spectre Blue", variant: "8GB / 256GB", specs: "1.5K Curved AMOLED 120Hz, 200MP OIS Camera, IP68 Water Resistant, 6200mAh Battery", sellPrice: 30999, onlinePrice: 29999, mrpPrice: 34999, stock: 12, rating: "4.7", reviews: 620 },
+            { id: "item-7", barcode: "8901007", name: "Apple AirPods Pro (2nd Gen USB-C)", category: "Accessory", color: "White", variant: "MagSafe USB-C Case", specs: "H2 Chip, 2x Active Noise Cancellation, Adaptive Audio, Personalized Spatial Audio", sellPrice: 22900, onlinePrice: 21900, mrpPrice: 24900, stock: 10, rating: "4.9", reviews: 512 },
+            { id: "item-8", barcode: "8901008", name: "Sony Bravia 55-inch 4K Ultra HD Google TV", category: "Smart TV", color: "Matte Black", variant: "55 Inch (KD-55X74L)", specs: "4K Processor X1, Dolby Audio 20W, Google TV, Apple AirPlay, ALLM Gaming", sellPrice: 55990, onlinePrice: 54490, mrpPrice: 69990, stock: 4, rating: "4.8", reviews: 175 },
+            { id: "item-9", barcode: "8901009", name: "Original 20W USB-C Fast Power Adapter + UV Glass Combo", category: "Accessory", color: "White / Clear", variant: "20W PD + 9H UV Tempered", specs: "Fast PD Charging Adapter + Edge-to-Edge Bubble-Free UV Screen Protector", sellPrice: 1999, onlinePrice: 1799, mrpPrice: 2999, stock: 35, rating: "4.8", reviews: 890 },
+            { id: "item-10", barcode: "8901010", name: "Pre-Owned Apple iPhone 14 Pro (Mint Certified)", category: "Pre-Owned", color: "Deep Purple", variant: "6GB / 256GB", specs: "Certified Pre-Owned Grade A+, 92% Original Battery Health, FaceID & TrueTone OK", sellPrice: 65999, onlinePrice: 64499, mrpPrice: 79999, stock: 2, rating: "4.9", reviews: 94 },
+            { id: "item-11", barcode: "8901011", name: "Express OLED Display / Combo Replacement Service", category: "Service", color: "OEM Original", variant: "Full Assembly + Fitting", specs: "Original Touch & Amoled Display Replacement with Frame Seal & Diagnostic Check", sellPrice: 2999, onlinePrice: 2799, mrpPrice: 3999, stock: 50, rating: "4.9", reviews: 310 }
         ];
 
-        let storeCatalog = [...DEFAULT_STORE_CATALOG];
+        // =================================================================
+        // STATE (loaded from the same localStorage keys the ERP uses)
+        // =================================================================
+        let storeCatalog = DEFAULT_STORE_CATALOG.map(normalizeItem);
+        const localInv = readJSON('cp_local_inventory', null);
+        if (Array.isArray(localInv) && localInv.length) storeCatalog = localInv.map(normalizeItem);
+
         let storeCart = [];
-        let customerOrders = [];
-        let activeCategory = "ALL";
-        let storePayMode = "PREPAID_UPI";
+        let customerOrders = readJSON('cp_online_orders', []);
+        if (!Array.isArray(customerOrders)) customerOrders = [];
+        let remoteOrders = [];
+        let activeCategory = 'ALL';
+        let storePayMode = 'PREPAID_UPI';
         let currentInspectedOnlineItem = null;
 
-        // Customer Session & Saved Delivery Addresses State
-        let customerSession = null;
-        let savedAddresses = [
-            {
-                id: "addr-default-1",
-                tag: "🏠 Home",
-                recipient: "Rahul Sharma",
-                phone: "9848012345",
-                fullText: "Flat 201, Wyra Road, Near New Bus Stand, Khammam 507001",
-                isDefault: true
-            }
-        ];
+        let customerSession = readJSON('cp_customer_session', null);
+        let savedAddresses = readJSON('cp_saved_addresses', null);
+        if (!Array.isArray(savedAddresses) || savedAddresses.length === 0) {
+            savedAddresses = [{
+                id: 'addr-default-1', tag: '🏠 Home', recipient: 'Rahul Sharma', phone: '9848012345',
+                fullText: 'Flat 201, Wyra Road, Near New Bus Stand, Khammam 507001', isDefault: true
+            }];
+        }
 
-        try {
-            const savedInv = JSON.parse(localStorage.getItem('cp_local_inventory') || 'null');
-            if (savedInv && Array.isArray(savedInv) && savedInv.length > 0) {
-                storeCatalog = savedInv.map(it => ({
-                    ...it,
-                    onlinePrice: Number(it.onlinePrice) || Number(it.sellPrice) || 0,
-                    mrpPrice: it.mrpPrice || Math.round((Number(it.sellPrice) || 0) * 1.10),
-                    rating: it.rating || "4.8",
-                    reviews: it.reviews || 150,
-                    image: resolveOnlineProductImage(it, "BOX")
-                }));
-            }
-            const savedOrd = JSON.parse(localStorage.getItem('cp_online_orders') || 'null');
-            if (savedOrd && Array.isArray(savedOrd)) customerOrders = savedOrd;
-
-            const savedCust = JSON.parse(localStorage.getItem('cp_customer_session') || 'null');
-            if (savedCust) customerSession = savedCust;
-
-            const savedAddrList = JSON.parse(localStorage.getItem('cp_saved_addresses') || 'null');
-            if (savedAddrList && Array.isArray(savedAddrList) && savedAddrList.length > 0) {
-                savedAddresses = savedAddrList;
-            }
-        } catch (e) {}
-
-        // Firebase Live Sync with Admin ERP
+        // =================================================================
+        // FIREBASE LIVE SYNC WITH ADMIN ERP
+        // Inventory is public (stock only). Orders are fetched only for the
+        // logged-in customer's phone, never the whole collection.
+        // =================================================================
         let db = null;
         let auth = null;
+        let unsubOrders = null;
+        let unsubInventory = null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'cell-planet-khammam-erp';
+        const colInventory = () => collection(db, 'artifacts', appId, 'public', 'data', 'inventory');
+        const colOrders = () => collection(db, 'artifacts', appId, 'public', 'data', 'online_orders');
 
         async function initCustomerStoreSync() {
+            if (typeof __firebase_config === 'undefined' || !__firebase_config) return;
             try {
-                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                    const app = initializeApp(JSON.parse(__firebase_config));
-                    db = getFirestore(app);
-                    auth = getAuth(app);
+                const cfg = JSON.parse(__firebase_config);
+                const app = getApps().length ? getApp() : initializeApp(cfg);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                try {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } else {
                         await signInAnonymously(auth);
                     }
-
-                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'inventory'), (snap) => {
-                        if (!snap.empty) {
-                            storeCatalog = snap.docs.map(d => {
-                                const it = d.data();
-                                return {
-                                    ...it,
-                                    onlinePrice: Number(it.onlinePrice) || Number(it.sellPrice) || 0,
-                                    mrpPrice: it.mrpPrice || Math.round((Number(it.sellPrice) || 0) * 1.10),
-                                    rating: it.rating || "4.8",
-                                    reviews: it.reviews || 150,
-                                    image: resolveOnlineProductImage(it, "BOX")
-                                };
-                            });
-                            renderStoreProducts();
-                        }
-                    });
-
-                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'online_orders'), (snap) => {
-                        if (!snap.empty) {
-                            customerOrders = snap.docs.map(d => d.data()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                            updateHeaderCounts();
-                            renderMyOrdersList();
-                        }
-                    });
+                } catch (e) {
+                    try { await signInAnonymously(auth); } catch (_) {}
                 }
-            } catch (e) {}
+                subscribeInventory();
+                subscribeMyOrders();
+            } catch (e) {
+                console.warn('Live sync unavailable; using this device data only.', e);
+            }
+        }
+
+        function subscribeInventory() {
+            if (!db || unsubInventory) return;
+            unsubInventory = onSnapshot(colInventory(), snap => {
+                if (snap.empty) return;
+                storeCatalog = snap.docs.map(d => normalizeItem({ id: d.id, ...d.data() }));
+                const notes = syncCartWithCatalog();
+                renderStoreProducts();
+                if (isOpen('checkoutModal')) { renderStoreCartModal(); updateStoreCheckoutTotals(); }
+                if (notes.length) showStoreToast(`⚠️ ${notes[0]}`);
+            }, err => console.warn('Inventory sync error', err));
+        }
+
+        function subscribeMyOrders() {
+            if (unsubOrders) { unsubOrders(); unsubOrders = null; }
+            remoteOrders = [];
+            const phone = customerSession?.phone;
+            if (db && phone) {
+                unsubOrders = onSnapshot(query(colOrders(), where('custPhone', '==', phone)), snap => {
+                    remoteOrders = snap.docs.map(d => d.data());
+                    updateHeaderCounts();
+                    renderMyOrdersList();
+                }, err => console.warn('Order sync error', err));
+            }
+            updateHeaderCounts();
+            renderMyOrdersList();
+        }
+
+        // Orders known on this device plus this customer's synced orders (synced wins on status)
+        function allKnownOrders() {
+            const byId = new Map();
+            customerOrders.forEach(o => byId.set(o.orderId, o));
+            remoteOrders.forEach(o => byId.set(o.orderId, { ...(byId.get(o.orderId) || {}), ...o }));
+            return [...byId.values()].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        }
+
+        function myOrders() {
+            const phone = customerSession?.phone;
+            return allKnownOrders().filter(o => o.source === 'STOREFRONT' || (phone && digitsOnly(o.custPhone) === phone));
+        }
+
+        // Re-reads the stored list first so ERP updates to other orders are not overwritten
+        function persistOrderLocally(order) {
+            const latest = readJSON('cp_online_orders', []);
+            const list = Array.isArray(latest) ? latest : [];
+            list.unshift(order);
+            const ok = writeJSON('cp_online_orders', list);
+            customerOrders = list;
+            return ok;
         }
 
         window.addEventListener('storage', (e) => {
             try {
                 if (e.key === 'cp_local_inventory' && e.newValue) {
-                    const raw = JSON.parse(e.newValue);
-                    storeCatalog = raw.map(it => ({
-                        ...it,
-                        onlinePrice: Number(it.onlinePrice) || Number(it.sellPrice) || 0,
-                        image: resolveOnlineProductImage(it, "BOX")
-                    }));
+                    storeCatalog = JSON.parse(e.newValue).map(normalizeItem);
+                    syncCartWithCatalog();
                     renderStoreProducts();
                 } else if (e.key === 'cp_online_orders' && e.newValue) {
-                    customerOrders = JSON.parse(e.newValue);
+                    const list = JSON.parse(e.newValue);
+                    if (Array.isArray(list)) customerOrders = list;
                     updateHeaderCounts();
                     renderMyOrdersList();
                 }
             } catch (err) {}
         });
 
-        window.showStoreToast = function(msg) {
+        window.showStoreToast = function (msg) {
             const t = document.getElementById('toastStore');
             t.innerText = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2800);
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
         };
 
         // =================================================================
-        // CUSTOMER LOGIN / LOGOUT & SAVED DELIVERY ADDRESSES ENGINE
+        // CUSTOMER LOGIN / LOGOUT & SAVED DELIVERY ADDRESSES
         // =================================================================
+        function saveAddresses() { writeJSON('cp_saved_addresses', savedAddresses); }
+
         function updateCustomerAuthUI() {
-            const authText = document.getElementById('headerCustAuthText');
-            const logoutBtn = document.getElementById('headerCustLogoutBtn');
-            const mobBadge = document.getElementById('mobileCustomerStatusBadge');
-            const mobLoginLink = document.getElementById('mobileLoginQuickLink');
-            const mobLogoutLink = document.getElementById('mobileLogoutQuickLink');
-            const addrCount = document.getElementById('headerSavedAddrCount');
-            const activeAddrLabel = document.getElementById('headerActiveAddressLabel');
+            const $ = id => document.getElementById(id);
+            $('headerSavedAddrCount').innerText = String(savedAddresses.length);
 
-            if (addrCount) addrCount.innerText = String(savedAddresses.length);
-
-            const defaultAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
-            if (activeAddrLabel && defaultAddr) {
-                activeAddrLabel.innerHTML = `Deliver to <strong>${defaultAddr.recipient} (${defaultAddr.tag})</strong> • ${defaultAddr.fullText.slice(0, 32)}...`;
+            const def = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
+            if (def) {
+                $('headerActiveAddressLabel').innerHTML = `Deliver to <strong>${esc(def.recipient)} (${esc(def.tag)})</strong> • ${esc(String(def.fullText).slice(0, 32))}...`;
             }
 
             if (customerSession && customerSession.name) {
-                authText.innerText = `Hi, ${customerSession.name.split(' ')[0]}`;
-                logoutBtn.classList.remove('hidden');
-                logoutBtn.classList.add('inline-flex');
-                mobBadge.innerHTML = `<i class="ph-fill ph-check-circle text-emerald-400"></i> Logged in: <strong>${customerSession.name} (${customerSession.phone})</strong>`;
-                mobLoginLink.innerText = "My Profile";
-                mobLogoutLink.classList.remove('hidden');
+                $('headerCustAuthText').innerText = `Hi, ${customerSession.name.split(' ')[0]}`;
+                $('headerCustLogoutBtn').classList.remove('hidden');
+                $('headerCustLogoutBtn').classList.add('inline-flex');
+                $('mobileCustomerStatusBadge').innerHTML = `<i class="ph-fill ph-check-circle text-emerald-400"></i> Logged in: <strong>${esc(customerSession.name)} (${esc(customerSession.phone)})</strong>`;
+                $('mobileLoginQuickLink').innerText = 'My Profile';
+                $('mobileLogoutQuickLink').classList.remove('hidden');
             } else {
-                authText.innerText = "Login / Sign Up";
-                logoutBtn.classList.add('hidden');
-                logoutBtn.classList.remove('inline-flex');
-                mobBadge.innerHTML = `<i class="ph-fill ph-user"></i> Guest Shopper (Login to Save Delivery Addresses)`;
-                mobLoginLink.innerText = "Login / Sign Up";
-                mobLogoutLink.classList.add('hidden');
+                $('headerCustAuthText').innerText = 'Login / Sign Up';
+                $('headerCustLogoutBtn').classList.add('hidden');
+                $('headerCustLogoutBtn').classList.remove('inline-flex');
+                $('mobileCustomerStatusBadge').innerHTML = `<i class="ph-fill ph-user"></i> Guest Shopper (Login to Save Delivery Addresses)`;
+                $('mobileLoginQuickLink').innerText = 'Login / Sign Up';
+                $('mobileLogoutQuickLink').classList.add('hidden');
             }
         }
 
-        window.handleCustomerAccountBtnClick = function() {
+        window.handleCustomerAccountBtnClick = function () {
             if (customerSession) {
                 document.getElementById('custLoginName').value = customerSession.name || '';
                 document.getElementById('custLoginPhone').value = customerSession.phone || '';
@@ -1222,53 +1060,50 @@
             modal.classList.add('flex');
         };
 
-        window.closeCustomerAuthModal = function() {
+        window.closeCustomerAuthModal = function () {
             const modal = document.getElementById('customerAuthModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         };
 
-        window.submitCustomerLoginForm = function(e) {
+        window.submitCustomerLoginForm = function (e) {
             e.preventDefault();
             const name = document.getElementById('custLoginName').value.trim();
-            const phone = document.getElementById('custLoginPhone').value.trim();
+            const phone = digitsOnly(document.getElementById('custLoginPhone').value);
             const addrText = document.getElementById('custLoginDefaultAddress').value.trim();
+            if (!name || phone.length !== 10) {
+                showStoreToast('⚠️ Enter your name and a valid 10-digit mobile number.');
+                return;
+            }
 
             customerSession = { name, phone, loggedInAt: Date.now() };
-            try {
-                localStorage.setItem('cp_customer_session', JSON.stringify(customerSession));
-            } catch (err) {}
+            writeJSON('cp_customer_session', customerSession);
 
             if (addrText) {
                 savedAddresses.forEach(a => a.isDefault = false);
-                savedAddresses.unshift({
-                    id: 'addr-' + Date.now(),
-                    tag: '🏠 Home',
-                    recipient: name,
-                    phone: phone,
-                    fullText: addrText,
-                    isDefault: true
-                });
-                try {
-                    localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-                } catch (err) {}
+                savedAddresses.unshift({ id: 'addr-' + Date.now(), tag: '🏠 Home', recipient: name, phone, fullText: addrText, isDefault: true });
+                saveAddresses();
             }
 
+            subscribeMyOrders();
             updateCustomerAuthUI();
+            renderSavedAddressesList();
+            renderCheckoutSavedAddressChips();
             closeCustomerAuthModal();
             showStoreToast(`👋 Welcome, ${name}! Your Khammam delivery address is saved.`);
         };
 
-        window.openCustomerLogoutConfirm = function() {
+        window.openCustomerLogoutConfirm = function () {
+            if (!customerSession) return;
+            if (!confirm('Log out of your account on this device?')) return;
             customerSession = null;
-            try {
-                localStorage.removeItem('cp_customer_session');
-            } catch (err) {}
+            try { localStorage.removeItem('cp_customer_session'); } catch (err) {}
+            subscribeMyOrders();
             updateCustomerAuthUI();
-            showStoreToast("🚪 Logged out of your Customer Account.");
+            showStoreToast('🚪 Logged out of your Customer Account.');
         };
 
-        window.openSavedAddressesModal = function() {
+        window.openSavedAddressesModal = function () {
             renderSavedAddressesList();
             if (customerSession) {
                 document.getElementById('newAddrRecipient').value = customerSession.name || '';
@@ -1279,7 +1114,7 @@
             modal.classList.add('flex');
         };
 
-        window.closeSavedAddressesModal = function() {
+        window.closeSavedAddressesModal = function () {
             const modal = document.getElementById('savedAddressesModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
@@ -1295,80 +1130,59 @@
             container.innerHTML = savedAddresses.map(addr => `
                 <div class="p-3 rounded-2xl border ${addr.isDefault ? 'border-emerald-500 bg-emerald-50/50' : 'border-neutral-200 bg-white'} flex flex-wrap items-center justify-between gap-2 text-xs">
                     <div class="space-y-0.5 max-w-md">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded bg-neutral-900 text-white font-bold text-[10px]">${addr.tag}</span>
-                            <span class="font-extrabold text-neutral-900">${addr.recipient} (${addr.phone})</span>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 rounded bg-neutral-900 text-white font-bold text-[10px]">${esc(addr.tag)}</span>
+                            <span class="font-extrabold text-neutral-900">${esc(addr.recipient)} (${esc(addr.phone)})</span>
                             ${addr.isDefault ? `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">✓ Default</span>` : ''}
                         </div>
-                        <div class="text-neutral-600">${addr.fullText}</div>
+                        <div class="text-neutral-600">${esc(addr.fullText)}</div>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="selectSavedAddressAsDefault('${addr.id}')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px]">
-                            Deliver Here
-                        </button>
-                        <button type="button" onclick="deleteSavedAddress('${addr.id}')" class="px-2 py-1.5 rounded-lg border border-rose-300 text-rose-600 font-bold text-[11px]">
-                            Delete
-                        </button>
+                        <button type="button" onclick="selectSavedAddressAsDefault('${safeId(addr.id)}')" class="px-2.5 py-1.5 rounded-lg bg-blue-600 text-white font-bold text-[11px]">Deliver Here</button>
+                        <button type="button" onclick="deleteSavedAddress('${safeId(addr.id)}')" class="px-2 py-1.5 rounded-lg border border-rose-300 text-rose-600 font-bold text-[11px]">Delete</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        window.addNewSavedAddress = function(e) {
+        window.addNewSavedAddress = function (e) {
             e.preventDefault();
             const tag = document.getElementById('newAddrTag').value;
             const recipient = document.getElementById('newAddrRecipient').value.trim();
-            const phone = document.getElementById('newAddrPhone').value.trim();
+            const phone = digitsOnly(document.getElementById('newAddrPhone').value);
             const fullText = document.getElementById('newAddrFullText').value.trim();
+            if (phone.length !== 10) { showStoreToast('⚠️ Enter a valid 10-digit mobile number.'); return; }
 
             savedAddresses.forEach(a => a.isDefault = false);
-            savedAddresses.unshift({
-                id: 'addr-' + Date.now(),
-                tag,
-                recipient,
-                phone,
-                fullText,
-                isDefault: true
-            });
-            try {
-                localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-            } catch (err) {}
+            savedAddresses.unshift({ id: 'addr-' + Date.now(), tag, recipient, phone, fullText, isDefault: true });
+            saveAddresses();
 
             document.getElementById('newAddrFullText').value = '';
             renderSavedAddressesList();
             renderCheckoutSavedAddressChips();
             updateCustomerAuthUI();
-            showStoreToast("📍 Saved new Khammam delivery address!");
+            showStoreToast('📍 Saved new Khammam delivery address!');
         };
 
-        window.selectSavedAddressAsDefault = function(addrId) {
+        window.selectSavedAddressAsDefault = function (addrId) {
             savedAddresses.forEach(a => a.isDefault = (a.id === addrId));
-            try {
-                localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-            } catch (err) {}
+            saveAddresses();
             const chosen = savedAddresses.find(a => a.id === addrId);
             if (chosen) {
-                const nameEl = document.getElementById('chkCustName');
-                const phoneEl = document.getElementById('chkCustPhone');
-                const addrEl = document.getElementById('chkCustAddress');
-                if (nameEl) nameEl.value = chosen.recipient;
-                if (phoneEl) phoneEl.value = chosen.phone;
-                if (addrEl) addrEl.value = chosen.fullText;
+                document.getElementById('chkCustName').value = chosen.recipient;
+                document.getElementById('chkCustPhone').value = chosen.phone;
+                document.getElementById('chkCustAddress').value = chosen.fullText;
             }
             renderSavedAddressesList();
             renderCheckoutSavedAddressChips();
             updateCustomerAuthUI();
-            showStoreToast("📍 Delivery address selected!");
+            showStoreToast('📍 Delivery address selected!');
         };
 
-        window.deleteSavedAddress = function(addrId) {
+        window.deleteSavedAddress = function (addrId) {
             savedAddresses = savedAddresses.filter(a => a.id !== addrId);
-            if (savedAddresses.length > 0 && !savedAddresses.some(a => a.isDefault)) {
-                savedAddresses[0].isDefault = true;
-            }
-            try {
-                localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-            } catch (err) {}
+            if (savedAddresses.length > 0 && !savedAddresses.some(a => a.isDefault)) savedAddresses[0].isDefault = true;
+            saveAddresses();
             renderSavedAddressesList();
             renderCheckoutSavedAddressChips();
             updateCustomerAuthUI();
@@ -1382,211 +1196,242 @@
                 return;
             }
             wrap.innerHTML = savedAddresses.map(a => `
-                <button type="button" onclick="selectSavedAddressAsDefault('${a.id}')" class="px-2.5 py-1 rounded-lg border text-[11px] font-bold ${a.isDefault ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-neutral-800 border-neutral-300'}">
-                    ${a.tag}: ${a.recipient} (${a.fullText.slice(0, 22)}...)
+                <button type="button" onclick="selectSavedAddressAsDefault('${safeId(a.id)}')" class="px-2.5 py-1 rounded-lg border text-[11px] font-bold ${a.isDefault ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-neutral-800 border-neutral-300'}">
+                    ${esc(a.tag)}: ${esc(a.recipient)} (${esc(String(a.fullText).slice(0, 22))}...)
                 </button>
             `).join('');
         }
 
         // =================================================================
-        // ONLINE PRODUCT QUICK-VIEW & BOX/VARIANT GALLERY MODAL
+        // PRODUCT INSPECTOR (ONLINE)
         // =================================================================
-        window.openOnlineProductInspector = function(itemId) {
+        function setBuyButtons(inStock) {
+            ['onlineInspectAddCartBtn', 'onlineInspectBuyNowBtn'].forEach(id => {
+                const b = document.getElementById(id);
+                b.disabled = !inStock;
+                b.classList.toggle('is-disabled', !inStock);
+            });
+        }
+
+        window.openOnlineProductInspector = function (itemId) {
             const item = storeCatalog.find(x => x.id === itemId);
             if (!item) return;
             currentInspectedOnlineItem = item;
 
-            const onlineRate = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
+            const onlineRate = onlineRateOf(item);
             const offlineRate = Number(item.sellPrice) || onlineRate;
             const mrp = Number(item.mrpPrice) || Math.round(onlineRate * 1.12);
             const emi = Math.round(onlineRate / 12);
+            const stock = stockOf(item);
 
             document.getElementById('onlineInspectTitle').innerText = item.name;
             document.getElementById('onlineInspectCategory').innerText = item.category || 'Smartphone';
             document.getElementById('onlineInspectColor').innerText = `🎨 Color: ${item.color}`;
             document.getElementById('onlineInspectVariant').innerText = `⚡ Variant: ${item.variant}`;
-            document.getElementById('onlineInspectPrice').innerText = `₹${onlineRate.toLocaleString('en-IN')}`;
-            document.getElementById('onlineInspectMrp').innerText = `₹${mrp.toLocaleString('en-IN')}`;
+            document.getElementById('onlineInspectPrice').innerText = inr(onlineRate);
+            document.getElementById('onlineInspectMrp').innerText = inr(mrp);
             document.getElementById('onlineInspectOfflineCompare').innerText = offlineRate > onlineRate
-                ? `Save ₹${(offlineRate - onlineRate).toLocaleString('en-IN')} vs Counter Rate (₹${offlineRate.toLocaleString('en-IN')})`
-                : `Synced Official Rate`;
-            document.getElementById('onlineInspectEmi').innerText = `🏦 0% No-Cost EMI from ₹${emi.toLocaleString('en-IN')}/mo (Poonawalla, IDBI, ICICI, Bajaj)`;
+                ? `Save ${inr(offlineRate - onlineRate)} vs Counter Rate (${inr(offlineRate)})`
+                : 'Synced Official Rate';
+            document.getElementById('onlineInspectEmi').innerText = `🏦 0% No-Cost EMI from ${inr(emi)}/mo (Poonawalla, IDBI, ICICI, Bajaj)`;
+            document.getElementById('onlineInspectStock').innerText = stock > 0
+                ? (stock <= 2 ? `⚠️ Only ${stock} left at this price` : `✓ ${stock} in stock`)
+                : '❌ Currently out of stock';
             document.getElementById('onlineInspectSpecs').innerText = item.specs || '100% Genuine Sealed Box Device with Brand Warranty';
+            setBuyButtons(stock > 0);
 
             switchOnlineInspectGallery('BOX');
-
             const modal = document.getElementById('onlineProductInspectorModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         };
 
-        window.closeOnlineProductInspector = function() {
+        window.closeOnlineProductInspector = function () {
             const modal = document.getElementById('onlineProductInspectorModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         };
 
-        window.switchOnlineInspectGallery = function(mode) {
+        window.switchOnlineInspectGallery = function (mode) {
             if (!currentInspectedOnlineItem) return;
             const it = currentInspectedOnlineItem;
-            const imgEl = document.getElementById('onlineInspectMainImg');
-            imgEl.src = resolveOnlineProductImage(it, mode);
-
+            document.getElementById('onlineInspectMainImg').src = productImg(it, mode);
             document.getElementById('onlineGalBtn-BOX').className = mode === 'BOX'
-                ? "py-1.5 px-2 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-900"
-                : "py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700";
+                ? 'py-1.5 px-2 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-900'
+                : 'py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700';
             document.getElementById('onlineGalBtn-VARIANT').className = mode === 'VARIANT'
-                ? "py-1.5 px-2 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-900"
-                : "py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700";
+                ? 'py-1.5 px-2 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-900'
+                : 'py-1.5 px-2 rounded-lg border border-neutral-300 bg-white text-neutral-700';
         };
 
-        window.triggerOnlineInspectAction = function(buyNow) {
+        window.triggerOnlineInspectAction = function (buyNow) {
             if (!currentInspectedOnlineItem) return;
+            const id = currentInspectedOnlineItem.id;
             closeOnlineProductInspector();
-            addToStoreCart(currentInspectedOnlineItem.id, buyNow);
+            addToStoreCart(id, buyNow);
         };
 
-        window.setStoreCategory = function(cat) {
+        // =================================================================
+        // CATEGORY FILTER, PRODUCT GRID
+        // =================================================================
+        window.setStoreCategory = function (cat) {
             activeCategory = cat;
             document.querySelectorAll('.store-cat-chip').forEach(btn => {
-                btn.className = "store-cat-chip px-3 py-1 rounded-full hover:bg-white/10";
+                btn.className = 'store-cat-chip px-3 py-1 rounded-full hover:bg-white/10';
             });
             const activeBtn = document.getElementById(`catChip-${cat}`);
-            if (activeBtn) {
-                activeBtn.className = "store-cat-chip px-3 py-1 rounded-full bg-amber-400 text-neutral-950 font-bold";
-            }
+            if (activeBtn) activeBtn.className = 'store-cat-chip px-3 py-1 rounded-full bg-amber-400 text-neutral-950 font-bold';
             renderStoreProducts();
         };
 
-        window.renderStoreProducts = function() {
+        function productCard(item) {
+            const online = onlineRateOf(item);
+            const offline = Number(item.sellPrice) || online;
+            const mrp = Number(item.mrpPrice) || Math.round(online * 1.12);
+            const off = Math.max(5, Math.round(((mrp - online) / mrp) * 100));
+            const emi = Math.round(online / 12);
+            const stock = stockOf(item);
+            const inStock = stock > 0;
+            const id = item.id;
+            const dis = inStock ? '' : 'disabled';
+            const dimCls = inStock ? '' : 'is-disabled';
+
+            return `
+            <div class="product-card p-4">
+                <div>
+                    <div onclick="openOnlineProductInspector('${id}')" class="relative flex items-center justify-center bg-neutral-50 rounded-xl p-3 mb-3 cursor-pointer group" title="Click to inspect full phone name, color variant & box pictures">
+                        <span class="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded">${off}% OFF</span>
+                        <span class="absolute top-2 right-2 assured-badge"><i class="ph-fill ph-seal-check text-amber-300"></i> Box Sealed</span>
+                        <img src="${productImg(item)}" alt="${esc(item.name)}" class="w-40 h-40 object-contain group-hover:scale-105 transition-transform ${dimCls}">
+                        ${inStock ? '' : `<span class="absolute bottom-1.5 left-2 bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">OUT OF STOCK</span>`}
+                        <span class="absolute bottom-1.5 right-2 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">🔍 View Variant & Box</span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 mb-1">
+                        <span class="bg-emerald-700 text-white text-[11px] font-bold px-1.5 py-0.5 rounded">${esc(item.rating)} ★</span>
+                        <span class="text-[11px] text-neutral-500 font-medium">(${esc(item.reviews)} Ratings)</span>
+                        <span class="ml-auto text-[10px] font-bold ${stock > 2 ? 'text-emerald-700' : (inStock ? 'text-amber-700' : 'text-rose-600')}">
+                            ${inStock ? (stock > 2 ? `${stock} In Stock` : `Only ${stock} left`) : 'Out of Stock'}
+                        </span>
+                    </div>
+
+                    <h3 onclick="openOnlineProductInspector('${id}')" class="text-sm font-extrabold text-neutral-900 leading-snug hover:text-blue-700 cursor-pointer">${esc(item.name)}</h3>
+
+                    <div class="flex flex-wrap gap-1 mt-1.5">
+                        <span onclick="openOnlineProductInspector('${id}')" class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 cursor-pointer">🎨 ${esc(item.color)}</span>
+                        <span onclick="openOnlineProductInspector('${id}')" class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 cursor-pointer">📦 ${esc(item.variant)}</span>
+                    </div>
+
+                    <p class="text-[11px] text-neutral-500 mt-2 line-clamp-2">${esc(item.specs)}</p>
+                </div>
+
+                <div class="pt-3 mt-3 border-t border-neutral-100 space-y-2">
+                    <div>
+                        <div class="flex items-baseline gap-2 flex-wrap">
+                            <span class="text-xl font-extrabold text-neutral-900">${inr(online)}</span>
+                            <span class="text-xs text-neutral-400 line-through">${inr(mrp)}</span>
+                            ${offline > online ? `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Online Rate (-${inr(offline - online)})</span>` : ''}
+                        </div>
+                        <div class="text-[11px] font-bold text-emerald-700">🏦 No-Cost EMI from ${inr(emi)}/mo (Poonawalla, IDBI, ICICI, Bajaj)</div>
+                        <div class="text-[10px] text-neutral-500">🚚 Free 2-Hr Delivery in Khammam • Extra ₹1,000 Off on Prepaid</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button type="button" ${dis} onclick="addToStoreCart('${id}', false)" class="btn-add-cart py-2.5 px-3 text-xs flex items-center justify-center gap-1 ${dimCls}">
+                            <i class="ph-bold ph-shopping-cart"></i><span>Add to Cart</span>
+                        </button>
+                        <button type="button" ${dis} onclick="addToStoreCart('${id}', true)" class="btn-buy-now py-2.5 px-3 text-xs flex items-center justify-center gap-1 ${dimCls}">
+                            <i class="ph-bold ph-lightning"></i><span>Buy Now</span>
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        window.renderStoreProducts = function () {
             const grid = document.getElementById('storeProductGrid');
             const q = (document.getElementById('storeSearchInput')?.value || '').toLowerCase().trim();
             const sortMode = document.getElementById('storeSortSelect')?.value || 'POPULAR';
 
-            let filtered = storeCatalog.filter(item => {
+            let list = storeCatalog.filter(item => {
                 const matchCat = activeCategory === 'ALL' || item.category === activeCategory;
-                const matchQ = !q ||
-                    item.name.toLowerCase().includes(q) ||
-                    item.color.toLowerCase().includes(q) ||
-                    item.variant.toLowerCase().includes(q) ||
-                    (item.specs && item.specs.toLowerCase().includes(q));
-                return matchCat && matchQ;
+                const hay = `${item.name} ${item.color} ${item.variant} ${item.specs}`.toLowerCase();
+                return matchCat && (!q || hay.includes(q));
             });
 
-            if (sortMode === 'PRICE_LOW') filtered.sort((a, b) => (Number(a.onlinePrice) || a.sellPrice) - (Number(b.onlinePrice) || b.sellPrice));
-            else if (sortMode === 'PRICE_HIGH') filtered.sort((a, b) => (Number(b.onlinePrice) || b.sellPrice) - (Number(a.onlinePrice) || a.sellPrice));
+            if (sortMode === 'PRICE_LOW') list.sort((a, b) => onlineRateOf(a) - onlineRateOf(b));
+            else if (sortMode === 'PRICE_HIGH') list.sort((a, b) => onlineRateOf(b) - onlineRateOf(a));
+            // In-stock items first, out-of-stock items last (keeps the chosen sort order within each group)
+            list = [...list.filter(i => stockOf(i) > 0), ...list.filter(i => stockOf(i) === 0)];
 
-            document.getElementById('storeResultCountText').innerText = `Showing ${filtered.length} Genuine Sealed Box Devices`;
+            document.getElementById('storeResultCountText').innerText = `Showing ${list.length} Genuine Sealed Box Devices`;
 
-            if (filtered.length === 0) {
+            if (list.length === 0) {
                 grid.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-10 text-center text-sm text-neutral-500">No matching products found. Try another search term!</div>`;
                 return;
             }
-
-            grid.innerHTML = filtered.map(item => {
-                const onlinePrice = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
-                const offlinePrice = Number(item.sellPrice) || onlinePrice;
-                const mrp = Number(item.mrpPrice) || Math.round(onlinePrice * 1.12);
-                const offPct = Math.max(5, Math.round(((mrp - onlinePrice) / mrp) * 100));
-                const monthlyEmi = Math.round(onlinePrice / 12);
-                const boxImgSrc = resolveOnlineProductImage(item, "BOX");
-
-                return `
-                <div class="product-card p-4">
-                    <div>
-                        <div onclick="openOnlineProductInspector('${item.id}')" class="relative flex items-center justify-center bg-neutral-50 rounded-xl p-3 mb-3 cursor-pointer group" title="Click to inspect full phone name, color variant & box pictures">
-                            <span class="absolute top-2 left-2 bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded">
-                                ${offPct}% OFF
-                            </span>
-                            <span class="absolute top-2 right-2 assured-badge">
-                                <i class="ph-fill ph-seal-check text-amber-300"></i> Box Sealed
-                            </span>
-                            <img src="${boxImgSrc}" alt="${item.name}" class="w-40 h-40 object-contain group-hover:scale-105 transition-transform">
-                            <span class="absolute bottom-1.5 right-2 bg-black/75 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                🔍 View Variant & Box
-                            </span>
-                        </div>
-
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <span class="bg-emerald-700 text-white text-[11px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                ${item.rating || '4.8'} ★
-                            </span>
-                            <span class="text-[11px] text-neutral-500 font-medium">(${item.reviews || 140} Ratings)</span>
-                            <span class="ml-auto text-[10px] font-bold ${item.stock > 2 ? 'text-emerald-700' : 'text-rose-600'}">
-                                ${item.stock > 0 ? `${item.stock} In Stock` : 'Out of Stock'}
-                            </span>
-                        </div>
-
-                        <h3 onclick="openOnlineProductInspector('${item.id}')" class="text-sm font-extrabold text-neutral-900 leading-snug hover:text-blue-700 cursor-pointer">${item.name}</h3>
-
-                        <div class="flex flex-wrap gap-1 mt-1.5">
-                            <span onclick="openOnlineProductInspector('${item.id}')" class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-200 cursor-pointer">🎨 ${item.color}</span>
-                            <span onclick="openOnlineProductInspector('${item.id}')" class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-200 cursor-pointer">📦 ${item.variant}</span>
-                        </div>
-
-                        <p class="text-[11px] text-neutral-500 mt-2 line-clamp-2">${item.specs}</p>
-                    </div>
-
-                    <div class="pt-3 mt-3 border-t border-neutral-100 space-y-2">
-                        <div>
-                            <div class="flex items-baseline gap-2 flex-wrap">
-                                <span class="text-xl font-extrabold text-neutral-900">₹${onlinePrice.toLocaleString('en-IN')}</span>
-                                <span class="text-xs text-neutral-400 line-through">₹${mrp.toLocaleString('en-IN')}</span>
-                                ${offlinePrice > onlinePrice ? `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Online Rate (-₹${(offlinePrice - onlinePrice).toLocaleString('en-IN')})</span>` : ''}
-                            </div>
-                            <div class="text-[11px] font-bold text-emerald-700">
-                                🏦 No-Cost EMI from ₹${monthlyEmi.toLocaleString('en-IN')}/mo (Poonawalla, IDBI, ICICI, Bajaj)
-                            </div>
-                            <div class="text-[10px] text-neutral-500">
-                                🚚 Free 2-Hr Delivery in Khammam • Extra ₹1,000 Off on Prepaid
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button type="button" onclick="addToStoreCart('${item.id}', false)" class="btn-add-cart py-2.5 px-3 text-xs flex items-center justify-center gap-1">
-                                <i class="ph-bold ph-shopping-cart"></i>
-                                <span>Add to Cart</span>
-                            </button>
-                            <button type="button" onclick="addToStoreCart('${item.id}', true)" class="btn-buy-now py-2.5 px-3 text-xs flex items-center justify-center gap-1">
-                                <i class="ph-bold ph-lightning"></i>
-                                <span>Buy Now</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
+            grid.innerHTML = list.map(productCard).join('');
         };
 
-        window.addToStoreCart = function(itemId, openCheckoutImmediately = false) {
-            const item = storeCatalog.find(x => x.id === itemId);
-            if (!item) return;
+        // =================================================================
+        // CART (stock-aware)
+        // =================================================================
+        function cartLineFromItem(item) {
+            return { id: item.id, name: item.name, color: item.color, variant: item.variant, specs: item.specs, sellPrice: onlineRateOf(item), qty: 1 };
+        }
 
-            const unitOnlinePrice = Number(item.onlinePrice) || Number(item.sellPrice) || 0;
+        // Re-checks every cart line against live stock and live online price.
+        // Returns messages describing any change so the customer is told.
+        function syncCartWithCatalog() {
+            const notes = [];
+            storeCart = storeCart.filter(line => {
+                const live = storeCatalog.find(x => x.id === line.id);
+                const avail = stockOf(live);
+                if (!live || avail === 0) {
+                    notes.push(`${line.name} is out of stock and was removed from your cart.`);
+                    return false;
+                }
+                if (line.qty > avail) {
+                    notes.push(`${line.name}: only ${avail} left, quantity adjusted.`);
+                    line.qty = avail;
+                }
+                line.sellPrice = onlineRateOf(live);
+                return true;
+            });
+            updateHeaderCounts();
+            return notes;
+        }
+
+        window.addToStoreCart = function (itemId, openCheckoutImmediately = false) {
+            const item = storeCatalog.find(x => x.id === itemId);
+            if (!item) { showStoreToast('⚠️ Product not found. Please refresh the page.'); return; }
+            const avail = stockOf(item);
+            if (avail < 1) { showStoreToast(`😔 ${item.name} is out of stock right now.`); return; }
+
             const existing = storeCart.find(c => c.id === itemId);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                storeCart.push({ ...item, sellPrice: unitOnlinePrice, qty: 1 });
-            }
+            const nextQty = (existing ? existing.qty : 0) + 1;
+            if (nextQty > avail) { showStoreToast(`⚠️ Only ${avail} unit(s) of this model available.`); return; }
+
+            if (existing) existing.qty = nextQty;
+            else storeCart.push(cartLineFromItem(item));
+
             updateHeaderCounts();
             showStoreToast(`🛒 Added ${item.name} (${item.variant}) to Cart!`);
-
-            if (openCheckoutImmediately) {
-                openCartDrawer();
-            }
+            if (openCheckoutImmediately) openCartDrawer();
         };
 
         function updateHeaderCounts() {
             const totalCart = storeCart.reduce((s, i) => s + i.qty, 0);
             document.getElementById('headerCartCount').innerText = String(totalCart);
-            document.getElementById('headerMyOrdersCount').innerText = String(customerOrders.length);
+            document.getElementById('headerMyOrdersCount').innerText = String(myOrders().length);
         }
 
-        window.openCartDrawer = function() {
+        window.openCartDrawer = function () {
+            const notes = syncCartWithCatalog();
+            if (notes.length) showStoreToast(`⚠️ ${notes[0]}`);
             renderStoreCartModal();
             renderCheckoutSavedAddressChips();
 
-            // Pre-fill from logged in Customer or Default Saved Address
             const defAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
             const nameEl = document.getElementById('chkCustName');
             const phoneEl = document.getElementById('chkCustPhone');
@@ -1608,7 +1453,7 @@
             modal.classList.add('flex');
         };
 
-        window.closeCartDrawer = function() {
+        window.closeCartDrawer = function () {
             const modal = document.getElementById('checkoutModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
@@ -1620,48 +1465,60 @@
                 list.innerHTML = `<div class="p-6 text-center bg-neutral-50 rounded-2xl text-xs text-neutral-500">Your cart is empty. Click "Buy Now" or "Add to Cart" on any smartphone!</div>`;
                 return;
             }
-
-            list.innerHTML = storeCart.map(it => `
+            const id = null;
+            list.innerHTML = storeCart.map(line => {
+                const live = storeCatalog.find(x => x.id === line.id);
+                const avail = stockOf(live);
+                const atMax = line.qty >= avail;
+                return `
                 <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 flex items-center justify-between gap-3 text-xs">
                     <div class="flex items-center gap-3">
-                        <img src="${resolveOnlineProductImage(it, 'BOX')}" alt="${it.name}" class="w-12 h-12 rounded-lg object-contain bg-white border">
+                        <img src="${createBoxAndVariantSvgThumb(line.name, line.variant, line.color)}" alt="${esc(line.name)}" class="w-12 h-12 rounded-lg object-contain bg-white border">
                         <div>
-                            <div class="font-bold text-neutral-900">${it.name}</div>
-                            <div class="text-[11px] text-neutral-500">🎨 ${it.color} • 📦 ${it.variant} (Sealed Box)</div>
+                            <div class="font-bold text-neutral-900">${esc(line.name)}</div>
+                            <div class="text-[11px] text-neutral-500">🎨 ${esc(line.color)} • 📦 ${esc(line.variant)} (Sealed Box)</div>
+                            ${atMax ? `<div class="text-[10px] font-bold text-amber-700">Maximum available quantity reached</div>` : ''}
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="flex items-center border rounded-lg bg-white">
-                            <button type="button" onclick="changeStoreCartQty('${it.id}', -1)" class="px-2 py-1 font-bold">-</button>
-                            <span class="px-2 font-bold">${it.qty}</span>
-                            <button type="button" onclick="changeStoreCartQty('${it.id}', 1)" class="px-2 py-1 font-bold">+</button>
+                            <button type="button" onclick="changeStoreCartQty('${line.id}', -1)" class="px-2 py-1 font-bold">-</button>
+                            <span class="px-2 font-bold">${line.qty}</span>
+                            <button type="button" onclick="changeStoreCartQty('${line.id}', 1)" class="px-2 py-1 font-bold ${atMax ? 'opacity-40' : ''}">+</button>
                         </div>
-                        <div class="font-extrabold text-sm text-neutral-900">₹${(it.sellPrice * it.qty).toLocaleString('en-IN')}</div>
+                        <div class="font-extrabold text-sm text-neutral-900">${inr(line.sellPrice * line.qty)}</div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
-        window.changeStoreCartQty = function(itemId, delta) {
-            const idx = storeCart.findIndex(x => x.id === itemId);
-            if (idx === -1) return;
-            storeCart[idx].qty += delta;
-            if (storeCart[idx].qty <= 0) storeCart.splice(idx, 1);
+        window.changeStoreCartQty = function (itemId, delta) {
+            const line = storeCart.find(x => x.id === itemId);
+            if (!line) return;
+            const live = storeCatalog.find(x => x.id === itemId);
+            const avail = stockOf(live);
+            if (delta > 0 && line.qty + 1 > avail) {
+                showStoreToast(`⚠️ Only ${avail} unit(s) available.`);
+                return;
+            }
+            line.qty += delta;
+            if (line.qty <= 0) storeCart = storeCart.filter(x => x !== line);
             updateHeaderCounts();
             renderStoreCartModal();
             updateStoreCheckoutTotals();
         };
 
-        window.selectStorePaymentMode = function(mode) {
+        // =================================================================
+        // CHECKOUT: PAYMENT MODES & TOTALS
+        // =================================================================
+        window.selectStorePaymentMode = function (mode) {
             storePayMode = mode;
             ['PREPAID_UPI', 'BANK_EMI', 'PREPAID_CARD', 'COD'].forEach(m => {
                 const btn = document.getElementById(`stPay-${m}`);
                 if (!btn) return;
-                if (m === mode) {
-                    btn.className = "p-2.5 rounded-xl border-2 border-blue-600 bg-blue-50/70 text-blue-950 font-bold text-left shadow-sm";
-                } else {
-                    btn.className = "p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left";
-                }
+                btn.className = m === mode
+                    ? 'p-2.5 rounded-xl border-2 border-blue-600 bg-blue-50/70 text-blue-950 font-bold text-left shadow-sm'
+                    : 'p-2.5 rounded-xl border border-neutral-300 bg-white text-neutral-800 font-bold text-left';
             });
 
             const sub = document.getElementById('storePaymentSubBox');
@@ -1680,8 +1537,7 @@
                             </select>
                             <input type="text" id="stUpiRef" placeholder="UTR / Last 4 Digits" class="border border-neutral-300 rounded-lg px-2.5 py-2 font-mono bg-white">
                         </div>
-                    </div>
-                `;
+                    </div>`;
             } else if (mode === 'BANK_EMI') {
                 sub.innerHTML = `
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -1716,8 +1572,7 @@
                             <label class="font-bold text-neutral-700 block mb-1">Card / PAN / Approval Note</label>
                             <input type="text" id="stEmiRef" placeholder="Last 4 digits or Mobile linked" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 bg-white">
                         </div>
-                    </div>
-                `;
+                    </div>`;
             } else if (mode === 'PREPAID_CARD') {
                 sub.innerHTML = `
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1735,19 +1590,17 @@
                             <label class="font-bold text-neutral-700 block mb-1">Card Last 4 Digits / Auth Ref</label>
                             <input type="text" id="stCardRef" maxlength="8" placeholder="e.g. 4921" class="w-full border border-neutral-300 rounded-lg px-2.5 py-2 font-mono bg-white">
                         </div>
-                    </div>
-                `;
+                    </div>`;
             } else {
                 sub.innerHTML = `
                     <div class="text-xs text-neutral-700 font-semibold">
                         🚚 <strong>Pay on Delivery in Khammam:</strong> Our store executive will deliver the sealed box to your doorstep and collect Cash, UPI, or Card Swipe at delivery!
-                    </div>
-                `;
+                    </div>`;
             }
             updateStoreCheckoutTotals();
         };
 
-        window.updateStoreCheckoutTotals = function() {
+        window.updateStoreCheckoutTotals = function () {
             const rawSum = storeCart.reduce((s, i) => s + (i.sellPrice * i.qty), 0);
             const isExch = document.getElementById('chkExchangeToggle')?.checked;
             const exFields = document.getElementById('chkExchangeFields');
@@ -1760,8 +1613,8 @@
                 exBadge.classList.remove('hidden');
                 exRow.classList.remove('hidden');
                 exVal = Number(document.getElementById('chkOldValue')?.value) || 8000;
-                exBadge.innerText = `-₹${exVal.toLocaleString('en-IN')}`;
-                document.getElementById('chkSumExchange').innerText = `-₹${exVal.toLocaleString('en-IN')}`;
+                exBadge.innerText = `-${inr(exVal)}`;
+                document.getElementById('chkSumExchange').innerText = `-${inr(exVal)}`;
             } else {
                 exFields?.classList.add('hidden');
                 exBadge?.classList.add('hidden');
@@ -1770,53 +1623,53 @@
 
             const isPrepaidDiscount = (storePayMode === 'PREPAID_UPI' || storePayMode === 'PREPAID_CARD') && rawSum > 5000;
             const prepaidDisc = isPrepaidDiscount ? 1000 : 0;
-            const prepRow = document.getElementById('chkPrepaidRow');
-            if (isPrepaidDiscount) {
-                prepRow.classList.remove('hidden');
-            } else {
-                prepRow.classList.add('hidden');
-            }
+            document.getElementById('chkPrepaidRow').classList.toggle('hidden', !isPrepaidDiscount);
 
             const net = Math.max(0, rawSum - exVal - prepaidDisc);
-            document.getElementById('chkSumItems').innerText = `₹${rawSum.toLocaleString('en-IN')}`;
-            document.getElementById('chkSumNetPayable').innerText = `₹${net.toLocaleString('en-IN')}`;
+            document.getElementById('chkSumItems').innerText = inr(rawSum);
+            document.getElementById('chkSumNetPayable').innerText = inr(net);
             return { rawSum, exVal, prepaidDisc, net };
         };
 
-        window.submitCustomerOnlineOrder = async function(e) {
+        // =================================================================
+        // PLACE ORDER (validates address, phone, and live stock)
+        // =================================================================
+        window.submitCustomerOnlineOrder = async function (e) {
             e.preventDefault();
-            if (storeCart.length === 0) {
-                showStoreToast("⚠️ Your cart is empty!");
+            if (storeCart.length === 0) { showStoreToast('⚠️ Your cart is empty!'); return; }
+
+            const custName = document.getElementById('chkCustName').value.trim();
+            const custPhone = digitsOnly(document.getElementById('chkCustPhone').value);
+            const address = document.getElementById('chkCustAddress').value.trim();
+
+            if (!custName) { showStoreToast('⚠️ Please enter your full name.'); return; }
+            if (custPhone.length !== 10) { showStoreToast('⚠️ Enter a valid 10-digit mobile number.'); return; }
+            if (address.length < 10) { showStoreToast('⚠️ Enter a complete delivery address in Khammam.'); return; }
+
+            // Stock check against the live catalog before anything is saved
+            const notes = syncCartWithCatalog();
+            if (notes.length) {
+                showStoreToast(`⚠️ ${notes[0]}`);
+                renderStoreCartModal();
+                updateStoreCheckoutTotals();
                 return;
             }
+            if (storeCart.length === 0) { showStoreToast('⚠️ Items in your cart are no longer available.'); renderStoreCartModal(); return; }
 
             const totals = updateStoreCheckoutTotals();
-            const custName = document.getElementById('chkCustName').value.trim();
-            const custPhone = document.getElementById('chkCustPhone').value.trim();
-            const address = document.getElementById('chkCustAddress').value.trim();
-            const saveAddrChecked = document.getElementById('chkSaveThisAddress')?.checked;
 
-            if (saveAddrChecked && address) {
-                const exists = savedAddresses.some(a => a.fullText.toLowerCase() === address.toLowerCase());
+            if (document.getElementById('chkSaveThisAddress')?.checked) {
+                const exists = savedAddresses.some(a => String(a.fullText).toLowerCase() === address.toLowerCase());
                 if (!exists) {
                     savedAddresses.forEach(a => a.isDefault = false);
-                    savedAddresses.unshift({
-                        id: 'addr-' + Date.now(),
-                        tag: '🏠 Home',
-                        recipient: custName,
-                        phone: custPhone,
-                        fullText: address,
-                        isDefault: true
-                    });
-                    try {
-                        localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-                    } catch (err) {}
+                    savedAddresses.unshift({ id: 'addr-' + Date.now(), tag: '🏠 Home', recipient: custName, phone: custPhone, fullText: address, isDefault: true });
+                    saveAddresses();
                     updateCustomerAuthUI();
                 }
             }
 
-            let paymentType = "CASH ON DELIVERY (Khammam)";
-            let paymentRef = "Pay at Doorstep";
+            let paymentType = 'CASH ON DELIVERY (Khammam)';
+            let paymentRef = 'Pay at Doorstep';
             let isPrepaid = false;
             let isEmi = false;
 
@@ -1843,13 +1696,13 @@
             }
 
             const mainItem = storeCart[0];
-            const allNames = storeCart.map(i => `${i.name} x${i.qty}`).join(' + ');
             const isExch = document.getElementById('chkExchangeToggle')?.checked;
             const oldModel = document.getElementById('chkOldModel')?.value || 'Old Smartphone';
-
             const now = new Date();
+
             const orderRecord = {
-                orderId: `ORD-CP-${501 + customerOrders.length}`,
+                orderId: `ORD-CP-W${Date.now().toString(36).toUpperCase()}`,
+                source: 'STOREFRONT',
                 timestamp: now.getTime(),
                 dateStr: now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
                 timeStr: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
@@ -1857,7 +1710,8 @@
                 custPhone,
                 address,
                 itemId: mainItem.id,
-                itemName: allNames,
+                itemName: storeCart.map(i => `${i.name} x${i.qty}`).join(' + '),
+                lines: storeCart.map(i => ({ itemId: i.id, name: i.name, color: i.color, variant: i.variant, qty: i.qty, unitPrice: i.sellPrice })),
                 color: mainItem.color,
                 variant: mainItem.variant,
                 imei: 'Assigned at Dispatch',
@@ -1870,35 +1724,47 @@
                 paymentRef,
                 isPrepaid,
                 isEmi,
-                status: "NEW"
+                status: 'NEW'
             };
 
-            customerOrders.unshift(orderRecord);
-            try {
-                localStorage.setItem('cp_online_orders', JSON.stringify(customerOrders));
-            } catch (err) {}
+            const savedLocally = persistOrderLocally(orderRecord);
 
+            let synced = false;
             if (db) {
                 try {
                     await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'online_orders', orderRecord.orderId), orderRecord);
-                } catch (err) {}
+                    synced = true;
+                } catch (err) {
+                    console.warn('Order sync failed', err);
+                }
             }
 
             storeCart = [];
             updateHeaderCounts();
             closeCartDrawer();
             openTrackOrdersModal();
-            showStoreToast(`🎉 Order ${orderRecord.orderId} Placed & Synced with Cell Planet Khammam!`);
+
+            if (synced) {
+                showStoreToast(`🎉 Order ${orderRecord.orderId} placed & synced with Cell Planet Khammam!`);
+            } else {
+                showStoreToast(`🎉 Order ${orderRecord.orderId} saved. Please also send it on WhatsApp to the store.`);
+            }
+            if (!savedLocally) {
+                showStoreToast('⚠️ Browser storage is full. Please send this order on WhatsApp to the store.');
+            }
         };
 
-        window.openTrackOrdersModal = function() {
+        // =================================================================
+        // MY ORDERS
+        // =================================================================
+        window.openTrackOrdersModal = function () {
             renderMyOrdersList();
             const modal = document.getElementById('trackOrdersModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         };
 
-        window.closeTrackOrdersModal = function() {
+        window.closeTrackOrdersModal = function () {
             const modal = document.getElementById('trackOrdersModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
@@ -1907,37 +1773,38 @@
         function renderMyOrdersList() {
             const container = document.getElementById('myOrdersContainer');
             if (!container) return;
+            const list = myOrders();
 
-            if (customerOrders.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-xs text-neutral-500">You haven't placed any orders yet.</div>`;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-xs text-neutral-500">You haven't placed any orders on this device yet. Orders placed while logged in also appear here.</div>`;
                 return;
             }
 
-            container.innerHTML = customerOrders.map(ord => `
+            container.innerHTML = list.map(ord => `
                 <div class="p-4 rounded-2xl border border-neutral-200 bg-neutral-50 space-y-2 text-xs">
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-2">
                         <div>
-                            <span class="font-extrabold text-sm text-blue-900">${ord.orderId}</span>
-                            <span class="text-neutral-500 ml-2">${ord.dateStr} • ${ord.timeStr}</span>
+                            <span class="font-extrabold text-sm text-blue-900">${esc(ord.orderId)}</span>
+                            <span class="text-neutral-500 ml-2">${esc(ord.dateStr)} • ${esc(ord.timeStr)}</span>
                         </div>
                         <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-extrabold text-[11px]">
-                            🚚 Status: ${ord.status.replace(/_/g, ' ')}
+                            🚚 ${esc(STATUS_LABEL[ord.status] || ord.status || 'Order received')}
                         </span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div>
-                            <div class="font-bold text-neutral-900">${ord.itemName}</div>
-                            <div class="text-neutral-600">Variant: ${ord.color} | ${ord.variant} (Sealed Box)</div>
-                            <div class="text-neutral-500">Deliver To: ${ord.custName} (${ord.custPhone}) — ${ord.address}</div>
+                            <div class="font-bold text-neutral-900">${esc(ord.itemName)}</div>
+                            <div class="text-neutral-600">Variant: ${esc(ord.color)} | ${esc(ord.variant)} (Sealed Box)</div>
+                            <div class="text-neutral-500">Deliver To: ${esc(ord.custName)} (${esc(ord.custPhone)}) — ${esc(ord.address)}</div>
                         </div>
                         <div class="sm:text-right">
-                            <div class="text-base font-extrabold text-neutral-900">₹${Number(ord.netPayable).toLocaleString('en-IN')}</div>
-                            <div class="font-semibold text-blue-800">${ord.paymentType}</div>
-                            <div class="text-[11px] text-neutral-500">${ord.paymentRef}</div>
+                            <div class="text-base font-extrabold text-neutral-900">${inr(ord.netPayable)}</div>
+                            <div class="font-semibold text-blue-800">${esc(ord.paymentType)}</div>
+                            <div class="text-[11px] text-neutral-500">${esc(ord.paymentRef)}</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-2 pt-2">
-                        <button type="button" onclick="sendCustomerOrderToStoreWhatsApp('${ord.orderId}')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-1">
+                        <button type="button" onclick="sendCustomerOrderToStoreWhatsApp('${esc(ord.orderId)}')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-bold flex items-center gap-1">
                             <i class="ph-bold ph-whatsapp-logo"></i>
                             <span>Send Order to Store WhatsApp</span>
                         </button>
@@ -1946,8 +1813,8 @@
             `).join('');
         }
 
-        window.sendCustomerOrderToStoreWhatsApp = function(orderId) {
-            const ord = customerOrders.find(x => x.orderId === orderId);
+        window.sendCustomerOrderToStoreWhatsApp = function (orderId) {
+            const ord = allKnownOrders().find(x => x.orderId === orderId);
             if (!ord) return;
             const msg =
 `🛒 *NEW ONLINE HOME ORDER — ${STORE_INFO.name}*
@@ -1956,20 +1823,21 @@
 📍 *Delivery Address:* ${ord.address}
 --------------------------------
 📱 *Ordered Item:* ${ord.itemName} (${ord.color} • ${ord.variant})
-${ord.exchangeDeduction > 0 ? `🔄 *Old Phone Exchange:* -₹${ord.exchangeDeduction.toLocaleString('en-IN')} (${ord.exchangeInfo})\n` : ''}💳 *Payment / Finance:* ${ord.paymentType} (${ord.paymentRef})
-💰 *NET PAYABLE TOTAL: ₹${Number(ord.netPayable).toLocaleString('en-IN')}*
+${ord.exchangeDeduction > 0 ? `🔄 *Old Phone Exchange:* -${inr(ord.exchangeDeduction)} (${ord.exchangeInfo})\n` : ''}💳 *Payment / Finance:* ${ord.paymentType} (${ord.paymentRef})
+💰 *NET PAYABLE TOTAL: ${inr(ord.netPayable)}*
 --------------------------------
 Please confirm express Khammam delivery!`;
-
             window.open(`https://wa.me/91${STORE_INFO.phone}?text=${encodeURIComponent(msg)}`, '_blank');
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            updateCustomerAuthUI();
-            renderStoreProducts();
-            updateHeaderCounts();
-            initCustomerStoreSync();
-        });
+        // =================================================================
+        // INITIAL RENDER
+        // =================================================================
+        updateCustomerAuthUI();
+        renderStoreProducts();
+        updateHeaderCounts();
+        renderCheckoutSavedAddressChips();
+        initCustomerStoreSync();
     </script>
 </body>
 </html>
