@@ -600,7 +600,7 @@
 
           <div class="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
             <span class="flex items-center gap-1.5 text-emerald-300 font-semibold">
-            <i class="ph-fill ph-check-circle"></i> Dual-Photo OCR & Spell-Check Ready
+            <i class="ph-fill ph-check-circle"></i> High-Res OCR + Rapid Model Matrix Ready
             </span>
             <span class="font-mono text-amber-300/90">📞 9550677795</span>
           </div>
@@ -935,6 +935,49 @@
           </div>
         </div>
 
+            <!-- ULTRA-RAPID SHOWROOM SOLUTION: 1-TAP BRAND, MODEL & VARIANT MATRIX + LOCK MODEL SWITCH -->
+        <div class="rounded-2xl bg-slate-950/90 border border-amber-400/50 p-3.5 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-400 text-slate-950 font-extrabold text-[10px] uppercase tracking-wider">
+            ⚡ Zero-Wait Rapid Showroom Mode
+            </span>
+            <span class="text-xs font-bold text-amber-300">
+            1. Tap Brand &amp; Model (or Type) → 2. Lock Model → 3. Snap Box &amp; IMEI Sticker (Never Picks Wrong Phone!)
+            </span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+            <label class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-400/20 border border-amber-400 text-amber-200 text-[11px] font-extrabold cursor-pointer" title="When checked, uploading Front Box or Back Spec photos will NEVER overwrite your chosen Model Name—it will only attach the photos and extract the 15-digit IMEI & RAM/ROM!">
+            <input type="checkbox" id="dualLockModelNameToggle" checked class="accent-amber-400 w-3.5 h-3.5">
+            <span>🔒 Lock Chosen Model Name (Only Read IMEI &amp; Attach Photos)</span>
+            </label>
+            <label class="px-2.5 py-1 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] cursor-pointer inline-flex items-center gap-1 shadow">
+            <i class="ph-bold ph-barcode"></i>
+            <span>📷 Scan IMEI Barcode Only</span>
+            <input type="file" accept="image/*" capture="environment" class="hidden" onchange="handleStrictImeiOnlyPhotoScan(event)">
+            </label>
+            </div>
+          </div>
+
+          <!-- Brand Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-bold" id="rapidBrandPillsRow"></div>
+
+          <!-- Model Chips for Selected Brand + Instant Variant Buttons -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-2.5 items-center pt-1 border-t border-white/10">
+            <div class="lg:col-span-8 flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1" id="rapidModelChipsRow"></div>
+            <div class="lg:col-span-4 flex flex-wrap items-center justify-end gap-1">
+            <span class="text-[10px] font-bold text-slate-400 mr-1">1-Tap RAM/ROM:</span>
+            <button type="button" onclick="setRapidVariant('4GB / 128GB')" class="px-2 py-1 rounded bg-white/10 hover:bg-indigo-500 text-white text-[10px] font-bold">4/128G</button>
+            <button type="button" onclick="setRapidVariant('6GB / 128GB')" class="px-2 py-1 rounded bg-white/10 hover:bg-indigo-500 text-white text-[10px] font-bold">6/128G</button>
+            <button type="button" onclick="setRapidVariant('8GB / 128GB')" class="px-2 py-1 rounded bg-white/10 hover:bg-indigo-500 text-white text-[10px] font-bold">8/128G</button>
+            <button type="button" onclick="setRapidVariant('8GB / 256GB')" class="px-2 py-1 rounded bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400 hover:text-slate-950 text-amber-200 text-[10px] font-bold">8/256G</button>
+            <button type="button" onclick="setRapidVariant('12GB / 256GB')" class="px-2 py-1 rounded bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400 hover:text-slate-950 text-amber-200 text-[10px] font-bold">12/256G</button>
+            <button type="button" onclick="setRapidVariant('12GB / 512GB')" class="px-2 py-1 rounded bg-white/10 hover:bg-indigo-500 text-white text-[10px] font-bold">12/512G</button>
+            <button type="button" onclick="setRapidVariant('16GB / 512GB')" class="px-2 py-1 rounded bg-white/10 hover:bg-indigo-500 text-white text-[10px] font-bold">16/512G</button>
+            </div>
+          </div>
+        </div>
+
         <!-- 3-Column Synchronized Portal: [1. Front Box Image] + [2. Spec & IMEI Image] + [3. Exact Spell-Checked & IMEI Verified Stock Input] -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
           <!-- COLUMN 1: PICTURE 1 - MOBILE FRONT FACE BOX -->
@@ -1009,7 +1052,7 @@
             <div class="grid grid-cols-12 gap-2 text-xs">
             <div class="col-span-8">
             <label class="text-[10px] font-bold text-neutral-500 uppercase block">Model Name (Spell-Checked) *</label>
-            <input type="text" id="dualExactModelInput" value="Apple iPhone 16 Pro Max" oninput="handleDualExactInputChanged()" class="input-luxury py-1.5 px-2.5 text-xs font-bold border-amber-400">
+            <input type="text" id="dualExactModelInput" list="masterPhoneModelDatalist" value="Apple iPhone 16 Pro Max" oninput="handleDualExactInputChanged()" class="input-luxury py-1.5 px-2.5 text-xs font-bold border-amber-400">
             </div>
             <div class="col-span-4">
             <label class="text-[10px] font-bold text-neutral-500 uppercase block">Color *</label>
@@ -1996,7 +2039,7 @@
             <label class="font-bold text-neutral-600">Product / Model Name *</label>
             <button type="button" onclick="autoSpellCheckModalFields()" class="text-[10px] font-bold text-indigo-700 underline">✓ Spell-Check</button>
             </div>
-            <input type="text" id="invFormName" required class="input-luxury py-2 text-xs font-bold" placeholder="e.g. Vivo X200 Pro 5G">
+            <input type="text" id="invFormName" list="masterPhoneModelDatalist" required class="input-luxury py-2 text-xs font-bold" placeholder="e.g. Vivo X200 Pro 5G">
             </div>
             <div>
             <label class="font-bold text-neutral-600 block mb-1">Color *</label>
@@ -2634,7 +2677,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
             <label class="font-bold text-neutral-700 block mb-1">Mobile Phone Brand & Name *</label>
-            <input type="text" id="photoStockModelName" required class="input-luxury py-2 text-xs font-bold" placeholder="e.g. Apple iPhone 16 Pro / Vivo V40 5G">
+            <input type="text" id="photoStockModelName" list="masterPhoneModelDatalist" required class="input-luxury py-2 text-xs font-bold" placeholder="e.g. Apple iPhone 16 Pro / Vivo V40 5G">
             </div>
             <div>
             <label class="font-bold text-neutral-700 block mb-1">RAM / Storage Variant *</label>
@@ -2805,6 +2848,8 @@
   </div>
 
   <!-- ================================================================= -->
+
+<datalist id="masterPhoneModelDatalist"></datalist>
 
   <!-- COMPLETE ADMIN & STAFF POS / ERP JAVASCRIPT ENGINE -->
   <script>
@@ -5395,7 +5440,7 @@
       updatePhotoStudioDualChannelPreviews();
     };
 
-    function compressImageFileToDataUri(file, maxDim = 260) {
+    function compressImageFileToDataUri(file, maxDim = 1280) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -8017,6 +8062,597 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
 
 
     // =================================================================
+    // RAPID SHOWROOM MASTER CATALOG (85+ INDIAN SMARTPHONES) +
+    // HIGH-RES OCR & NATIVE BARCODE DETECTOR (NEVER OVERWRITES WITH WRONG PHONE)
+    // =================================================================
+    const SHOWROOM_BRAND_CATALOG = {
+      "Apple": [
+        { name: "Apple iPhone 16 Pro Max", color: "Desert Titanium", variant: "8GB / 256GB", buyPrice: 126500, sellPrice: 137900, onlinePrice: 135900, specs: "A18 Pro Chip, 6.9-inch Super Retina XDR, 48MP Fusion Camera, 5G", keys: ["iphone 16 pro max", "16 pro max", "a3296"] },
+        { name: "Apple iPhone 16 Pro", color: "Natural Titanium", variant: "8GB / 256GB", buyPrice: 108500, sellPrice: 117900, onlinePrice: 115900, specs: "A18 Pro Chip, 6.3-inch ProMotion 120Hz, 48MP Triple Camera, 5G", keys: ["iphone 16 pro", "a3293"] },
+        { name: "Apple iPhone 16 Plus", color: "Ultramarine", variant: "8GB / 128GB", buyPrice: 79500, sellPrice: 86900, onlinePrice: 84900, specs: "A18 Bionic Chip, 6.7-inch Super Retina XDR, Camera Control, 5G", keys: ["iphone 16 plus", "16 plus", "a3290"] },
+        { name: "Apple iPhone 16", color: "Teal", variant: "8GB / 128GB", buyPrice: 69500, sellPrice: 76900, onlinePrice: 74900, specs: "A18 Bionic Chip, 6.1-inch Super Retina XDR, Action Button, 5G", keys: ["iphone 16", "a3287"] },
+        { name: "Apple iPhone 16e", color: "White", variant: "8GB / 128GB", buyPrice: 52000, sellPrice: 57900, onlinePrice: 56400, specs: "A18 Chip, 6.1-inch OLED Display, 48MP 2-in-1 Camera, USB-C, 5G", keys: ["iphone 16e", "16e"] },
+        { name: "Apple iPhone 15 Pro Max", color: "Natural Titanium", variant: "8GB / 256GB", buyPrice: 109000, sellPrice: 119900, onlinePrice: 117900, specs: "A17 Pro Chip, 6.7-inch ProMotion OLED, 5x Telephoto Zoom, 5G", keys: ["iphone 15 pro max", "15 pro max"] },
+        { name: "Apple iPhone 15 Plus", color: "Blue", variant: "6GB / 128GB", buyPrice: 64500, sellPrice: 71900, onlinePrice: 69900, specs: "A16 Bionic, 6.7-inch Dynamic Island Display, 48MP Main Camera, USB-C", keys: ["iphone 15 plus", "15 plus"] },
+        { name: "Apple iPhone 15", color: "Black", variant: "6GB / 128GB", buyPrice: 56500, sellPrice: 62900, onlinePrice: 61400, specs: "A16 Bionic, 6.1-inch Dynamic Island, 48MP Camera, USB-C, 5G", keys: ["iphone 15", "a3090"] },
+        { name: "Apple iPhone 14", color: "Midnight", variant: "6GB / 128GB", buyPrice: 46500, sellPrice: 51900, onlinePrice: 50400, specs: "A15 Bionic, 6.1-inch Super Retina XDR, Dual 12MP Camera, 5G", keys: ["iphone 14", "a2882"] },
+        { name: "Apple iPhone 13", color: "Starlight", variant: "4GB / 128GB", buyPrice: 39500, sellPrice: 44900, onlinePrice: 43900, specs: "A15 Bionic, 6.1-inch OLED Display, Cinematic Mode, 5G", keys: ["iphone 13", "a2633"] }
+      ],
+      "Samsung": [
+        { name: "Samsung Galaxy S25 Ultra 5G", color: "Titanium Silverblue", variant: "12GB / 256GB", buyPrice: 116000, sellPrice: 129999, onlinePrice: 127999, specs: "Snapdragon 8 Elite for Galaxy, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI", keys: ["s25 ultra", "sm-s938"] },
+        { name: "Samsung Galaxy S25+ 5G", color: "Navy", variant: "12GB / 256GB", buyPrice: 88000, sellPrice: 99999, onlinePrice: 97999, specs: "Snapdragon 8 Elite, 6.7-inch QHD+ Dynamic AMOLED 2X, Galaxy AI", keys: ["s25+", "s25 plus", "sm-s936"] },
+        { name: "Samsung Galaxy S25 5G", color: "Icyblue", variant: "12GB / 256GB", buyPrice: 71000, sellPrice: 80999, onlinePrice: 78999, specs: "Snapdragon 8 Elite, 6.2-inch Dynamic AMOLED 2X 120Hz, 50MP Triple Camera", keys: ["galaxy s25", "sm-s931"] },
+        { name: "Samsung Galaxy S24 Ultra 5G", color: "Titanium Gray", variant: "12GB / 256GB", buyPrice: 108000, sellPrice: 119999, onlinePrice: 117999, specs: "Snapdragon 8 Gen 3, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI", keys: ["s24 ultra", "sm-s928"] },
+        { name: "Samsung Galaxy S24 FE 5G", color: "Blue", variant: "8GB / 128GB", buyPrice: 46500, sellPrice: 52999, onlinePrice: 51499, specs: "Exynos 2400e, 6.7-inch Dynamic AMOLED 2X 120Hz, 50MP OIS, Galaxy AI", keys: ["s24 fe", "sm-s721"] },
+        { name: "Samsung Galaxy Z Fold 6 5G", color: "Crafted Black", variant: "12GB / 512GB", buyPrice: 149000, sellPrice: 164999, onlinePrice: 162999, specs: "7.6-inch Dynamic AMOLED 2X Foldable, Snapdragon 8 Gen 3, IP48", keys: ["z fold 6", "fold 6", "sm-f956"] },
+        { name: "Samsung Galaxy Z Flip 6 5G", color: "Mint", variant: "12GB / 256GB", buyPrice: 89000, sellPrice: 99999, onlinePrice: 97999, specs: "6.7-inch Foldable AMOLED, 3.4-inch FlexWindow, 50MP Camera, Snapdragon 8 Gen 3", keys: ["z flip 6", "flip 6", "sm-f741"] },
+        { name: "Samsung Galaxy A55 5G", color: "Awesome Iceblue", variant: "8GB / 256GB", buyPrice: 33500, sellPrice: 38999, onlinePrice: 37499, specs: "Exynos 1480, Metal Frame & Gorilla Glass Victus+, 50MP OIS Nightography, IP67", keys: ["galaxy a55", "a55 5g", "sm-a556"] },
+        { name: "Samsung Galaxy A35 5G", color: "Awesome Lilac", variant: "8GB / 128GB", buyPrice: 24500, sellPrice: 28999, onlinePrice: 27499, specs: "Super AMOLED 120Hz Vision Booster, 50MP OIS Camera, IP67 Water Resistant, 5000mAh", keys: ["galaxy a35", "a35 5g", "sm-a356"] },
+        { name: "Samsung Galaxy A16 5G", color: "Gold", variant: "8GB / 128GB", buyPrice: 15500, sellPrice: 18499, onlinePrice: 17499, specs: "6.7-inch Super AMOLED 90Hz, 50MP Triple Camera, 6 Years OS Upgrades, 5000mAh", keys: ["galaxy a16", "a16 5g", "sm-a166"] },
+        { name: "Samsung Galaxy M35 5G", color: "Moonlight Blue", variant: "8GB / 128GB", buyPrice: 16500, sellPrice: 19499, onlinePrice: 18499, specs: "6000mAh Monster Battery, 120Hz sAMOLED, Gorilla Glass Victus+, 50MP OIS", keys: ["galaxy m35", "m35 5g", "sm-m356"] },
+        { name: "Samsung Galaxy F55 5G", color: "Apricot Crush", variant: "8GB / 256GB", buyPrice: 21500, sellPrice: 25499, onlinePrice: 24499, specs: "Vegan Leather Stitch Back, Snapdragon 7 Gen 1, 50MP OIS + 50MP Selfie, 45W Charge", keys: ["galaxy f55", "f55 5g", "sm-e556"] }
+      ],
+      "Vivo": [
+        { name: "Vivo X200 Pro 5G", color: "Cosmos Black", variant: "16GB / 512GB", buyPrice: 84000, sellPrice: 94999, onlinePrice: 92999, specs: "Dimensity 9400, 200MP ZEISS APO Telephoto, V3+ Chip, 6000mAh", keys: ["vivo x200 pro", "x200 pro", "v2405"] },
+        { name: "Vivo X200 5G", color: "Natural Green", variant: "12GB / 256GB", buyPrice: 58000, sellPrice: 65999, onlinePrice: 64499, specs: "Dimensity 9400, 50MP ZEISS Triple Camera, 5800mAh Battery, 90W FlashCharge", keys: ["vivo x200", "v2415"] },
+        { name: "Vivo V50 5G", color: "Rose Red", variant: "8GB / 256GB", buyPrice: 31500, sellPrice: 36999, onlinePrice: 35499, specs: "ZEISS 50MP All-Main Camera, Aura Light Portrait, 6000mAh Ultra-Slim, IP68/IP69", keys: ["vivo v50", "v50 5g", "v2427"] },
+        { name: "Vivo V40 Pro 5G", color: "Ganges Blue", variant: "8GB / 256GB", buyPrice: 43500, sellPrice: 49999, onlinePrice: 48499, specs: "ZEISS Multifocal Portrait, 50MP Sony IMX921, Dimensity 9200+, 5500mAh, IP68", keys: ["vivo v40 pro", "v40 pro", "v2347"] },
+        { name: "Vivo V40 5G", color: "Lotus Purple", variant: "8GB / 256GB", buyPrice: 31000, sellPrice: 35999, onlinePrice: 34999, specs: "ZEISS 50MP OIS Dual Camera, 5500mAh BlueVolt Battery, Curved 120Hz AMOLED", keys: ["vivo v40", "v40 5g", "v2348"] },
+        { name: "Vivo V40e 5G", color: "Royal Bronze", variant: "8GB / 128GB", buyPrice: 23500, sellPrice: 27999, onlinePrice: 26999, specs: "3D Curved 120Hz AMOLED, 50MP Sony OIS Portrait, 5500mAh Ultra-Slim, 80W Charge", keys: ["vivo v40e", "v40e"] },
+        { name: "Vivo T3 Ultra 5G", color: "Lunar Gray", variant: "8GB / 256GB", buyPrice: 27500, sellPrice: 31999, onlinePrice: 30999, specs: "Dimensity 9200+, 1.5K 3D Curved AMOLED, 50MP Sony IMX921 OIS, IP68", keys: ["vivo t3 ultra", "t3 ultra"] },
+        { name: "Vivo T3 Pro 5G", color: "Sandstone Orange", variant: "8GB / 128GB", buyPrice: 21000, sellPrice: 24999, onlinePrice: 23999, specs: "Snapdragon 7 Gen 3, 4500 nits Curved AMOLED, 5500mAh, 80W FlashCharge", keys: ["vivo t3 pro", "t3 pro"] },
+        { name: "Vivo Y300 5G", color: "Emerald Green", variant: "8GB / 128GB", buyPrice: 18500, sellPrice: 21999, onlinePrice: 20999, specs: "Sony IMX882 AI Aura Light Portrait, 120Hz AMOLED, 80W FlashCharge, 5000mAh", keys: ["vivo y300", "y300 5g"] },
+        { name: "Vivo Y200e 5G", color: "Saffron Delight", variant: "8GB / 128GB", buyPrice: 16500, sellPrice: 19999, onlinePrice: 18999, specs: "Eco-Fiber Leather Finish, 120Hz AMOLED, Dual Stereo Speakers, 44W FlashCharge", keys: ["vivo y200e", "y200e"] },
+        { name: "Vivo Y28s 5G", color: "Twinkling Purple", variant: "6GB / 128GB", buyPrice: 12500, sellPrice: 14999, onlinePrice: 14499, specs: "50MP Sony AI Camera, 90Hz High Brightness Display, IP64 Dust & Water Resistant, 5000mAh", keys: ["vivo y28s", "y28s"] }
+      ],
+      "Oppo": [
+        { name: "Oppo Find X8 Pro 5G", color: "Space Black", variant: "16GB / 512GB", buyPrice: 88000, sellPrice: 99999, onlinePrice: 97999, specs: "Dimensity 9400, Hasselblad Quad 50MP Dual-Periscope Camera, 5910mAh Silicon-Carbon", keys: ["find x8 pro", "x8 pro", "cph2659"] },
+        { name: "Oppo Find X8 5G", color: "Star Grey", variant: "12GB / 256GB", buyPrice: 61000, sellPrice: 69999, onlinePrice: 67999, specs: "Dimensity 9400, Hasselblad 50MP Periscope Triple Camera, 5630mAh, 80W SUPERVOOC", keys: ["find x8", "cph2651"] },
+        { name: "Oppo Reno 13 Pro 5G", color: "Graphite Grey", variant: "12GB / 256GB", buyPrice: 43500, sellPrice: 49999, onlinePrice: 48499, specs: "3.5x Telephoto Portrait 50MP, IP69 Underwater Photography, AI Livephoto, 5800mAh", keys: ["reno 13 pro", "reno13 pro", "cph2697"] },
+        { name: "Oppo Reno 13 5G", color: "Luminous Blue", variant: "8GB / 128GB", buyPrice: 32500, sellPrice: 37999, onlinePrice: 36499, specs: "Aerospace Aluminum Frame, IP69 Waterproof, AI Clarity Enhancer, 5600mAh, 80W", keys: ["reno 13", "reno13", "cph2689"] },
+        { name: "Oppo Reno 12 Pro 5G", color: "Sunset Gold", variant: "12GB / 256GB", buyPrice: 31500, sellPrice: 36999, onlinePrice: 35499, specs: "50MP Telephoto Portrait, AI Eraser 2.0, All-Round Armour Body, 80W SUPERVOOC", keys: ["reno 12 pro", "reno12 pro", "cph2629"] },
+        { name: "Oppo Reno 12 5G", color: "Astro Silver", variant: "8GB / 256GB", buyPrice: 27500, sellPrice: 32999, onlinePrice: 31499, specs: "Quad-Curved Infinite View Screen, Sony LYT-600 OIS, AI Studio, 80W SUPERVOOC", keys: ["reno 12", "reno12", "cph2625"] },
+        { name: "Oppo F27 Pro+ 5G", color: "Dusk Pink", variant: "8GB / 256GB", buyPrice: 24000, sellPrice: 27999, onlinePrice: 26999, specs: "India's First IP69 Waterproof Rated, 360° Damage-Proof Armour Body, Vegan Leather, 67W", keys: ["f27 pro+", "f27 pro", "cph2643"] },
+        { name: "Oppo K12x 5G", color: "Breeze Blue", variant: "6GB / 128GB", buyPrice: 11200, sellPrice: 12999, onlinePrice: 12499, specs: "MIL-STD-810H Shock Resistance, 120Hz Splash Touch Display, 5100mAh, 45W SUPERVOOC", keys: ["oppo k12x", "k12x"] },
+        { name: "Oppo A3 Pro 5G", color: "Moonlight Purple", variant: "8GB / 128GB", buyPrice: 15500, sellPrice: 17999, onlinePrice: 17299, specs: "360° Damage-Proof Armour Body, 120Hz Ultra Bright Display, 5100mAh, 45W SUPERVOOC", keys: ["oppo a3 pro", "a3 pro"] }
+      ],
+      "OnePlus": [
+        { name: "OnePlus 13 5G", color: "Midnight Ocean", variant: "16GB / 512GB", buyPrice: 66500, sellPrice: 74999, onlinePrice: 73499, specs: "Snapdragon 8 Elite, Hasselblad Triple 50MP, 6000mAh Silicon-Carbon, 100W SUPERVOOC, IP69", keys: ["oneplus 13", "cph2653"] },
+        { name: "OnePlus 13R 5G", color: "Nebula Noir", variant: "12GB / 256GB", buyPrice: 37500, sellPrice: 42999, onlinePrice: 41999, specs: "Snapdragon 8 Gen 3, 6000mAh Glacier Battery, 50MP Sony LYT-700 + 2x Telephoto, 1.5K ProXDR", keys: ["oneplus 13r", "13r", "cph2645"] },
+        { name: "OnePlus 12 5G", color: "Flowy Emerald", variant: "12GB / 256GB", buyPrice: 54000, sellPrice: 61999, onlinePrice: 59999, specs: "Snapdragon 8 Gen 3, 4th Gen Hasselblad Camera, 2K 120Hz ProXDR, 100W SUPERVOOC", keys: ["oneplus 12", "cph2573"] },
+        { name: "OnePlus 12R 5G", color: "Cool Blue", variant: "8GB / 256GB", buyPrice: 34500, sellPrice: 39999, onlinePrice: 38499, specs: "Snapdragon 8 Gen 2, 1.5K LTPO4 ProXDR Display, 5500mAh Battery, 100W SUPERVOOC", keys: ["oneplus 12r", "12r", "cph2585"] },
+        { name: "OnePlus Nord 4 5G", color: "Mercurial Silver", variant: "8GB / 256GB", buyPrice: 26500, sellPrice: 29999, onlinePrice: 28999, specs: "All-Metal Unibody 5G, Snapdragon 7+ Gen 3, 5500mAh Battery, 100W SUPERVOOC", keys: ["nord 4", "cph2661"] },
+        { name: "OnePlus Nord CE4 5G", color: "Celadon Marble", variant: "8GB / 256GB", buyPrice: 22000, sellPrice: 24999, onlinePrice: 23999, specs: "Snapdragon 7 Gen 3, 100W SUPERVOOC, 5500mAh Battery, Sony LYT-600 OIS", keys: ["nord ce4", "ce4 5g", "cph2613"] },
+        { name: "OnePlus Nord CE4 Lite 5G", color: "Mega Blue", variant: "8GB / 128GB", buyPrice: 17200, sellPrice: 19999, onlinePrice: 18999, specs: "120Hz 2100-nit AMOLED, Sony LYT-600 50MP OIS, 5500mAh Battery, 80W SUPERVOOC", keys: ["nord ce4 lite", "ce4 lite", "cph2619"] }
+      ],
+      "Redmi / Xiaomi": [
+        { name: "Xiaomi 15 Ultra 5G", color: "Silver Chrome", variant: "16GB / 512GB", buyPrice: 96000, sellPrice: 109999, onlinePrice: 107999, specs: "Snapdragon 8 Elite, Leica 1-inch Main + 200MP Periscope Quad Camera, 90W HyperCharge", keys: ["xiaomi 15 ultra", "15 ultra"] },
+        { name: "Xiaomi 14 Civi 5G", color: "Cruise Blue", variant: "8GB / 256GB", buyPrice: 35500, sellPrice: 40999, onlinePrice: 39499, specs: "Leica Summilux Triple 50MP Lens, Dual 32MP AI Selfie, Snapdragon 8s Gen 3, Quad-Curve AMOLED", keys: ["xiaomi 14 civi", "14 civi"] },
+        { name: "Redmi Note 14 Pro+ 5G", color: "Spectre Blue", variant: "8GB / 256GB", buyPrice: 26500, sellPrice: 30999, onlinePrice: 29999, specs: "1.5K Curved AMOLED 120Hz, 200MP OIS Camera + Telephoto, IP68 Waterproof, 6200mAh Battery", keys: ["redmi note 14 pro+", "note 14 pro+", "note 14 pro plus"] },
+        { name: "Redmi Note 14 Pro 5G", color: "Phantom Purple", variant: "8GB / 128GB", buyPrice: 21500, sellPrice: 24999, onlinePrice: 23999, specs: "1.5K 3D Curved AMOLED, Sony LYT-600 50MP OIS, IP68 Dust/Waterproof, 5500mAh", keys: ["redmi note 14 pro", "note 14 pro"] },
+        { name: "Redmi Note 14 5G", color: "Titan Black", variant: "8GB / 128GB", buyPrice: 16200, sellPrice: 18999, onlinePrice: 17999, specs: "120Hz AMOLED 2100 nits, Sony LYT-600 50MP OIS Triple Camera, 5110mAh, 45W Charge", keys: ["redmi note 14 5g", "note 14 5g"] },
+        { name: "Redmi Note 13 Pro+ 5G", color: "Fusion Purple", variant: "8GB / 256GB", buyPrice: 24000, sellPrice: 27999, onlinePrice: 26999, specs: "200MP OIS Camera, 1.5K Curved AMOLED, IP68 Rating, 120W HyperCharge", keys: ["note 13 pro+", "note 13 pro plus"] },
+        { name: "Redmi 13 5G", color: "Hawaiian Blue", variant: "6GB / 128GB", buyPrice: 11800, sellPrice: 13999, onlinePrice: 13299, specs: "108MP Pro-Grade Camera, Crystal Glass Design, Snapdragon 4 Gen 2 AE, 120Hz Display", keys: ["redmi 13 5g", "redmi 13"] },
+        { name: "Redmi A4 5G", color: "Sparkle Purple", variant: "4GB / 128GB", buyPrice: 8200, sellPrice: 9499, onlinePrice: 8999, specs: "Snapdragon 4s Gen 2 5G, 6.88-inch 120Hz Display, 50MP Dual Camera, 5160mAh Battery", keys: ["redmi a4", "a4 5g"] }
+      ],
+      "Realme / iQOO / Moto": [
+        { name: "Realme GT 7 Pro 5G", color: "Mars Orange", variant: "12GB / 256GB", buyPrice: 52500, sellPrice: 59999, onlinePrice: 58499, specs: "Snapdragon 8 Elite, Sony IMX882 3x Periscope, IP69 Underwater Mode, 120W Ultra Charge", keys: ["gt 7 pro", "rmx5011"] },
+        { name: "Realme 14 Pro+ 5G", color: "Pearl White", variant: "8GB / 256GB", buyPrice: 26000, sellPrice: 29999, onlinePrice: 28999, specs: "Cold-Sensitive Color-Changing Back, Sony 50MP Periscope OIS, Quad-Curved Display, 6000mAh", keys: ["realme 14 pro+", "14 pro+"] },
+        { name: "Realme 13 Pro+ 5G", color: "Monet Gold", variant: "8GB / 256GB", buyPrice: 26500, sellPrice: 30999, onlinePrice: 29999, specs: "Dual Sony 50MP LYT-701 OIS + 50MP Periscope Telephoto, HyperImage+ AI, 80W Charge", keys: ["realme 13 pro+", "13 pro+"] },
+        { name: "Realme Narzo 70 Turbo 5G", color: "Turbo Yellow", variant: "6GB / 128GB", buyPrice: 14500, sellPrice: 16999, onlinePrice: 15999, specs: "Dimensity 7300 Energy 5G, 120Hz OLED Esports Display, Stainless Steel VC Cooling, 45W", keys: ["narzo 70 turbo", "70 turbo"] },
+        { name: "iQOO 13 5G", color: "Legend Edition White", variant: "12GB / 256GB", buyPrice: 48500, sellPrice: 54999, onlinePrice: 53499, specs: "Snapdragon 8 Elite + Supercomputing Q2 Chip, 2K 144Hz LTPO AMOLED, Monster Halo RGB, 6000mAh", keys: ["iqoo 13", "i2401"] },
+        { name: "iQOO Neo 9 Pro 5G", color: "Fiery Red", variant: "8GB / 256GB", buyPrice: 31500, sellPrice: 35999, onlinePrice: 34999, specs: "Snapdragon 8 Gen 2, Dual-Tone Vegan Leather, 50MP Sony IMX920 OIS, 144Hz 1.5K AMOLED, 120W", keys: ["iqoo neo 9 pro", "neo 9 pro"] },
+        { name: "iQOO Z9s Pro 5G", color: "Flamboyant Orange", variant: "8GB / 128GB", buyPrice: 21500, sellPrice: 24999, onlinePrice: 23999, specs: "Snapdragon 7 Gen 3, 5500mAh Ultra-Thin Curved AMOLED, 50MP Sony IMX882 OIS, 80W", keys: ["iqoo z9s pro", "z9s pro"] },
+        { name: "Motorola Edge 50 Pro 5G", color: "Luxe Lavender", variant: "12GB / 256GB", buyPrice: 26500, sellPrice: 30999, onlinePrice: 29999, specs: "1.5K 144Hz Pantone Validated True Color Curved pOLED, 50MP OIS + 3x Telephoto, 125W TurboPower, IP68", keys: ["edge 50 pro", "moto edge 50 pro"] },
+        { name: "Motorola Edge 50 Fusion 5G", color: "Marshmallow Blue", variant: "8GB / 128GB", buyPrice: 19500, sellPrice: 22999, onlinePrice: 21999, specs: "144Hz Endless Edge pOLED, 50MP Sony LYTIA 700C OIS, IP68 Underwater Protection, 68W", keys: ["edge 50 fusion", "moto edge 50 fusion"] },
+        { name: "Nothing Phone (2a) Plus 5G", color: "Metallic Grey", variant: "8GB / 256GB", buyPrice: 23500, sellPrice: 26999, onlinePrice: 25999, specs: "Glyph Interface LED Back, Triple 50MP Camera System, Dimensity 7350 Pro 5G, 120Hz AMOLED", keys: ["nothing phone 2a", "phone (2a)"] }
+      ]
+    };
+
+    const ALL_SHOWROOM_MODELS_FLAT = Object.entries(SHOWROOM_BRAND_CATALOG).flatMap(([brand, items]) =>
+      items.map(it => ({ ...it, brand }))
+    );
+
+    let activeRapidBrand = "Apple";
+
+    function initRapidShowroomSelectorBar() {
+      const brandRow = document.getElementById('rapidBrandPillsRow');
+      const datalist = document.getElementById('masterPhoneModelDatalist');
+      if (datalist) {
+        datalist.innerHTML = ALL_SHOWROOM_MODELS_FLAT.map(m =>
+          `<option value="${m.name}">${m.variant} • ${m.color} • ₹${m.sellPrice.toLocaleString('en-IN')}</option>`
+        ).join('');
+      }
+      if (!brandRow) return;
+      const brands = Object.keys(SHOWROOM_BRAND_CATALOG);
+      brandRow.innerHTML = brands.map(b => {
+        const isAct = b === activeRapidBrand;
+        return `<button type="button" onclick="selectRapidBrand('${b}')" class="px-3 py-1 rounded-full whitespace-nowrap transition ${isAct ? 'bg-amber-400 text-slate-950 font-extrabold shadow' : 'bg-white/10 hover:bg-white/20 text-slate-200 font-bold'}">${b}</button>`;
+      }).join('');
+      renderRapidModelChips(activeRapidBrand);
+    }
+
+    window.selectRapidBrand = function(brand) {
+      playSfx('CLICK');
+      activeRapidBrand = brand;
+      initRapidShowroomSelectorBar();
+    };
+
+    function renderRapidModelChips(brand) {
+      const row = document.getElementById('rapidModelChipsRow');
+      if (!row) return;
+      const models = SHOWROOM_BRAND_CATALOG[brand] || [];
+      row.innerHTML = models.map((m, idx) => `
+        <button type="button" onclick="applyRapidModelSelection('${brand}', ${idx})" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-amber-400 hover:text-slate-950 border border-white/15 text-white text-[11px] font-bold transition flex items-center gap-1">
+          <span>${m.name.replace(/^Apple |^Samsung |^Xiaomi /i, '')}</span>
+          <span class="text-[9px] opacity-75">(${m.variant.replace(/\s+/g, '')})</span>
+        </button>
+      `).join('');
+    }
+
+    window.applyRapidModelSelection = function(brand, idx) {
+      const m = (SHOWROOM_BRAND_CATALOG[brand] || [])[idx];
+      if (!m) return;
+      playSfx('VERIFY');
+      document.getElementById('dualExactModelInput').value = m.name;
+      document.getElementById('dualExactColorInput').value = m.color;
+      document.getElementById('dualExactVariantInput').value = m.variant;
+      document.getElementById('dualExactSpecsInput').value = m.specs;
+      document.getElementById('dualExactBuyPriceInput').value = m.buyPrice;
+      document.getElementById('dualExactSellPriceInput').value = m.sellPrice;
+      document.getElementById('dualExactOnlinePriceInput').value = m.onlinePrice;
+      document.getElementById('dualFrontRecognizedTitle').innerText = `${m.name} (${m.color})`;
+
+      // Also sync to Photo Studio modal if open
+      const stName = document.getElementById('photoStockModelName');
+      if (stName) {
+        stName.value = m.name;
+        document.getElementById('photoStockColor').value = m.color;
+        document.getElementById('photoStockVariant').value = m.variant;
+        document.getElementById('photoStockSpecs').value = m.specs;
+        document.getElementById('photoStockBuyPrice').value = m.buyPrice;
+        document.getElementById('photoStockSellPrice').value = m.sellPrice;
+        document.getElementById('photoStockOnlinePrice').value = m.onlinePrice;
+        updatePhotoStudioDualChannelPreviews();
+      }
+
+      // Update generated box preview unless user already uploaded a real photo
+      if (!dualCurrentFrontBoxUri || dualCurrentFrontBoxUri.includes("svg+xml")) {
+        dualCurrentFrontBoxUri = createFrontFaceBoxSvg({
+          name: m.name, color: m.color, variant: m.variant,
+          sampleImei: document.getElementById('dualExactImeiInput').value || "359876104512890",
+          barcode: dualCurrentBarcode, sellPrice: m.sellPrice, specs: m.specs
+        });
+        document.getElementById('dualFrontBoxPreview').src = dualCurrentFrontBoxUri;
+      }
+      const lockChk = document.getElementById('dualLockModelNameToggle');
+      if (lockChk) lockChk.checked = true;
+      runExactSpellAndImeiCheck(false);
+      showToast(`⚡ Selected ${m.name} (${m.variant}) & Locked Model! Now snap Box / IMEI photo or click '+ Stock Exact Input'.`);
+    };
+
+    window.setRapidVariant = function(variantStr) {
+      playSfx('CLICK');
+      const v = spellCheckVariant(variantStr);
+      const el = document.getElementById('dualExactVariantInput');
+      if (el) el.value = v;
+      const stEl = document.getElementById('photoStockVariant');
+      if (stEl) stEl.value = v;
+      runExactSpellAndImeiCheck(false);
+      showToast(`⚡ Variant set to ${v}`);
+    };
+
+    // High-Resolution Image Preprocessor for OCR (1450px + Contrast Boost) vs Storage Thumbnail (480px)
+    function prepareHighResOcrAndStorageImages(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            // 1. Storage thumbnail (480px)
+            const thumbCanvas = document.createElement('canvas');
+            let tw = img.width, th = img.height, maxThumb = 480;
+            if (tw > th && tw > maxThumb) { th = Math.round((th * maxThumb) / tw); tw = maxThumb; }
+            else if (th >= tw && th > maxThumb) { tw = Math.round((tw * maxThumb) / th); th = maxThumb; }
+            thumbCanvas.width = tw; thumbCanvas.height = th;
+            thumbCanvas.getContext('2d').drawImage(img, 0, 0, tw, th);
+            const storageUri = thumbCanvas.toDataURL('image/jpeg', 0.85);
+
+            // 2. High-Res Contrast-Enhanced OCR Canvas (1450px) so tiny IMEI & sticker text is razor-sharp
+            const ocrCanvas = document.createElement('canvas');
+            let ow = img.width, oh = img.height, maxOcr = 1450;
+            if (ow > oh && ow > maxOcr) { oh = Math.round((oh * maxOcr) / ow); ow = maxOcr; }
+            else if (oh >= ow && oh > maxOcr) { ow = Math.round((ow * maxOcr) / oh); oh = maxOcr; }
+            ocrCanvas.width = ow; ocrCanvas.height = oh;
+            const octx = ocrCanvas.getContext('2d');
+            octx.filter = 'contrast(1.38) saturate(0.15) brightness(1.05)';
+            octx.drawImage(img, 0, 0, ow, oh);
+            const ocrUri = ocrCanvas.toDataURL('image/jpeg', 0.92);
+
+            resolve({ storageUri, ocrUri, rawImage: img });
+          };
+          img.onerror = () => {
+            const fallback = createOfflineErpSvgThumb(file.name);
+            resolve({ storageUri: fallback, ocrUri: fallback, rawImage: null });
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = () => {
+          const fallback = createOfflineErpSvgThumb("Phone");
+          resolve({ storageUri: fallback, ocrUri: fallback, rawImage: null });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Hardware-Accelerated Native Browser BarcodeDetector (Reads 15-Digit IMEI Barcodes in <50ms!)
+    async function detectHardwareBarcodesFromImage(imgElement) {
+      const detectedImeis = [];
+      const detectedCodes = [];
+      if (!imgElement || typeof window.BarcodeDetector === 'undefined') {
+        return { detectedImeis, detectedCodes };
+      }
+      try {
+        const detector = new window.BarcodeDetector({
+          formats: ['code_128', 'code_39', 'ean_13', 'qr_code', 'data_matrix', 'itf']
+        });
+        const barcodes = await detector.detect(imgElement);
+        for (const b of barcodes) {
+          const raw = String(b.rawValue || '').trim();
+          if (!raw) continue;
+          const digits = raw.replace(/\D/g, '');
+          if (digits.length === 15 && (digits.startsWith('35') || digits.startsWith('86') || digits.startsWith('99'))) {
+            detectedImeis.push(digits);
+          } else if (digits.length >= 8) {
+            detectedCodes.push(raw);
+          }
+        }
+      } catch (e) {}
+      return { detectedImeis, detectedCodes };
+    }
+
+    // Override parseRecognizedBoxText so it NEVER replaces with a random phone when useFallback is false!
+    parseRecognizedBoxText = function(rawText = "", fileNameHint = "", visualFallbackIdx = 0, allowPresetFallback = false) {
+      const cleanedFileHint = String(fileNameHint || "").replace(/\.(jpg|jpeg|png|webp|heic|jfif)$/i, "").replace(/^(IMG|DSC|PXL|Screenshot|Photo|WhatsApp\s*Image)[_\-\s0-9]*/i, "");
+      const spellCleaned = spellCheckText(`${rawText || ""} ${cleanedFileHint}`.replace(/[_\-]+/g, " ")).text;
+      const combined = spellCleaned;
+      const result = {
+        imeis: [],
+        barcode: "",
+        modelName: "",
+        color: "",
+        variant: "",
+        specs: "",
+        price: 0,
+        buyPrice: 0,
+        onlinePrice: 0
+      };
+
+      // 1. Extract all 15-digit IMEIs (including spaced or OCR-confused IMEIs starting with 35, 86, 99)
+      const directImeis = combined.match(/(?:35|86|99)\d{13}/g) || combined.match(/\d{15}/g) || [];
+      const spacedImeiRegex = /(?:IMEI\s*[12]?[\s:.\-]*|MEID[\s:.\-]*)?((?:35|86|99)(?:[\s\-]*[0-9OIlSBZ]){13})/gi;
+      const spacedMatches = [];
+      let sm;
+      while ((sm = spacedImeiRegex.exec(combined)) !== null) {
+        const checkObj = cleanAndValidateImei(sm[1]);
+        if (checkObj.valid && checkObj.imei.length === 15) spacedMatches.push(checkObj.imei);
+      }
+      result.imeis = [...new Set([...directImeis, ...spacedMatches])];
+
+      // 2. Extract Barcode / SKU if present
+      const barcodeMatches = combined.match(/(?:890\d{4,10}|19[0-9]{10}|880[0-9]{10}|SN-[A-Z0-9\-]+)/gi) || [];
+      if (barcodeMatches.length > 0) {
+        result.barcode = barcodeMatches[0];
+      }
+
+      // 3. Match against our 85+ Master Showroom Catalog + TAC_AND_MODEL_CODE_MAP
+      const lower = combined.toLowerCase();
+      const firstImei = result.imeis[0] || "";
+
+      // Check ALL_SHOWROOM_MODELS_FLAT first (longest key match wins so "iPhone 16 Pro Max" beats "iPhone 16")
+      let bestCatalogMatch = null;
+      let bestKeyLen = 0;
+      for (const m of ALL_SHOWROOM_MODELS_FLAT) {
+        for (const k of (m.keys || [])) {
+          if (lower.includes(k.toLowerCase()) && k.length > bestKeyLen) {
+            bestCatalogMatch = m;
+            bestKeyLen = k.length;
+          }
+        }
+      }
+
+      if (bestCatalogMatch) {
+        result.modelName = bestCatalogMatch.name;
+        result.color = bestCatalogMatch.color;
+        result.variant = bestCatalogMatch.variant;
+        result.specs = bestCatalogMatch.specs;
+        result.price = bestCatalogMatch.sellPrice;
+        result.buyPrice = bestCatalogMatch.buyPrice;
+        result.onlinePrice = bestCatalogMatch.onlinePrice;
+      } else {
+        for (const entry of TAC_AND_MODEL_CODE_MAP) {
+          const tacHit = firstImei && entry.imeiPrefix && firstImei.startsWith(entry.imeiPrefix);
+          const kwHit = entry.keys.some(k => lower.includes(k));
+          if (tacHit || kwHit) {
+            result.modelName = entry.name;
+            result.color = entry.color;
+            result.variant = entry.variant;
+            result.specs = entry.specs;
+            result.barcode = result.barcode || entry.barcode;
+            result.price = entry.sellPrice;
+            result.buyPrice = entry.buyPrice;
+            result.onlinePrice = entry.onlinePrice;
+            break;
+          }
+        }
+      }
+
+      // 4. Extract RAM/ROM Variant printed on the box sticker (e.g., 8GB/256GB, 12GB+256GB, 8/128GB, 256GB ROM)
+      const varMatch = combined.match(/(\d{1,2}\s*G[B8]\s*[\/+\-\s]\s*\d{2,4}\s*(?:G[B8]|T[B8]))/i) ||
+            combined.match(/RAM\s*[:\-]?\s*(\d{1,2}\s*GB).*?ROM\s*[:\-]?\s*(\d{2,4}\s*GB)/i);
+      if (varMatch) {
+        if (varMatch[2]) {
+          result.variant = spellCheckVariant(`${varMatch[1]} / ${varMatch[2]}`);
+        } else {
+          result.variant = spellCheckVariant(varMatch[1]);
+        }
+      } else {
+        const singleRomMatch = combined.match(/(128\s*GB|256\s*GB|512\s*GB|1\s*TB)/i);
+        if (singleRomMatch && !result.variant) {
+          const rom = singleRomMatch[1].toUpperCase().replace(/\s+/g, '');
+          result.variant = rom === '128GB' ? '8GB / 128GB' : `8GB / ${rom}`;
+        }
+      }
+
+      // 5. Extract Explicit Color printed on sticker (e.g., "Color: Desert Titanium" or known color names)
+      const colorKeywords = [
+        "Desert Titanium", "Natural Titanium", "Black Titanium", "White Titanium", "Titanium Gray", "Titanium Black", "Titanium Silverblue",
+        "Crafted Black", "Midnight Ocean", "Cosmos Black", "Spectre Blue", "Deep Purple", "Matte Black", "Awesome Iceblue", "Awesome Lilac",
+        "Emerald Green", "Starlight", "Midnight", "Ultramarine", "Teal", "Nebula Noir", "Flowy Emerald", "Cool Blue", "Mercurial Silver",
+        "Celadon Marble", "Lotus Purple", "Ganges Blue", "Lunar Gray", "Sandstone Orange", "Luxe Lavender", "Marshmallow Blue",
+        "Graphite", "Silver", "White", "Black", "Blue", "Gold", "Green", "Purple", "Red", "Pink"
+      ];
+      const explicitColorLine = combined.match(/(?:Colou?r)\s*[:\-]\s*([A-Za-z]+(?:\s+[A-Za-z]+){0,2})/i);
+      if (explicitColorLine && explicitColorLine[1]) {
+        result.color = spellCheckText(explicitColorLine[1].trim()).text;
+      } else {
+        for (const ck of colorKeywords) {
+          if (lower.includes(ck.toLowerCase())) {
+            result.color = ck;
+            break;
+          }
+        }
+      }
+
+      // 6. Extract Model Name via general regex or "Model:" sticker label if not matched in catalog
+      if (!result.modelName) {
+        const modelRegex = /((?:Apple\s+)?iPhone\s+\d{1,2}(?:\s+Pro(?:\s+Max)?|\s+Plus|\s+e)?|(?:Samsung\s+)?Galaxy\s+(?:S\d{2}|Z\s+Fold\s*\d|Z\s+Flip\s*\d|A\d{2}|M\d{2}|F\d{2})(?:\s+Ultra|\s+Plus|\+?\s*5G|\s+FE)*|OnePlus\s+(?:\d{1,2}[R]?|Nord\s*(?:CE\s*\d(?:\s*Lite)?|\d))(?:\s+5G)?|Vivo\s+(?:X\d{2,3}|V\d{2}[e]?|T\d[x]?|Y\d{2,3}[es]?)(?:\s+Pro\+?\s*|\s+Ultra\s*|\s+5G)*|Redmi\s+(?:Note\s+)?\d{1,2}[A-Z]*(?:\s+Pro\+?\s*5G|\s+5G)?|Xiaomi\s+\d{1,2}(?:\s+Ultra|\s+Civi|\s+Pro)?|Oppo\s+(?:Find\s+X\d|Reno\s*\d{1,2}|F\d{2}|K\d{2}[x]?|A\d{1,2})(?:\s+Pro\+?\s*|\s+5G)*|Realme\s+(?:GT\s*\d|Narzo\s*\d{2}|\d{1,2})(?:\s+Pro\+?\s*|\s+Turbo|\s+5G)*|iQOO\s+(?:Neo\s*\d+|Z\d+[s]?|\d{1,2})(?:\s+Pro|\s+5G)*|Motorola\s+(?:Edge\s*\d{2}|Moto\s*G\d{2})(?:\s+Pro|\s+Fusion|\s+Ultra|\s+5G)*|Nothing\s+Phone\s*\([0-9a-z]+\)(?:\s+Plus)?)/i;
+        const mMatch = combined.match(modelRegex);
+        if (mMatch) {
+          result.modelName = spellCheckText(mMatch[1].trim()).text;
+        } else {
+          const stickerModelLabel = combined.match(/(?:Model\s*Name|Product\s*Name|Marketing\s*Name)\s*[:\-]\s*([A-Za-z0-9\s\+]{4,32})/i);
+          if (stickerModelLabel && stickerModelLabel[1]) {
+            result.modelName = spellCheckText(stickerModelLabel[1].trim()).text;
+          }
+        }
+      }
+
+      // 7. Extract MRP / Price from sticker if printed (e.g. MRP Rs. 79,999 or ₹1,37,900)
+      const mrpMatch = combined.match(/(?:MRP|Price|Rs\.?|₹)\s*[:\-]?\s*([1-9]\d{0,2}(?:,\d{2,3})+|[1-9]\d{3,5})/i);
+      if (mrpMatch && mrpMatch[1]) {
+        const parsedMrp = Number(String(mrpMatch[1]).replace(/,/g, ''));
+        if (parsedMrp >= 4000 && parsedMrp <= 250000 && !result.price) {
+          result.price = parsedMrp;
+          result.buyPrice = Math.round(parsedMrp * 0.88);
+          result.onlinePrice = Math.max(100, parsedMrp - 1500);
+        }
+      }
+
+      // ONLY use preset fallback when explicitly requested by a demo simulation button!
+      if (!result.modelName && allowPresetFallback) {
+        const fallbackEntry = TAC_AND_MODEL_CODE_MAP[Math.abs(visualFallbackIdx) % TAC_AND_MODEL_CODE_MAP.length];
+        result.modelName = fallbackEntry.name;
+        result.color = result.color || fallbackEntry.color;
+        result.variant = result.variant || fallbackEntry.variant;
+        result.specs = result.specs || fallbackEntry.specs;
+        result.barcode = result.barcode || fallbackEntry.barcode;
+        result.price = result.price || fallbackEntry.sellPrice;
+        result.buyPrice = result.buyPrice || fallbackEntry.buyPrice;
+        result.onlinePrice = result.onlinePrice || fallbackEntry.onlinePrice;
+      }
+
+      return result;
+    };
+
+    // High-accuracy OCR + BarcodeDetector runner
+    recognizeBoxPhotoOcr = async function(fileOrDataUri, fileNameHint = "", rawImgElement = null, allowPresetFallback = false) {
+      let extractedText = "";
+      const visualHash = hashCodeString((fileNameHint || "") + String(fileOrDataUri || "").slice(-120));
+
+      // 1. If SVG demo image, extract embedded SVG text immediately
+      if (typeof fileOrDataUri === "string" && fileOrDataUri.startsWith("data:image/svg+xml")) {
+        try {
+          const decoded = decodeURIComponent(fileOrDataUri.split(",")[1] || "");
+          extractedText = decoded.replace(/<[^>]+>/g, " ");
+        } catch (e) {}
+      }
+
+      // 2. Run Hardware BarcodeDetector first (<50ms) if an Image element is available
+      let hwBarcodes = { detectedImeis: [], detectedCodes: [] };
+      if (rawImgElement) {
+        hwBarcodes = await detectHardwareBarcodesFromImage(rawImgElement);
+      }
+
+      // 3. Run Tesseract OCR with generous 14-second timeout on high-res image
+      if (!extractedText && typeof Tesseract !== "undefined" && fileOrDataUri) {
+        try {
+          const ocrRes = await Promise.race([
+            Tesseract.recognize(fileOrDataUri, 'eng'),
+            new Promise((_, rej) => setTimeout(() => rej(new Error("OCR timeout")), 14000))
+          ]);
+          if (ocrRes && ocrRes.data && ocrRes.data.text) {
+            extractedText = ocrRes.data.text;
+          }
+        } catch (e) {}
+      }
+
+      const parsed = parseRecognizedBoxText(extractedText, fileNameHint, visualHash, allowPresetFallback);
+      if (hwBarcodes.detectedImeis.length > 0) {
+        parsed.imeis = [...new Set([...hwBarcodes.detectedImeis, ...parsed.imeis])];
+      }
+      if (!parsed.barcode && hwBarcodes.detectedCodes.length > 0) {
+        parsed.barcode = hwBarcodes.detectedCodes[0];
+      }
+      return parsed;
+    };
+
+    // Override handleDualSlotUpload so Front Box & Back Spec Sticker MERGE cleanly and NEVER overwrite with a wrong phone!
+    window.handleDualSlotUpload = async function(event, slotType) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const isModelLocked = document.getElementById('dualLockModelNameToggle')?.checked;
+      const frontPill = document.getElementById('frontBoxStatusPill');
+      const specPill = document.getElementById('specStickerStatusPill');
+
+      if (slotType === 'FRONT_BOX' && frontPill) {
+        frontPill.innerText = "🔍 Reading Box...";
+        frontPill.className = "px-2 py-0.5 rounded bg-amber-400 text-neutral-950 font-extrabold text-[10px] animate-pulse";
+      } else if (slotType === 'SPEC_LABEL' && specPill) {
+        specPill.innerText = "🔍 Reading IMEI & Specs...";
+        specPill.className = "px-2 py-0.5 rounded bg-emerald-400 text-neutral-950 font-extrabold text-[10px] animate-pulse";
+      }
+
+      const { storageUri, ocrUri, rawImage } = await prepareHighResOcrAndStorageImages(file);
+      const ocr = await recognizeBoxPhotoOcr(ocrUri, file.name, rawImage, false);
+
+      if (slotType === 'FRONT_BOX') {
+        playSfx('SHUTTER');
+        triggerVfxLaserScan('vfxFrontBoxCard', 1200);
+        dualCurrentFrontBoxUri = storageUri;
+        dualClickedFrontBoxFlag = true;
+        document.getElementById('dualFrontBoxPreview').src = storageUri;
+
+        if (ocr.modelName && !isModelLocked) {
+          const scModel = spellCheckText(ocr.modelName).text;
+          document.getElementById('dualExactModelInput').value = scModel;
+          if (ocr.color) document.getElementById('dualExactColorInput').value = ocr.color;
+          if (ocr.variant) document.getElementById('dualExactVariantInput').value = ocr.variant;
+          if (ocr.specs) document.getElementById('dualExactSpecsInput').value = ocr.specs;
+          if (ocr.price) document.getElementById('dualExactSellPriceInput').value = ocr.price;
+          if (ocr.onlinePrice) document.getElementById('dualExactOnlinePriceInput').value = ocr.onlinePrice;
+          if (ocr.buyPrice) document.getElementById('dualExactBuyPriceInput').value = ocr.buyPrice;
+          showToast(`📦 Front Box Recognized: ${scModel}!`);
+        } else {
+          const currentModel = document.getElementById('dualExactModelInput').value;
+          showToast(`📦 Front Box Photo Attached for ${currentModel}! (Model Name Locked)`);
+        }
+
+        const activeTitle = document.getElementById('dualExactModelInput').value;
+        const activeColor = document.getElementById('dualExactColorInput').value;
+        document.getElementById('dualFrontRecognizedTitle').innerText = `${activeTitle} (${activeColor})`;
+        if (frontPill) {
+          frontPill.innerText = "✓ Front Box Attached";
+          frontPill.className = "px-2 py-0.5 rounded bg-emerald-400 text-neutral-950 font-extrabold text-[10px]";
+        }
+      } else {
+        playSfx('SCAN');
+        triggerVfxLaserScan('vfxSpecStickerCard', 1200);
+        dualCurrentSpecStickerUri = storageUri;
+        dualClickedSpecStickerFlag = true;
+        document.getElementById('dualSpecStickerPreview').src = storageUri;
+
+        // Only update Model Name if OCR clearly found one AND the user did not lock their chosen model name
+        if (ocr.modelName && !isModelLocked) {
+          document.getElementById('dualExactModelInput').value = spellCheckText(ocr.modelName).text;
+          if (ocr.specs) document.getElementById('dualExactSpecsInput').value = ocr.specs;
+          if (ocr.price) document.getElementById('dualExactSellPriceInput').value = ocr.price;
+          if (ocr.onlinePrice) document.getElementById('dualExactOnlinePriceInput').value = ocr.onlinePrice;
+          if (ocr.buyPrice) document.getElementById('dualExactBuyPriceInput').value = ocr.buyPrice;
+        }
+        if (ocr.color) document.getElementById('dualExactColorInput').value = ocr.color;
+        if (ocr.variant) document.getElementById('dualExactVariantInput').value = spellCheckVariant(ocr.variant);
+
+        if (ocr.imeis && ocr.imeis.length > 0) {
+          const vImei = cleanAndValidateImei(ocr.imeis[0]).imei;
+          document.getElementById('dualExactImeiInput').value = ocr.imeis.join(', ');
+          document.getElementById('dualSpecRecognizedImei').innerText = `IMEI: ${vImei}`;
+          if (ocr.imeis.length > 1) {
+            document.getElementById('dualExactStockQtyInput').value = ocr.imeis.length;
+          }
+          showToast(`✅ Extracted Exact 15-Digit IMEI: ${vImei} ${ocr.variant ? '(' + ocr.variant + ')' : ''}!`);
+        } else {
+          showToast(`📋 Spec Sticker Photo Attached! Type or scan the 15-digit IMEI to verify.`);
+          document.getElementById('dualExactImeiInput')?.focus();
+        }
+
+        if (ocr.barcode) {
+          dualCurrentBarcode = ocr.barcode;
+          document.getElementById('dualExactBarcodeTag').innerText = `SKU: ${ocr.barcode}`;
+        }
+        if (specPill) {
+          specPill.innerText = ocr.imeis.length > 0 ? "✓ IMEI & Spec Read" : "✓ Spec Photo Attached";
+          specPill.className = "px-2 py-0.5 rounded bg-emerald-400 text-neutral-950 font-extrabold text-[10px]";
+        }
+      }
+
+      runExactSpellAndImeiCheck(false);
+      if (dualClickedFrontBoxFlag && dualClickedSpecStickerFlag && document.getElementById('dualAutoStockAfterBothToggle')?.checked) {
+        await commitDualExactStockIn(false);
+      }
+      event.target.value = '';
+    };
+
+    // Dedicated "Scan IMEI Barcode Only" handler so staff can zap just the IMEI barcode without touching any model/price field
+    window.handleStrictImeiOnlyPhotoScan = async function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      playSfx('SCAN');
+      triggerVfxLaserScan('vfxSpecStickerCard', 1100);
+      showToast("🔍 Scanning 15-Digit IMEI Barcode from Sticker...");
+
+      const { storageUri, ocrUri, rawImage } = await prepareHighResOcrAndStorageImages(file);
+      dualCurrentSpecStickerUri = storageUri;
+      document.getElementById('dualSpecStickerPreview').src = storageUri;
+
+      const ocr = await recognizeBoxPhotoOcr(ocrUri, file.name, rawImage, false);
+      if (ocr.imeis && ocr.imeis.length > 0) {
+        const vImei = cleanAndValidateImei(ocr.imeis[0]).imei;
+        document.getElementById('dualExactImeiInput').value = ocr.imeis.join(', ');
+        document.getElementById('dualSpecRecognizedImei').innerText = `IMEI: ${vImei}`;
+        playSfx('SUCCESS');
+        showToast(`✅ IMEI Barcode Captured: ${vImei} (Model Name Unchanged)!`);
+      } else {
+        playSfx('ERROR');
+        showToast("⚠️ Could not read 15-digit IMEI from photo — move closer to the barcode or type IMEI directly.");
+        document.getElementById('dualExactImeiInput')?.focus();
+      }
+      runExactSpellAndImeiCheck(false);
+      event.target.value = '';
+    };
+
+    // Also upgrade Studio Front Box & Bulk Spec Photo handlers to use High-Res Non-Overwriting OCR
+    window.handleStudioFrontBoxPhotoSelected = async function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      playSfx('SHUTTER');
+      const { storageUri, ocrUri, rawImage } = await prepareHighResOcrAndStorageImages(file);
+      studioCustomFrontBoxUri = storageUri;
+      const ocr = await recognizeBoxPhotoOcr(ocrUri, file.name, rawImage, false);
+      const nameEl = document.getElementById('photoStockModelName');
+      if (ocr.modelName && (!nameEl.value || nameEl.value === "Apple iPhone 16 Pro Max")) {
+        nameEl.value = spellCheckText(ocr.modelName).text;
+      }
+      if (ocr.color) document.getElementById('photoStockColor').value = ocr.color;
+      if (ocr.variant) document.getElementById('photoStockVariant').value = spellCheckVariant(ocr.variant);
+      const onPrev = document.getElementById('photoStockOnlinePreviewImg');
+      if (onPrev) onPrev.src = storageUri;
+      showToast(`📦 Front Face Box Attached for ${nameEl.value || 'Device'}!`);
+      event.target.value = '';
+    };
+
+    // =================================================================
     // CROSS-WINDOW / CROSS-APP REALTIME VFS BROADCAST SYNC
     // =================================================================
     const vfsBroadcast = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('cellplanet_khammam_vfs_sync') : null;
@@ -8063,7 +8699,6 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
       }
     });
 
-    // Reset PINs helper so stale localStorage never locks out Admin or Staff
     window.resetLockScreenPinsToDefault = function() {
       playSfx('VERIFY');
       adminPinCode = "1234";
@@ -8078,7 +8713,6 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
       showToast("🔐 Reset Admin PIN to 1234 & Staff PIN to 0000!");
     };
 
-    // Override Lock Screen Role Switcher for Ultra-Premium Login Face
     window.selectLockScreenRole = function(role) {
       playSfx('CLICK');
       lockScreenTargetRole = role;
@@ -8198,6 +8832,7 @@ Thank you for ordering from *Cell Planet Khammam*! Call +91 ${STORE_INFO.phone} 
         inp.dataset.prefilled = 'true';
       }
       updateLoginLiveClock();
+      initRapidShowroomSelectorBar();
       initDualBoxAndSpecPortal();
       renderClickableSpecStickerGalleries();
       renderQuickScanChips();
