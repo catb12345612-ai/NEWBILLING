@@ -154,48 +154,100 @@
     <!-- VIEW 1: POS BILLING TERMINAL (ONLINE & OFFLINE COUNTER)    -->
     <!-- ========================================================== -->
     <section id="view-pos" class="space-y-4">
-      <!-- Instant AI Mobile Spec & IMEI Quick Bar inside POS -->
-      <div class="glass-card rounded-2xl p-3.5 border border-cyan-500/30 bg-gradient-to-r from-slate-900/95 via-indigo-950/40 to-slate-900/95">
-        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <!-- LIVE 3-CODE SCANNER DOCK (IMEI 1 + IMEI 2 + SERIAL/SKU) -> INSTANT IDENTIFY -> ADD TO STOCK OR BILL -->
+      <div class="glass-card rounded-2xl p-4 border-2 border-cyan-500/40 bg-gradient-to-r from-slate-900/95 via-indigo-950/50 to-slate-900/95 space-y-3 shadow-lg shadow-cyan-500/5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-bold text-base shrink-0">
-              AI
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-300 font-extrabold text-sm shrink-0">
+              3X
             </div>
             <div>
-              <div class="flex items-center gap-2">
-                <h2 class="text-xs sm:text-sm font-bold text-white">AI Instant Mobile Name, Model &amp; IMEI Spec Detector</h2>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Key: Active</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="text-xs sm:text-sm font-extrabold text-white uppercase tracking-wide">
+                  Instant 3-Code Phone Scanner (IMEI 1 + IMEI 2 + Serial/SKU) → Direct Stock &amp; Billing
+                </h2>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Auto-Identifies Phone Immediately</span>
               </div>
-              <p class="text-[11px] text-slate-400">Type any phone name, model code (e.g. <span class="font-mono text-slate-300">SM-S928B</span>, <span class="font-mono text-slate-300">Vivo X200 Pro</span>, <span class="font-mono text-slate-300">iPhone 16 Pro</span>) or 15-digit IMEI to auto-detect specs &amp; add to bill</p>
+              <p class="text-[11px] text-slate-400">
+                Scan the 3 barcodes with a USB/Bluetooth barcode gun, camera photo, or click a test phone below — phone model &amp; specs are identified immediately so you can <strong>Add to Stock</strong> or <strong>Do Bill</strong> in 1 click.
+              </p>
             </div>
           </div>
 
-          <div class="flex flex-1 max-w-2xl items-center gap-2">
-            <input id="posQuickAiInput" type="text" placeholder="Try 'Samsung S24 Ultra', 'OnePlus 13', 'Pixel 9 Pro', 'Nothing 2a', or 15-digit IMEI..." class="flex-1 bg-slate-950/90 border border-slate-700 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-slate-500 outline-none" onkeydown="if(event.key==='Enter') runPosQuickAiDetect()" />
-            <button id="btnOpen3BarcodeScannerPos" onclick="openThreeBarcodeScannerModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-extrabold text-xs sm:text-sm whitespace-nowrap shadow-md shadow-emerald-500/15 transition-all flex items-center gap-1.5" title="Click picture or scan the 3 barcodes on the back of any phone">
-              <span>📸</span> Scan 3 Barcodes (Phone Back)
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="btnOpen3BarcodeScannerPos" onclick="openThreeBarcodeScannerModal()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-extrabold text-xs whitespace-nowrap shadow-md flex items-center gap-1.5">
+              📸 Scan 3 Barcodes (Phone Back)
             </button>
-            <button id="btnPosQuickAiDetect" onclick="runPosQuickAiDetect()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-bold text-xs sm:text-sm whitespace-nowrap shadow-md shadow-cyan-500/10 transition-all">
+            <select id="quickDemoScanPresetSelect" onchange="if(this.value) triggerInstantThreeCodeDemo(this.value)" class="bg-slate-950 border border-cyan-500/40 rounded-xl px-3 py-2 text-xs font-semibold text-cyan-300 outline-none">
+              <option value="">⚡ Simulate 3-Barcode Scan...</option>
+              <option value="MOB-S24U">Scan: Samsung Galaxy S24 Ultra (SM-S928B)</option>
+              <option value="MOB-IP16PM">Scan: Apple iPhone 16 Pro Max (A3296)</option>
+              <option value="MOB-OP13">Scan: OnePlus 13 5G (CPH2653)</option>
+              <option value="MOB-VX200P">Scan: Vivo X200 Pro 5G (V2415)</option>
+              <option value="MOB-XM15U">Scan: Xiaomi 15 Ultra (25010PN30G)</option>
+              <option value="MOB-PX9P">Scan: Google Pixel 9 Pro XL (GGX8B)</option>
+              <option value="MOB-IQ13">Scan: iQOO 13 5G (I2401)</option>
+              <option value="MOB-RMGT7P">Scan: Realme GT 7 Pro (RMX5011)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3 Sequential Scanner Inputs (Supports USB Barcode Gun Auto-Jump + Manual/AI Entry) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-end">
+          <div class="md:col-span-3">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-cyan-300 mb-1">
+              1️⃣ Scan Code 1: Primary IMEI 1 (15 Digits)
+            </label>
+            <input id="liveScanImei1Input" type="text" value="354891104928174" maxlength="16" oninput="handleLiveThreeCodeInput('imei1')" placeholder="Scan 15-digit IMEI 1..." class="w-full bg-slate-950 border border-cyan-500/50 focus:border-emerald-400 rounded-xl px-3 py-2 text-xs font-mono font-bold text-white outline-none" />
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-indigo-300 mb-1">
+              2️⃣ Scan Code 2: Secondary IMEI 2
+            </label>
+            <input id="liveScanImei2Input" type="text" value="354891104928182" maxlength="16" oninput="handleLiveThreeCodeInput('imei2')" placeholder="Scan 15-digit IMEI 2..." class="w-full bg-slate-950 border border-indigo-500/40 focus:border-emerald-400 rounded-xl px-3 py-2 text-xs font-mono font-bold text-white outline-none" />
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-emerald-300 mb-1">
+              3️⃣ Scan Code 3: Serial / Model SKU / Name
+            </label>
+            <input id="posQuickAiInput" type="text" value="R58X20S928B-256G" oninput="handleLiveThreeCodeInput('sku')" onkeydown="if(event.key==='Enter') runPosQuickAiDetect()" placeholder="Scan Serial/SKU or type model..." class="w-full bg-slate-950 border border-emerald-500/40 focus:border-emerald-400 rounded-xl px-3 py-2 text-xs font-mono font-bold text-white outline-none" />
+          </div>
+          <div class="md:col-span-3 flex gap-1.5">
+            <button id="btnPosQuickAiDetect" onclick="runPosQuickAiDetect()" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs border border-cyan-500/30 transition-all">
               ✨ AI Detect Specs
             </button>
-            <button id="btnPosQuickAiAddBill" onclick="runPosQuickAiDetect(true)" class="px-3 py-2 rounded-xl bg-indigo-600/80 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm whitespace-nowrap border border-indigo-400/30 transition-all">
+            <button id="btnPosQuickAiAddBill" onclick="runPosQuickAiDetect(true)" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700 transition-all" title="Clear scanner fields for next handset">
               + Detect &amp; Bill
             </button>
           </div>
         </div>
 
-        <!-- Collapsible Quick AI Result Strip -->
-        <div id="posQuickAiResultBanner" class="hidden mt-3 pt-3 border-t border-slate-800/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+        <!-- Always-On Live Identified Phone & Direct Stock / Direct Bill Action Strip -->
+        <div id="posQuickAiResultBanner" class="pt-3 border-t border-slate-800/90 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 text-xs bg-slate-950/70 rounded-xl p-3 border border-emerald-500/30">
           <div id="posQuickAiSummaryText" class="space-y-1 flex-1"></div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button onclick="addLastDetectedDeviceToCatalogAndCart(false)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold border border-cyan-500/30">
+
+          <!-- Direct Stock Qty & Price Adjuster + Instant Stock & Bill Buttons -->
+          <div class="flex flex-wrap items-center gap-2 shrink-0 pt-2 xl:pt-0 border-t xl:border-t-0 border-slate-800">
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1">
+              <span class="text-[10px] text-slate-400">Price ₹</span>
+              <input id="liveIdentifiedPriceInput" type="number" value="121999" class="w-24 bg-transparent font-mono font-bold text-emerald-300 text-xs outline-none" />
+            </div>
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1">
+              <span class="text-[10px] text-slate-400">+Stock Qty</span>
+              <input id="liveIdentifiedStockQtyInput" type="number" value="1" min="1" class="w-12 bg-transparent font-mono font-bold text-white text-xs text-center outline-none" />
+            </div>
+
+            <button onclick="addScannedPhoneDirectlyToStock()" class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow-md">
+              📦 Add Directly to Stock
+            </button>
+            <button onclick="addLastDetectedDeviceToCatalogAndCart(false)" class="px-2.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold text-xs border border-cyan-500/30">
               📥 Save to Catalog
             </button>
-            <button onclick="addLastDetectedDeviceToCatalogAndCart(true)" class="px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold">
+            <button onclick="addLastDetectedDeviceToCatalogAndCart(true)" class="px-3 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs shadow-md">
               🛒 Add to Current Bill
             </button>
-            <button onclick="document.getElementById('posQuickAiResultBanner').classList.add('hidden')" class="px-2 py-1.5 rounded-lg text-slate-400 hover:text-white">
-              ✕
+            <button onclick="instantStockAndGenerateBillNow()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-extrabold text-xs shadow-md">
+              ⚡ Stock + Do Bill Now
             </button>
           </div>
         </div>
@@ -1033,13 +1085,19 @@
             <!-- Populated dynamically by renderThreeBarcodeResult() -->
           </div>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-2 pt-1">
-            <button onclick="applyThreeBarcodeScanToPosBill(false)" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs border border-cyan-500/30">
+          <!-- Action Buttons: Direct to Stock, Direct to Bill, or Both -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+            <button onclick="applyThreeBarcodeScanToPosBill(false)" class="py-2.5 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs border border-cyan-500/30">
               🔍 Open Full AI Specs
             </button>
-            <button onclick="applyThreeBarcodeScanToPosBill(true)" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-extrabold text-xs shadow-lg">
+            <button onclick="applyThreeBarcodeScanDirectlyToStockOnly()" class="py-2.5 px-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow-md">
+              📦 Add Directly to Stock
+            </button>
+            <button onclick="applyThreeBarcodeScanToPosBill(true)" class="py-2.5 px-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs shadow-md">
               🛒 Add Phone + Scanned IMEI to Bill
+            </button>
+            <button onclick="applyThreeBarcodeScanStockAndFastBill()" class="py-2.5 px-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-extrabold text-xs shadow-lg">
+              ⚡ Stock + Do Bill Now
             </button>
           </div>
         </div>
@@ -1837,55 +1895,230 @@
       };
     }
 
-    // 9. QUICK AI DETECT BAR IN POS VIEW
-    async function runPosQuickAiDetect(autoAddToBill = false) {
-      const input = document.getElementById('posQuickAiInput');
-      const query = (input && input.value.trim()) || 'Samsung Galaxy S24 Ultra';
+    // 9. INSTANT 3-CODE SCANNER DOCK (IMEI 1 + IMEI 2 + SERIAL/SKU) -> AUTO-IDENTIFY -> ADD TO STOCK OR BILL
+    function renderLiveThreeCodeBanner(device, imei1, imei2, sku, latencyMs = 8) {
       const banner = document.getElementById('posQuickAiResultBanner');
       const summary = document.getElementById('posQuickAiSummaryText');
+      const priceInp = document.getElementById('liveIdentifiedPriceInput');
+      if (priceInp && device) priceInp.value = device.price;
+
+      if (banner && summary && device) {
+        banner.classList.remove('hidden');
+        const stockObj = inventory.find(p => p.model_number === device.model_number || p.name === device.name);
+        const currentStock = stockObj ? stockObj.stock : 0;
+        summary.innerHTML = `
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px]">✓ PHONE IDENTIFIED (${latencyMs}ms)</span>
+            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">${device.brand}</span>
+            <strong class="text-white text-sm">${device.name}</strong>
+            <span class="font-mono text-cyan-300 font-semibold">Model: ${device.model_number}</span>
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 font-mono text-[11px]">Variant: ${device.ram_storage}</span>
+            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono text-[11px]">Current Stock: ${currentStock}</span>
+          </div>
+          <p class="text-slate-300 text-[11px]">
+            <strong>SoC:</strong> ${device.processor} • <strong>Display:</strong> ${device.display} • <strong>Cam:</strong> ${device.camera}
+          </p>
+          <p class="text-[11px] font-mono text-emerald-300">
+            1️⃣ IMEI-1: <strong>${imei1 || 'N/A'}</strong> &nbsp;|&nbsp; 2️⃣ IMEI-2: <strong>${imei2 || 'N/A'}</strong> &nbsp;|&nbsp; 3️⃣ S/N &amp; SKU: <strong>${sku || device.model_number}</strong>
+          </p>
+        `;
+      }
+    }
+
+    function triggerInstantThreeCodeDemo(prodId) {
+      const dev = inventory.find(p => p.id === prodId) || MOBILE_KNOWLEDGE_GRAPH.find(p => p.id === prodId) || MOBILE_KNOWLEDGE_GRAPH[0];
+      const im1 = generateLuhnIMEI(dev.tac_prefix);
+      const im2 = generateLuhnIMEI(dev.tac_prefix);
+      const cleanModel = dev.model_number.replace(/[^A-Z0-9]/gi, '');
+      const romShort = (dev.ram_storage || '256GB').split('/').pop().trim();
+      const sku = `R58X${cleanModel}-${romShort}`;
+
+      document.getElementById('liveScanImei1Input').value = im1;
+      document.getElementById('liveScanImei2Input').value = im2;
+      document.getElementById('posQuickAiInput').value = sku;
+
+      lastDetectedDevice = dev;
+      currentThreeBarcodeScanState = { device: dev, imei1: im1, imei2: im2, serialSku: sku, sourceMode: 'BARCODE_GUN_3X' };
+      renderLiveThreeCodeBanner(dev, im1, im2, sku, 4);
+      showToast(`⚡ Scanned 3 codes → Immediately identified ${dev.name} (${dev.model_number})!`, 'success');
+    }
+
+    function clearLiveThreeCodeScanner() {
+      const im1El = document.getElementById('liveScanImei1Input');
+      const im2El = document.getElementById('liveScanImei2Input');
+      const skuEl = document.getElementById('posQuickAiInput');
+      if (im1El) { im1El.value = ''; im1El.focus(); }
+      if (im2El) im2El.value = '';
+      if (skuEl) skuEl.value = '';
+      showToast('🔄 Ready to scan IMEI 1, IMEI 2 & Serial/SKU of next phone!', 'info');
+    }
+
+    async function handleLiveThreeCodeInput(changedField) {
+      const im1El = document.getElementById('liveScanImei1Input');
+      const im2El = document.getElementById('liveScanImei2Input');
+      const skuEl = document.getElementById('posQuickAiInput');
+
+      const im1 = (im1El?.value || '').trim();
+      const im2 = (im2El?.value || '').trim();
+      const sku = (skuEl?.value || '').trim();
+
+      // Auto-advance focus like a real hardware barcode scanner gun when 15 digits are scanned
+      if (changedField === 'imei1' && im1.replace(/\D/g, '').length === 15) {
+        if (im2El && !im2El.value) im2El.focus();
+      } else if (changedField === 'imei2' && im2.replace(/\D/g, '').length === 15) {
+        if (skuEl && !skuEl.value) skuEl.focus();
+      }
+
+      // Immediately identify phone from TAC prefix (first 8 digits of IMEI 1) OR SKU/Model code
+      const tac8 = im1.replace(/\D/g, '').slice(0, 8);
+      let matched = null;
+      if (tac8.length === 8) {
+        matched = inventory.find(m => m.tac_prefix === tac8) || MOBILE_KNOWLEDGE_GRAPH.find(m => m.tac_prefix === tac8);
+      }
+      if (!matched && sku.length >= 2) {
+        const sLow = sku.toLowerCase();
+        matched = inventory.find(m =>
+          sLow.includes(m.model_number.toLowerCase().replace(/[^a-z0-9]/g, '')) ||
+          m.name.toLowerCase().includes(sLow) ||
+          m.model_number.toLowerCase().includes(sLow)
+        ) || MOBILE_KNOWLEDGE_GRAPH.find(m =>
+          sLow.includes(m.model_number.toLowerCase().replace(/[^a-z0-9]/g, '')) ||
+          m.name.toLowerCase().includes(sLow)
+        );
+      }
+      if (matched) {
+        lastDetectedDevice = matched;
+        currentThreeBarcodeScanState = {
+          device: matched,
+          imei1: im1 || generateLuhnIMEI(matched.tac_prefix),
+          imei2: im2 || generateLuhnIMEI(matched.tac_prefix),
+          serialSku: sku || matched.model_number,
+          sourceMode: 'LIVE_3_CODE_SCANNER'
+        };
+        renderLiveThreeCodeBanner(matched, im1, im2, sku, 5);
+      }
+    }
+
+    async function runPosQuickAiDetect(autoAddToBill = false) {
+      const im1 = (document.getElementById('liveScanImei1Input')?.value || '').trim();
+      const im2 = (document.getElementById('liveScanImei2Input')?.value || '').trim();
+      const sku = (document.getElementById('posQuickAiInput')?.value || '').trim();
+      const query = sku || im1 || 'Samsung Galaxy S24 Ultra';
 
       const { device, telemetry } = await detectMobileSpecsWithKey(query);
       lastDetectedDevice = device;
 
-      if (banner && summary) {
-        banner.classList.remove('hidden');
-        summary.innerHTML = `
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">${device.brand}</span>
-            <strong class="text-white text-sm">${device.name}</strong>
-            <span class="font-mono text-slate-400">Model: ${device.model_number}</span>
-            <span class="font-mono text-emerald-300 font-bold">₹${device.price.toLocaleString('en-IN')}</span>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-indigo-300">${telemetry.engine} (${telemetry.latency_ms}ms)</span>
-          </div>
-          <p class="text-slate-300 text-[11px]">
-            <strong>SoC:</strong> ${device.processor} • <strong>RAM/ROM:</strong> ${device.ram_storage} • <strong>Cam:</strong> ${device.camera} • <strong>Battery:</strong> ${device.battery}
-          </p>
-        `;
-      }
+      const finalIm1 = im1.length >= 14 ? im1 : generateLuhnIMEI(device.tac_prefix);
+      const finalIm2 = im2.length >= 14 ? im2 : generateLuhnIMEI(device.tac_prefix);
+      const finalSku = sku || `SN-${device.model_number}-256G`;
+
+      if (document.getElementById('liveScanImei1Input') && !im1) document.getElementById('liveScanImei1Input').value = finalIm1;
+      if (document.getElementById('liveScanImei2Input') && !im2) document.getElementById('liveScanImei2Input').value = finalIm2;
+
+      currentThreeBarcodeScanState = {
+        device,
+        imei1: finalIm1,
+        imei2: finalIm2,
+        serialSku: finalSku,
+        sourceMode: telemetry.engine
+      };
+
+      renderLiveThreeCodeBanner(device, finalIm1, finalIm2, finalSku, telemetry.latency_ms);
 
       if (autoAddToBill) {
         addLastDetectedDeviceToCatalogAndCart(true);
       } else {
-        showToast(`✨ AI detected specs for ${device.name} (${device.model_number})`, 'info');
+        showToast(`✨ Identified ${device.name} (${device.model_number}) from scanned codes!`, 'success');
       }
+    }
+
+    function addScannedPhoneDirectlyToStock() {
+      if (!lastDetectedDevice) return null;
+      const customPrice = Number(document.getElementById('liveIdentifiedPriceInput')?.value || lastDetectedDevice.price);
+      const addQty = Math.max(1, Number(document.getElementById('liveIdentifiedStockQtyInput')?.value || 1));
+      const im1 = (document.getElementById('liveScanImei1Input')?.value || '').trim() || generateLuhnIMEI(lastDetectedDevice.tac_prefix);
+      const im2 = (document.getElementById('liveScanImei2Input')?.value || '').trim() || generateLuhnIMEI(lastDetectedDevice.tac_prefix);
+      const sku = (document.getElementById('posQuickAiInput')?.value || '').trim() || lastDetectedDevice.model_number;
+
+      let existing = inventory.find(p => p.model_number === lastDetectedDevice.model_number || p.name === lastDetectedDevice.name);
+      if (existing) {
+        existing.stock = Number(existing.stock || 0) + addQty;
+        existing.price = customPrice;
+        existing.lastScannedImei1 = im1;
+        existing.lastScannedImei2 = im2;
+        existing.lastScannedSku = sku;
+      } else {
+        existing = {
+          ...lastDetectedDevice,
+          price: customPrice,
+          stock: addQty,
+          lastScannedImei1: im1,
+          lastScannedImei2: im2,
+          lastScannedSku: sku
+        };
+        inventory.unshift(existing);
+      }
+
+      SafeStorage.set('cp_inventory_v25', inventory);
+      renderPosCatalog();
+      renderInventoryTable();
+      updateInventoryBadge();
+      renderLiveThreeCodeBanner(existing, im1, im2, sku, 4);
+      showToast(`📦 Added +${addQty} unit(s) of ${existing.name} (IMEI: ${im1}) directly into Stock! (Total Stock: ${existing.stock})`, 'success');
+      return existing;
     }
 
     function addLastDetectedDeviceToCatalogAndCart(alsoAddToCart = true) {
       if (!lastDetectedDevice) return;
+      const customPrice = Number(document.getElementById('liveIdentifiedPriceInput')?.value || lastDetectedDevice.price);
+      const im1 = (document.getElementById('liveScanImei1Input')?.value || '').trim() || generateLuhnIMEI(lastDetectedDevice.tac_prefix);
+      const im2 = (document.getElementById('liveScanImei2Input')?.value || '').trim() || generateLuhnIMEI(lastDetectedDevice.tac_prefix);
+      const sku = (document.getElementById('posQuickAiInput')?.value || '').trim() || lastDetectedDevice.model_number;
+
       let existing = inventory.find(p => p.model_number === lastDetectedDevice.model_number || p.name === lastDetectedDevice.name);
       if (!existing) {
-        existing = { ...lastDetectedDevice, stock: 8 };
+        existing = { ...lastDetectedDevice, price: customPrice, stock: 5 };
         inventory.unshift(existing);
         SafeStorage.set('cp_inventory_v25', inventory);
         renderPosCatalog();
         updateInventoryBadge();
-      }
-      if (alsoAddToCart) {
-        addProductToPosCart(existing.id);
-        switchTab('pos');
       } else {
-        showToast(`📥 Saved ${existing.name} to Cell Planet Store Inventory!`, 'success');
+        existing.price = customPrice;
       }
+
+      if (alsoAddToCart) {
+        posCart.push({
+          cartRowId: 'ROW-' + Date.now() + '-' + Math.floor(Math.random() * 999),
+          id: existing.id,
+          brand: existing.brand,
+          name: existing.name,
+          model_number: existing.model_number,
+          category: existing.category,
+          hsn_code: existing.hsn_code || '85171300',
+          variant: existing.ram_storage || '12GB / 256GB',
+          variants: existing.variants || [existing.ram_storage || '12GB / 256GB', '16GB / 512GB'],
+          color: (existing.colors && existing.colors[0]) || 'Titanium Black',
+          colors: existing.colors || ['Titanium Black', 'Silver'],
+          imei: im1,
+          imei2: im2,
+          serialSku: sku,
+          warranty: '1 Yr Brand Warranty',
+          basePrice: Number(customPrice),
+          price: Number(customPrice),
+          qty: 1
+        });
+        renderPosCart();
+        switchTab('pos');
+        showToast(`🛒 Added ${existing.name} (IMEI 1: ${im1}, IMEI 2: ${im2}) directly to Bill!`, 'success');
+      } else {
+        addScannedPhoneDirectlyToStock();
+      }
+    }
+
+    function instantStockAndGenerateBillNow() {
+      addScannedPhoneDirectlyToStock();
+      addLastDetectedDeviceToCatalogAndCart(true);
+      completeAndGenerateInvoice();
     }
 
     // 10. DEDICATED AI STUDIO VIEW LOGIC
@@ -2292,15 +2525,21 @@
                 </select>
               </div>
 
-              <!-- 15-Digit IMEI Scanner / Input -->
-              <div class="flex items-center gap-1.5">
-                <div class="flex-1 relative">
-                  <input type="text" value="${row.imei}" maxlength="15" onchange="updateCartRowField('${row.cartRowId}', 'imei', this.value)" class="w-full bg-slate-900 border border-slate-800 focus:border-cyan-400 rounded-lg pl-2.5 pr-20 py-1 font-mono text-[11px] text-emerald-300 outline-none" placeholder="15-Digit IMEI Number" />
-                  <span class="absolute right-2 top-1.5">${imeiStatusBadge}</span>
+              <!-- 3 Scanned Codes on Cart Item: IMEI 1, IMEI 2 & Serial/SKU -->
+              <div class="space-y-1">
+                <div class="flex items-center gap-1.5">
+                  <div class="flex-1 relative">
+                    <input type="text" value="${row.imei}" maxlength="15" onchange="updateCartRowField('${row.cartRowId}', 'imei', this.value)" class="w-full bg-slate-900 border border-slate-800 focus:border-cyan-400 rounded-lg pl-2.5 pr-20 py-1 font-mono text-[11px] text-emerald-300 outline-none" placeholder="IMEI 1 (15-Digit)" />
+                    <span class="absolute right-2 top-1.5">${imeiStatusBadge}</span>
+                  </div>
+                  <button onclick="regenerateRowImei('${row.cartRowId}')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-semibold" title="Scan / Generate Valid Luhn IMEI">
+                    🔄 Scan
+                  </button>
                 </div>
-                <button onclick="regenerateRowImei('${row.cartRowId}')" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[11px] font-semibold" title="Scan / Generate Valid Luhn IMEI">
-                  🔄 Scan IMEI
-                </button>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <input type="text" value="${row.imei2 || ''}" maxlength="15" onchange="row.imei2=this.value" placeholder="IMEI 2 (Optional)" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1 font-mono text-[10px] text-indigo-300 outline-none" />
+                  <input type="text" value="${row.serialSku || ''}" onchange="row.serialSku=this.value" placeholder="S/N or SKU Code" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1 font-mono text-[10px] text-cyan-300 outline-none" />
+                </div>
               </div>
             </div>
           `;
@@ -3509,8 +3748,31 @@ Identify the exact mobile brand, commercial name, model_number, ram_storage, pro
       }
     }
 
+    function syncCameraModalToMainThreeCodeDock() {
+      const { device, imei1, imei2, serialSku } = currentThreeBarcodeScanState;
+      if (!device) return;
+      lastDetectedDevice = device;
+      if (document.getElementById('liveScanImei1Input')) document.getElementById('liveScanImei1Input').value = imei1;
+      if (document.getElementById('liveScanImei2Input')) document.getElementById('liveScanImei2Input').value = imei2;
+      if (document.getElementById('posQuickAiInput')) document.getElementById('posQuickAiInput').value = serialSku;
+      renderLiveThreeCodeBanner(device, imei1, imei2, serialSku, 6);
+    }
+
+    function applyThreeBarcodeScanDirectlyToStockOnly() {
+      syncCameraModalToMainThreeCodeDock();
+      closeThreeBarcodeScannerModal();
+      addScannedPhoneDirectlyToStock();
+    }
+
+    function applyThreeBarcodeScanStockAndFastBill() {
+      syncCameraModalToMainThreeCodeDock();
+      closeThreeBarcodeScannerModal();
+      instantStockAndGenerateBillNow();
+    }
+
     function applyThreeBarcodeScanToPosBill(addToCart = true) {
-      const { device, imei1 } = currentThreeBarcodeScanState;
+      syncCameraModalToMainThreeCodeDock();
+      const { device, imei1, imei2, serialSku } = currentThreeBarcodeScanState;
       if (!device) return;
 
       // Ensure device exists in inventory catalog
@@ -3606,6 +3868,7 @@ Identify the exact mobile brand, commercial name, model_number, ram_storage, pro
       updateHeldBillsCount();
       renderPosCatalog();
       renderPosCart();
+      renderLiveThreeCodeBanner(MOBILE_KNOWLEDGE_GRAPH[0], '354891104928174', '354891104928182', 'R58X20S928B-256G', 5);
       runFullAiStudioDetection();
     });
   </script>
