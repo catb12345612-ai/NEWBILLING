@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cell Planet Khammam | Official Customer Online Storefront &amp; Express Delivery</title>
+  <title>Cell Planet Khammam | Official Online Mobile Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     :root {
-      --apple-bg: #f5f5f7;
-      --apple-card: #ffffff;
-      --apple-ink: #1d1d1f;
-      --apple-muted: #6e6e73;
-      --apple-blue: #0071e3;
-      --apple-blue-hover: #0077ed;
-      --apple-gold: #bfa06d;
-      --apple-border: rgba(0, 0, 0, 0.08);
-      --font-main: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', 'Inter', sans-serif;
+      --apple-bg: #F5F5F7;
+      --apple-card: #FFFFFF;
+      --apple-text: #1D1D1F;
+      --apple-muted: #86868B;
+      --apple-blue: #0071E3;
+      --apple-blue-hover: #0077ED;
+      --apple-green: #34C759;
+      --apple-border: #E5E5EA;
     }
 
     * {
@@ -26,527 +25,312 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    html {
-      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
     }
 
     body {
       background-color: var(--apple-bg);
-      color: var(--apple-ink);
-      font-family: var(--font-main);
+      color: var(--apple-text);
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .apple-nav-dark {
-      background: rgba(22, 22, 23, 0.88);
+    .apple-glass-nav {
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .store-header {
-      background: rgba(255, 255, 255, 0.86);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      color: var(--apple-ink);
-      position: sticky;
-      top: 44px;
-      z-index: 40;
       border-bottom: 1px solid var(--apple-border);
-      transition: background 0.2s ease;
     }
 
-    .product-card {
+    .apple-card {
       background: var(--apple-card);
-      border-radius: 24px;
       border: 1px solid var(--apple-border);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
+      border-radius: 20px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      will-change: transform;
-    }
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-      border-color: rgba(0, 113, 227, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .btn-buy-now {
+    .apple-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
+      border-color: #D2D2D7;
+    }
+
+    .btn-primary {
       background: var(--apple-blue);
-      color: #ffffff;
+      color: #FFFFFF;
       font-weight: 600;
-      border-radius: 980px;
-      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      border-radius: 12px;
+      transition: all 0.15s ease;
       cursor: pointer;
-      border: none;
     }
-    .btn-buy-now:hover {
+    .btn-primary:hover {
       background: var(--apple-blue-hover);
-      transform: scale(1.015);
-      box-shadow: 0 6px 18px rgba(0, 113, 227, 0.28);
-    }
-    .btn-buy-now:active {
-      transform: scale(0.98);
-    }
-
-    .btn-add-cart {
-      background: #f5f5f7;
-      color: var(--apple-ink);
-      font-weight: 600;
-      border-radius: 980px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      transition: background 0.18s ease, transform 0.18s ease;
-      cursor: pointer;
-    }
-    .btn-add-cart:hover {
-      background: #e8e8ed;
-    }
-    .btn-add-cart:active {
-      transform: scale(0.98);
-    }
-
-    .btn-emerald {
-      background: #059669;
-      color: #ffffff;
-      border: none;
-      border-radius: 980px;
-      font-weight: 600;
-      transition: background 0.18s ease, transform 0.18s ease;
-      cursor: pointer;
-    }
-    .btn-emerald:hover {
-      background: #047857;
       transform: translateY(-1px);
     }
 
-    .input-luxury {
-      width: 100%;
-      background: #f5f5f7;
-      border: 1px solid rgba(0, 0, 0, 0.12);
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-family: var(--font-main);
-      font-size: 13.5px;
-      color: var(--apple-ink);
-      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-      outline: none;
-    }
-    .input-luxury:focus {
-      border-color: var(--apple-blue);
-      background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.14);
-    }
-
-    .is-disabled {
-      opacity: 0.42 !important;
-      cursor: not-allowed !important;
-      filter: grayscale(0.4);
-      transform: none !important;
-      box-shadow: none !important;
-    }
-
-    .assured-badge {
-      background: #f5f5f7;
-      color: var(--apple-ink);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      font-size: 10px;
+    .btn-secondary {
+      background: #F2F2F7;
+      color: var(--apple-text);
       font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 980px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .brand-logo {
-      width: 44px;
-      height: 44px;
       border-radius: 12px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      background-color: #fff;
-      object-fit: cover;
-      padding: 2px;
-      transition: transform 0.3s ease;
+      border: 1px solid #E5E5EA;
+      transition: all 0.15s ease;
+      cursor: pointer;
     }
-    .brand-logo:hover {
-      transform: scale(1.05);
+    .btn-secondary:hover {
+      background: #E5E5EA;
     }
 
-    .dev-img {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid var(--apple-gold);
-      padding: 2px;
-      background: #fff;
-      transition: transform 0.3s ease;
+    .apple-input {
+      background: #FFFFFF;
+      border: 1.5px solid #D2D2D7;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--apple-text);
+      width: 100%;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    .dev-link:hover .dev-img {
-      transform: scale(1.08);
-    }
-
-    .glass-vault-card {
-      background: rgba(24, 24, 27, 0.92);
-      backdrop-filter: saturate(180%) blur(28px);
-      -webkit-backdrop-filter: saturate(180%) blur(28px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55);
+    .apple-input:focus {
+      outline: none;
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.14);
     }
 
-    .toast-notification {
-      visibility: hidden;
-      min-width: 280px;
-      background: rgba(29, 29, 31, 0.94);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: #fff;
-      text-align: center;
-      border-radius: 980px;
-      padding: 12px 24px;
-      position: fixed;
-      z-index: 9999;
-      left: 50%;
-      bottom: 28px;
-      transform: translateX(-50%) translateY(16px);
-      opacity: 0;
+    .cat-pill {
+      padding: 8px 16px;
+      border-radius: 999px;
       font-size: 13px;
       font-weight: 600;
-      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.25);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      color: #424245;
+      background: #FFFFFF;
+      border: 1px solid #E5E5EA;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .toast-notification.show {
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
+    .cat-pill.active {
+      background: #1D1D1F;
+      color: #FFFFFF;
+      border-color: #1D1D1F;
     }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+    .color-chip {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1.5px solid #E5E5EA;
+      background: #F5F5F7;
+      color: #1D1D1F;
+      cursor: pointer;
+      transition: all 0.15s ease;
     }
-    ::-webkit-scrollbar-track {
-      background: transparent;
+    .color-chip.active {
+      border-color: var(--apple-blue);
+      background: rgba(0, 113, 227, 0.08);
+      color: var(--apple-blue);
     }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 999px;
-    }
+
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #D2D2D7; border-radius: 99px; }
   </style>
 </head>
-<body>
-  <!-- TOP APPLE CUPERTINO BAR -->
-  <div class="apple-nav-dark text-white px-3 sm:px-6 py-2.5 sticky top-0 z-[100]">
-    <div class="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5 text-xs flex-wrap">
-        <div class="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center font-extrabold text-[11px] tracking-tighter">
-          CP
-        </div>
-        <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-semibold text-[10px] uppercase tracking-wider">
-          Apple Luxury Edition
-        </span>
-        <span class="font-semibold text-white tracking-tight">Cell Planet <span class="text-neutral-400 font-normal">Khammam Online</span></span>
-        <span id="vfsGlobalSyncBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-[10px] font-semibold flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Showroom Stock Synced
-        </span>
+<body class="flex flex-col min-h-screen">
+
+  <!-- TOP STORE ANNOUNCEMENT BAR -->
+  <div class="bg-[#1D1D1F] text-white text-xs py-2 px-4">
+    <div class="max-w-[1360px] mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
+        <span>Cell Planet Official Store • Wyra Road, Opp. Collector Office, Khammam</span>
       </div>
-      <div class="flex items-center gap-2 flex-wrap">
-        <button type="button" onclick="toggleGlobalSfxMute()" id="globalSfxMuteBtn" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-neutral-200 font-medium text-[11px] flex items-center gap-1" title="Toggle Audio Feedback">
-          <i id="globalSfxIcon" class="ph-bold ph-speaker-high"></i>
-          <span id="globalSfxText">Audio: ON</span>
+      <div class="flex items-center gap-4 text-[11px] text-[#A1A1A6]">
+        <span><i class="ph-fill ph-seal-check text-[#34C759]"></i> 100% Sealed &amp; GST Billed</span>
+        <span><i class="ph-fill ph-truck text-[#0A84FF]"></i> Express 2-Hour Khammam Delivery</span>
+        <a href="tel:+919848012345" class="text-white font-semibold hover:underline"><i class="ph-bold ph-phone"></i> +91 98480 12345</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY APPLE GLASS HEADER -->
+  <header class="apple-glass-nav sticky top-0 z-40">
+    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <!-- Brand -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
+        <div class="w-10 h-10 rounded-xl bg-[#1D1D1F] text-white flex items-center justify-center shadow-sm">
+          <i class="ph-fill ph-planet text-xl text-[#D4AF37]"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-base tracking-tight text-[#1D1D1F]">Cell Planet</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#E8F8EE] text-[#1D8348]">Live Store</span>
+          </div>
+          <p class="text-[11px] text-[#86868B] font-medium">Khammam Official Showroom Catalog</p>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-xl relative">
+        <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868B]"></i>
+        <input id="store-search" type="text" oninput="renderStoreCatalog()" placeholder="Search iPhone, Vivo, Samsung, 8GB/256GB, or color..." class="apple-input !pl-10 !pr-20 !py-2 !bg-[#F5F5F7] focus:!bg-white text-xs sm:text-sm">
+        <button onclick="openAiAdvisorModal()" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-[#0071E3] text-white text-[11px] font-bold flex items-center gap-1 hover:bg-[#0077ED]" title="Ask AI Mobile Advisor">
+          <i class="ph-fill ph-sparkle"></i> AI Help
         </button>
-        <a href="tel:9550677795" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium text-[11px] flex items-center gap-1 no-underline">
-          <i class="ph-bold ph-phone-call text-sky-400"></i>
-          <span>9550677795</span>
-        </a>
-        <a href="https://wa.me/919550677795" target="_blank" class="px-3 py-1 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold text-[11px] flex items-center gap-1 no-underline">
-          <i class="ph-bold ph-whatsapp-logo"></i>
-          <span>WhatsApp Specialist</span>
-        </a>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-2">
+        <button onclick="syncLiveStock(true)" class="btn-secondary px-3 py-2 text-xs flex items-center gap-1.5" title="Sync latest stock from Admin ERP">
+          <i class="ph-bold ph-arrows-clockwise text-[#0071E3]"></i>
+          <span class="hidden md:inline">Sync Stock</span>
+        </button>
+        <button onclick="openTrackOrdersModal()" class="btn-secondary px-3 py-2 text-xs flex items-center gap-1.5">
+          <i class="ph-bold ph-package text-[#1D1D1F]"></i>
+          <span class="hidden sm:inline">My Orders</span>
+          <span id="my-orders-badge" class="px-1.5 py-0.2 rounded-full bg-[#E5E5EA] text-[#1D1D1F] text-[10px] font-extrabold">0</span>
+        </button>
+        <button onclick="toggleCartDrawer(true)" class="btn-primary px-4 py-2 text-xs sm:text-sm flex items-center gap-2 shadow-sm">
+          <i class="ph-bold ph-shopping-bag text-base"></i>
+          <span>Bag</span>
+          <span id="cart-count-badge" class="px-1.5 py-0.5 rounded-full bg-white text-[#0071E3] text-[11px] font-extrabold">0</span>
+        </button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- ================================================================= -->
-  <!-- APPLE LUXURY CUSTOMER ONLINE STOREFRONT                           -->
-  <!-- ================================================================= -->
-  <div id="globalStoreViewWrapper">
-
-    <header class="store-header">
-      <div class="max-w-[1440px] mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='28' fill='%231d1d1f'/%3E%3Ctext x='60' y='58' font-family='sans-serif' font-size='30' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ECP%3C/text%3E%3Ctext x='60' y='80' font-family='sans-serif' font-size='11' font-weight='600' fill='%23bfa06d' text-anchor='middle'%3EKHAMMAM%3C/text%3E%3C/svg%3E" alt="Cell Planet" class="brand-logo">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-lg sm:text-xl tracking-tight text-neutral-900">
-                Cell Planet <span class="font-normal text-neutral-500">Store</span>
-              </span>
-              <span class="hidden sm:inline-flex items-center gap-1 bg-neutral-900 text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
-                <i class="ph-fill ph-seal-check text-[#bfa06d]"></i> Authorized Showroom
-              </span>
-            </div>
-            <button type="button" onclick="openSavedAddressesModal()" class="text-[11px] text-neutral-500 hover:text-[#0071e3] flex items-center gap-1 text-left cursor-pointer">
-              <i class="ph-fill ph-map-pin text-[#0071e3]"></i>
-              <span id="headerActiveAddressLabel">Express Delivery to <strong>Khammam 507001</strong> • Manage Addresses</span>
-            </button>
-          </div>
+  <!-- CLEAN HERO + FILTERS BAR -->
+  <section class="bg-white border-b border-[#E5E5EA]">
+    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 py-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#F2F2F7]">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1D1D1F]">Shop Verified Smartphones &amp; Accessories.</h1>
+          <p class="text-xs sm:text-sm text-[#86868B] mt-1">Real-time showroom stock with exact color selection, official GST invoice, and instant store pickup or Khammam delivery.</p>
         </div>
-
-        <!-- Instant Search Bar -->
-        <div class="flex-1 max-w-xl mx-auto w-full order-3 lg:order-2">
-          <div class="relative flex items-center">
-            <i class="ph-bold ph-magnifying-glass absolute left-3.5 text-neutral-400 text-sm"></i>
-            <input
-              type="text"
-              id="storeSearchInput"
-              oninput="scheduleStoreProductsRender()"
-              placeholder="Search iPhone 16 Pro Max, Galaxy S25 Ultra, Vivo X200 Pro, Smart TVs..."
-              class="w-full py-2.5 pl-9 pr-16 rounded-full text-xs sm:text-sm text-neutral-900 font-medium bg-[#f5f5f7] border border-black/10 focus:outline-none focus:bg-white focus:border-[#0071e3]"
-            >
-            <button type="button" onclick="clearStoreSearch()" id="clearSearchBtn" class="hidden absolute right-3 text-[11px] font-semibold text-neutral-400 hover:text-neutral-700">Clear</button>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs font-semibold flex items-center gap-2">
+            <span class="text-[#86868B]">Models in Stock:</span>
+            <span id="stat-live-models" class="font-extrabold text-[#1D1D1F]">0</span>
           </div>
-        </div>
-
-        <!-- Right Action Buttons -->
-        <div class="flex flex-wrap items-center gap-2 order-2 lg:order-3">
-          <button type="button" onclick="handleCustomerAccountBtnClick()" id="headerCustAuthBtn" class="px-3.5 py-2 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 text-neutral-800 text-xs font-semibold flex items-center gap-1.5">
-            <i class="ph-bold ph-user-circle text-base text-[#0071e3]"></i>
-            <span id="headerCustAuthText">Sign In</span>
-          </button>
-          <button type="button" onclick="openCustomerLogoutConfirm()" id="headerCustLogoutBtn" class="hidden px-3 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold items-center gap-1" title="Sign Out">
-            <i class="ph-bold ph-sign-out text-sm"></i>
-            <span class="hidden sm:inline">Sign Out</span>
-          </button>
-          <button type="button" onclick="openSavedAddressesModal()" class="px-3.5 py-2 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 text-neutral-800 text-xs font-semibold flex items-center gap-1.5" title="Manage Saved Delivery Addresses">
-            <i class="ph-bold ph-map-pin-line text-base text-emerald-600"></i>
-            <span class="hidden md:inline">Addresses</span>
-            <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded-full text-[10px]" id="headerSavedAddrCount">1</span>
-          </button>
-          <button type="button" onclick="openTrackOrdersModal()" class="px-3.5 py-2 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 text-neutral-800 text-xs font-semibold flex items-center gap-1.5">
-            <i class="ph-bold ph-package text-base text-neutral-700"></i>
-            <span>Orders (<span id="headerMyOrdersCount">3</span>)</span>
-          </button>
-          <button type="button" onclick="openCartDrawer()" class="px-4 py-2 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-            <i class="ph-bold ph-bag text-base"></i>
-            <span>Bag (<span id="headerCartCount">0</span>)</span>
+          <div class="px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs font-semibold flex items-center gap-2">
+            <span class="text-[#86868B]">Total Pieces Ready:</span>
+            <span id="stat-live-pieces" class="font-extrabold text-[#0071E3]">0</span>
+          </div>
+          <button onclick="openResetStoreModal()" class="px-3 py-2 rounded-xl bg-[#FFF2F2] text-[#FF3B30] border border-[#FFD6D6] text-xs font-bold hover:bg-[#FFE5E5]">
+            <i class="ph-bold ph-trash"></i> Reset Store
           </button>
         </div>
       </div>
 
-      <!-- Sub-Bar: Account Status & Category Strip -->
-      <div class="bg-white/70 border-t border-black/5">
-        <div class="max-w-[1440px] mx-auto px-3 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto text-xs font-medium whitespace-nowrap">
-          <button type="button" onclick="setStoreCategory('ALL')" id="catChip-ALL" class="store-cat-chip px-3.5 py-1.5 rounded-full bg-[#1d1d1f] text-white font-semibold">
-            All Products
-          </button>
-          <button type="button" onclick="setStoreCategory('Smartphone')" id="catChip-Smartphone" class="store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100">
-            iPhone &amp; 5G Flagships
-          </button>
-          <button type="button" onclick="setStoreCategory('Pre-Owned')" id="catChip-Pre-Owned" class="store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100">
-            Certified Pre-Owned
-          </button>
-          <button type="button" onclick="setStoreCategory('Smart TV')" id="catChip-Smart TV" class="store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100">
-            4K Smart TVs
-          </button>
-          <button type="button" onclick="setStoreCategory('Accessory')" id="catChip-Accessory" class="store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100">
-            MagSafe &amp; Audio
-          </button>
-          <button type="button" onclick="setStoreCategory('Service')" id="catChip-Service" class="store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100">
-            AppleCare &amp; Repairs
-          </button>
-          <div class="ml-auto hidden xl:flex items-center gap-2">
-            <span id="mobileCustomerStatusBadge" class="text-[11px] text-neutral-500">Guest Shopper • 0% No-Cost EMI Available</span>
-            <button type="button" onclick="handleCustomerAccountBtnClick()" id="mobileLoginQuickLink" class="text-[11px] text-[#0071e3] font-semibold hover:underline">Sign In</button>
-            <button type="button" onclick="openCustomerLogoutConfirm()" id="mobileLogoutQuickLink" class="text-[11px] text-rose-600 font-semibold hover:underline hidden">Sign Out</button>
-          </div>
+      <!-- Category & Sort Bar -->
+      <div class="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 overflow-x-auto custom-scroll pb-1" id="category-pills">
+          <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-pill active">All Products</button>
+          <button onclick="setCategory('Smartphones')" data-cat="Smartphones" class="cat-pill">Smartphones</button>
+          <button onclick="setCategory('Accessories')" data-cat="Accessories" class="cat-pill">Audio &amp; Accessories</button>
+          <button onclick="setCategory('Tablets')" data-cat="Tablets" class="cat-pill">Tablets &amp; Watches</button>
         </div>
-      </div>
-    </header>
-
-    <!-- MAIN APPLE STOREFRONT CONTENT -->
-    <main class="max-w-[1440px] mx-auto px-3 sm:px-6 py-6 space-y-6">
-
-      <!-- APPLE CUPERTINO HERO SHOWCASE BANNER -->
-      <div class="rounded-[30px] bg-[#1d1d1f] text-white p-6 sm:p-10 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
-        <div class="space-y-4 max-w-2xl relative z-10">
-          <div class="inline-flex flex-wrap items-center gap-2">
-            <span class="px-3 py-1 rounded-full bg-white/10 text-[#f5d799] text-[11px] font-semibold tracking-wide">
-              Cell Planet Khammam • Official Online Store
-            </span>
-            <span class="px-3 py-1 rounded-full bg-[#0071e3]/25 text-sky-300 text-[11px] font-semibold">
-              Express 2-Hour Khammam Doorstep Delivery
-            </span>
-          </div>
-          <h1 class="text-3xl sm:text-5xl font-bold tracking-tight leading-[1.08]">
-            The best way to buy the devices you love.
-          </h1>
-          <p class="text-sm text-neutral-300 leading-relaxed">
-            Shop 100% brand-sealed smartphones, foldables, 4K TVs, and accessories directly from <strong>Cell Planet Khammam</strong> (Station Rd, Opp. Urdu Ghar Shadi Khana). Enjoy exclusive online pricing, <strong>₹1,000 instant cashback on Prepaid UPI/Cards</strong>, and <strong>0% No-Cost EMI</strong> across all major banks.
-          </p>
-          <div class="flex flex-wrap items-center gap-3 pt-1">
-            <div class="bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs">
-              <span class="text-white font-semibold block">0% No-Cost EMI</span>
-              <span class="text-neutral-400">Poonawalla • IDBI • ICICI • Bajaj</span>
-            </div>
-            <div class="bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs">
-              <span class="text-emerald-400 font-semibold block">₹1,000 Prepaid Instant Off</span>
-              <span class="text-neutral-400">PhonePe • GPay • Paytm • Cards</span>
-            </div>
-            <div class="bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs">
-              <span class="text-sky-400 font-semibold block">Instant Trade-In Credit</span>
-              <span class="text-neutral-400">Exchange your old phone at doorstep</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Apple Specialist Card -->
-        <div class="bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl p-5 w-full lg:w-80 space-y-3.5 shrink-0 relative z-10">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-semibold uppercase tracking-wider text-neutral-300">Showroom Specialist</span>
-            <span class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-semibold px-2.5 py-0.5 rounded-full">● Live in Khammam</span>
-          </div>
-          <div class="text-base font-bold text-white">Need one-on-one shopping help?</div>
-          <p class="text-xs text-neutral-300 leading-relaxed">Speak directly with our Station Road Khammam showroom specialists or check your active deliveries.</p>
-          <div class="grid grid-cols-2 gap-2 pt-1">
-            <a href="tel:9550677795" class="py-2.5 px-3 rounded-full bg-white text-neutral-900 font-semibold text-xs text-center no-underline flex items-center justify-center gap-1.5 hover:bg-neutral-100 transition">
-              <i class="ph-bold ph-phone-call"></i> Call Store
-            </a>
-            <a href="https://wa.me/919550677795" target="_blank" class="py-2.5 px-3 rounded-full bg-[#0071e3] hover:bg-[#0077ed] text-white font-semibold text-xs text-center no-underline flex items-center justify-center gap-1.5 transition">
-              <i class="ph-bold ph-whatsapp-logo"></i> WhatsApp
-            </a>
-          </div>
-          <button type="button" onclick="openTrackOrdersModal()" class="w-full py-2 rounded-full bg-white/10 hover:bg-white/15 text-neutral-200 text-[11px] font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
-            <i class="ph-bold ph-package text-[#f5d799]"></i> Track Your Khammam Orders →
-          </button>
-        </div>
-      </div>
-
-      <!-- FILTER & SORT BAR -->
-      <div class="bg-white rounded-2xl p-4 border border-black/5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
-        <div class="flex items-center gap-2.5 text-xs font-semibold text-neutral-700">
-          <span id="storeResultCountText">Showing All In-Stock Products</span>
-          <span class="text-neutral-500 bg-[#f5f5f7] px-3 py-1 rounded-full hidden sm:inline font-medium">
-            Tap any product to inspect sealed box &amp; color variant
-          </span>
-        </div>
-        <div class="flex flex-wrap items-center gap-2 text-xs">
-          <label class="font-medium text-neutral-500">Sort by:</label>
-          <select id="storeSortSelect" onchange="renderStoreProducts()" class="border border-neutral-200 rounded-full px-3.5 py-1.5 font-semibold bg-[#f5f5f7] text-neutral-800 focus:outline-none">
-            <option value="POPULAR">Featured &amp; Bestsellers</option>
-            <option value="PRICE_LOW">Price: Low to High</option>
-            <option value="PRICE_HIGH">Price: High to Low</option>
+        <div class="flex items-center gap-2">
+          <select id="brand-filter" onchange="renderStoreCatalog()" class="apple-input !w-auto !py-1.5 !px-3 !text-xs font-semibold">
+            <option value="ALL">All Brands</option>
+          </select>
+          <select id="sort-filter" onchange="renderStoreCatalog()" class="apple-input !w-auto !py-1.5 !px-3 !text-xs font-semibold">
+            <option value="featured">Sort: Latest Stock</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
           </select>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- PRODUCT CATALOG GRID -->
-      <div id="storeProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
-
-      <!-- STORE LINKS & DEVELOPER FOOTER BLOCK -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
-        <div class="bg-white rounded-3xl border border-black/5 p-5 md:col-span-7 flex flex-wrap items-center justify-around gap-3 shadow-sm">
-          <a href="tel:9550677795" class="px-4 py-2.5 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 font-semibold text-xs text-neutral-800 flex items-center gap-2 no-underline transition">
-            <span>📞</span> <span>Call 9550677795</span>
-          </a>
-          <a href="https://wa.me/919550677795" target="_blank" class="px-4 py-2.5 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 font-semibold text-xs text-neutral-800 flex items-center gap-2 no-underline transition">
-            <span>💬</span> <span>Store WhatsApp</span>
-          </a>
-          <a href="https://www.instagram.com/cellplanetkhammam?utm_source=qr&igsi=dzRuNjBtMGt5NTY0" target="_blank" class="px-4 py-2.5 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 font-semibold text-xs text-neutral-800 flex items-center gap-2 no-underline transition">
-            <span>📸</span> <span>@cellplanetkhammam</span>
-          </a>
-          <a href="https://www.google.com/maps?cid=5164307951894865629" target="_blank" class="px-4 py-2.5 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 font-semibold text-xs text-neutral-800 flex items-center gap-2 no-underline transition">
-            <span>📍</span> <span>Store Map Location</span>
-          </a>
-        </div>
-
-        <footer class="bg-white rounded-3xl border border-black/5 p-5 md:col-span-5 flex items-center justify-center shadow-sm">
-          <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" class="dev-link flex items-center gap-3.5 no-underline">
-            <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='58' fill='%231d1d1f' stroke='%23bfa06d' stroke-width='4'/%3E%3Ctext x='60' y='68' font-family='sans-serif' font-size='32' font-weight='800' fill='%23bfa06d' text-anchor='middle'%3ESZ%3C/text%3E%3C/svg%3E" alt="Syed Zeeshaan Ali" class="dev-img">
-            <div class="text-left">
-              <span class="block text-[10px] uppercase tracking-[2px] text-neutral-400 font-semibold">Designed &amp; Engineered By</span>
-              <span class="block text-base font-bold text-neutral-900 tracking-tight">SYED ZEESHAAN ALI</span>
-            </div>
-          </a>
-        </footer>
+  <!-- MAIN CATALOG GRID -->
+  <main class="max-w-[1360px] mx-auto w-full px-4 sm:px-6 py-8 flex-1">
+    <!-- Empty State (Shown when clean slate has 0 items) -->
+    <div id="store-empty-state" class="hidden apple-card p-10 text-center max-w-xl mx-auto my-8">
+      <div class="w-16 h-16 rounded-2xl bg-[#F2F2F7] text-[#0071E3] flex items-center justify-center mx-auto mb-4">
+        <i class="ph-duotone ph-DeviceMobileCamera text-3xl"></i>
       </div>
-    </main>
-  </div>
+      <h2 class="text-xl font-extrabold text-[#1D1D1F]">Store Catalog is Clean &amp; Ready</h2>
+      <p class="text-xs sm:text-sm text-[#86868B] mt-2 leading-relaxed">
+        All old dummy data has been cleared. Any mobile lot or accessory you add in the <strong>Cell Planet Admin ERP / POS Suite</strong> automatically appears here with live colors and stock count.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+        <button onclick="syncLiveStock(true)" class="btn-primary px-5 py-2.5 text-xs flex items-center gap-2">
+          <i class="ph-bold ph-arrows-clockwise"></i> Check Live ERP Stock
+        </button>
+        <button onclick="loadDemoSampleMobiles()" class="btn-secondary px-4 py-2.5 text-xs flex items-center gap-1.5">
+          <i class="ph-bold ph-plus-circle text-[#0071E3]"></i> Load 4 Sample Demo Mobiles
+        </button>
+      </div>
+    </div>
 
-  <!-- ================================================================= -->
-  <!-- STOREFRONT MODALS                                                 -->
-  <!-- ================================================================= -->
+    <!-- Product Grid -->
+    <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+  </main>
 
-  <!-- MODAL A: ONLINE PRODUCT VARIANT & SEALED BOX GALLERY INSPECTOR -->
-  <div id="onlineProductInspectorModal" onclick="if(event.target===this)closeOnlineProductInspector()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white rounded-[28px] max-w-2xl w-full p-5 sm:p-7 shadow-2xl border border-black/10 my-auto space-y-5">
-      <div class="flex items-start justify-between border-b border-neutral-200 pb-3">
+  <!-- CLEAN FOOTER -->
+  <footer class="bg-white border-t border-[#E5E5EA] py-6 px-4 sm:px-6 mt-12">
+    <div class="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#86868B]">
+      <div class="flex items-center gap-2 font-semibold text-[#1D1D1F]">
+        <i class="ph-fill ph-planet text-[#0071E3] text-lg"></i>
+        <span>Cell Planet Khammam • Official Online Storefront</span>
+      </div>
+      <div>Wyra Road, Opp. Collector Office, Khammam, Telangana 507002 • GST Verified Dealer</div>
+    </div>
+  </footer>
+
+  <!-- PRODUCT DETAIL & COLOR PICKER MODAL -->
+  <div id="product-detail-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#E5E5EA] max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex items-start justify-between gap-4 pb-4 border-b border-[#F2F2F7]">
         <div>
-          <span class="text-[10px] font-semibold uppercase tracking-widest text-[#0071e3] bg-blue-50 px-2.5 py-0.5 rounded-full">
-            Official Sealed Box &amp; Variant Preview
-          </span>
-          <h3 id="onlineInspectTitle" class="text-lg sm:text-xl font-bold text-neutral-900 mt-1">Apple iPhone 16 Pro Max</h3>
+          <span id="detail-brand" class="text-[11px] font-extrabold uppercase tracking-wider text-[#0071E3]">BRAND</span>
+          <h3 id="detail-name" class="text-xl sm:text-2xl font-extrabold text-[#1D1D1F] mt-0.5">Model Name</h3>
+          <p id="detail-variant" class="text-xs font-semibold text-[#86868B] mt-0.5">Variant</p>
         </div>
-        <button type="button" onclick="closeOnlineProductInspector()" class="w-8 h-8 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 flex items-center justify-center text-neutral-600 text-lg font-bold">&times;</button>
+        <button onclick="closeProductDetailModal()" class="w-9 h-9 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#1D1D1F] hover:bg-[#E5E5EA]">
+          <i class="ph-bold ph-x"></i>
+        </button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-        <div class="md:col-span-5 flex flex-col items-center space-y-2.5">
-          <div class="w-full h-56 rounded-2xl bg-[#f5f5f7] flex items-center justify-center p-4">
-            <img id="onlineInspectMainImg" src="" alt="Product Variant & Box" class="max-h-48 object-contain transition-all duration-200">
-          </div>
-          <div class="grid grid-cols-2 gap-2 w-full text-[11px] font-semibold">
-            <button type="button" onclick="switchOnlineInspectGallery('BOX')" id="onlineGalBtn-BOX" class="py-1.5 px-2 rounded-full border-2 border-[#0071e3] bg-blue-50 text-[#0071e3]">
-              📦 Sealed Box + Phone
-            </button>
-            <button type="button" onclick="switchOnlineInspectGallery('VARIANT')" id="onlineGalBtn-VARIANT" class="py-1.5 px-2 rounded-full border border-neutral-300 bg-white text-neutral-700">
-              🎨 Color Variant View
-            </button>
-          </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6">
+        <div class="bg-[#F5F5F7] rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[220px]">
+          <img id="detail-img" src="" alt="Product" class="max-h-44 object-contain">
+          <span id="detail-stock-badge" class="mt-4 px-3 py-1 rounded-full bg-[#E8F8EE] text-[#1D8348] text-[11px] font-bold">In Stock</span>
         </div>
-
-        <div class="md:col-span-7 space-y-3 text-xs">
-          <div class="flex flex-wrap items-center gap-2">
-            <span id="onlineInspectCategory" class="px-3 py-1 rounded-full bg-[#f5f5f7] text-neutral-800 font-semibold">Smartphone</span>
-            <span id="onlineInspectColor" class="px-3 py-1 rounded-full bg-[#f5f5f7] text-neutral-800 font-semibold">🎨 Desert Titanium</span>
-            <span id="onlineInspectVariant" class="px-3 py-1 rounded-full bg-blue-50 text-[#0071e3] font-semibold">⚡ 8GB / 256GB</span>
-          </div>
-
-          <div class="p-4 rounded-2xl bg-[#1d1d1f] text-white space-y-1">
-            <div class="text-[10px] uppercase tracking-wider text-neutral-400 font-semibold">Special Online Storefront Price</div>
-            <div class="flex items-baseline gap-2 flex-wrap">
-              <span id="onlineInspectPrice" class="text-2xl font-bold text-white">₹1,35,900</span>
-              <span id="onlineInspectMrp" class="text-xs text-neutral-400 line-through">₹1,44,900</span>
-              <span id="onlineInspectOfflineCompare" class="text-[11px] text-emerald-400 font-semibold ml-auto">Online Exclusive Deal</span>
+        <div class="flex flex-col justify-between space-y-4">
+          <div>
+            <div class="text-xs font-bold text-[#86868B] uppercase">Cell Planet Offer Price</div>
+            <div class="flex items-baseline gap-2.5 mt-1">
+              <span id="detail-price" class="text-3xl font-extrabold text-[#1D1D1F]">₹0</span>
+              <span id="detail-mrp" class="text-sm text-[#86868B] line-through">₹0</span>
             </div>
-            <div id="onlineInspectEmi" class="text-[11px] text-sky-300 font-medium">
-              🏦 0% No-Cost EMI from ₹11,325/mo (Poonawalla, IDBI, ICICI, Bajaj)
-            </div>
-            <div id="onlineInspectStock" class="text-[11px] font-semibold text-emerald-400"></div>
-          </div>
+            <p class="text-[11px] text-[#1D8348] font-semibold mt-1"><i class="ph-fill ph-check-circle"></i> Inclusive of 18% GST • Official Brand Warranty</p>
 
-          <div class="p-3.5 rounded-2xl bg-[#f5f5f7] space-y-1">
-            <div class="font-semibold text-neutral-800">Hardware &amp; Box Specifications:</div>
-            <p id="onlineInspectSpecs" class="text-neutral-600 leading-relaxed"></p>
-            <div class="text-[11px] text-emerald-700 font-semibold pt-1">
-              ✓ 100% Brand Sealed Box • Official GST Invoice • 2-Hour Khammam Delivery
+            <!-- Color Selector from Multi-Piece Units -->
+            <div class="mt-4">
+              <label class="block text-xs font-bold text-[#1D1D1F] mb-2">Available Colors in Showroom:</label>
+              <div id="detail-color-list" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Specifications -->
+            <div class="mt-4 p-3.5 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA]">
+              <div class="text-[11px] font-bold text-[#86868B] uppercase mb-1">Key Specifications</div>
+              <p id="detail-specs" class="text-xs font-medium text-[#1D1D1F] leading-relaxed">Official Sealed Pack</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2.5 pt-1">
-            <button type="button" id="onlineInspectAddCartBtn" onclick="triggerOnlineInspectAction(false)" class="btn-add-cart py-3 px-4 text-xs flex items-center justify-center gap-1.5">
-              <i class="ph-bold ph-bag text-base"></i>
-              <span>Add to Bag</span>
+          <div class="grid grid-cols-2 gap-2.5 pt-2">
+            <button id="detail-add-btn" class="btn-secondary py-3 text-xs font-bold flex items-center justify-center gap-1.5">
+              <i class="ph-bold ph-shopping-bag"></i> Add to Bag
             </button>
-            <button type="button" id="onlineInspectBuyNowBtn" onclick="triggerOnlineInspectAction(true)" class="btn-buy-now py-3 px-4 text-xs flex items-center justify-center gap-1.5">
-              <i class="ph-bold ph-lightning text-base"></i>
-              <span>Buy Now</span>
+            <button id="detail-buy-btn" class="btn-primary py-3 text-xs font-bold flex items-center justify-center gap-1.5">
+              <i class="ph-bold ph-lightning"></i> Buy Now
             </button>
           </div>
         </div>
@@ -554,1877 +338,726 @@
     </div>
   </div>
 
-  <!-- MODAL B: CUSTOMER VIP SIGN IN PORTAL -->
-  <div id="customerAuthModal" onclick="if(event.target===this)closeCustomerAuthModal()" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="glass-vault-card rounded-[28px] max-w-lg w-full overflow-hidden shadow-2xl my-auto text-white">
-      <div class="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-[#0071e3] text-white flex items-center justify-center shadow-lg">
-            <i class="ph-fill ph-user-circle text-2xl"></i>
+  <!-- SLIDE-OVER SHOPPING BAG & CHECKOUT DRAWER -->
+  <div id="cart-drawer-backdrop" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm flex justify-end">
+    <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between overflow-hidden">
+      <!-- Drawer Header -->
+      <div class="p-5 border-b border-[#E5E5EA] flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-[#0071E3] text-white flex items-center justify-center">
+            <i class="ph-bold ph-shopping-bag text-lg"></i>
           </div>
           <div>
-            <span class="text-[10px] font-semibold uppercase tracking-widest text-sky-400">Cell Planet Khammam Member</span>
-            <h3 class="text-lg font-bold text-white">Customer Sign In &amp; Express Profile</h3>
+            <h3 class="font-extrabold text-base text-[#1D1D1F]">Your Shopping Bag</h3>
+            <p class="text-[11px] text-[#86868B]">Instant sync with Cell Planet Khammam POS</p>
           </div>
         </div>
-        <button type="button" onclick="closeCustomerAuthModal()" class="text-neutral-400 hover:text-white text-2xl font-bold">&times;</button>
+        <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#1D1D1F]">
+          <i class="ph-bold ph-x"></i>
+        </button>
       </div>
 
-      <div class="p-5 sm:p-6 space-y-4">
-        <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-semibold">
-          <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-emerald-300">
-            ⚡ ₹1,000 Off Prepaid
-          </div>
-          <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-sky-300">
-            🚚 2-Hr Khammam Delivery
-          </div>
-          <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-amber-200">
-            🏦 0% All-Bank EMI
-          </div>
-        </div>
+      <!-- Bag Items + Customer Form -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-5 custom-scroll">
+        <div id="cart-items-container" class="space-y-2.5"></div>
 
-        <form onsubmit="submitCustomerLoginForm(event)" class="space-y-3 text-xs">
-          <div>
-            <label class="font-semibold text-neutral-300 block mb-1">Full Name *</label>
-            <input type="text" id="custLoginName" required placeholder="e.g. Rahul Sharma" class="w-full bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 font-semibold text-white placeholder-neutral-500 focus:outline-none focus:border-[#0071e3]">
+        <!-- Customer Checkout Details -->
+        <div id="checkout-form-box" class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-3">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-[#1D1D1F] flex items-center gap-1.5">
+            <i class="ph-fill ph-user-circle text-[#0071E3] text-base"></i> Customer &amp; Delivery Details
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-[#424245] mb-1">Full Name *</label>
+            <input id="cust-name" type="text" placeholder="Enter your name" class="apple-input !py-2 !text-xs">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-[#424245] mb-1">10-Digit Mobile / WhatsApp Number *</label>
+            <input id="cust-phone" type="tel" maxlength="10" placeholder="98480XXXXX" class="apple-input !py-2 !text-xs">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="font-semibold text-neutral-300 block mb-1">10-Digit WhatsApp Mobile *</label>
-              <input type="tel" id="custLoginPhone" required maxlength="10" placeholder="e.g. 9848012345" class="w-full bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 font-semibold font-mono text-white placeholder-neutral-500 focus:outline-none focus:border-[#0071e3]">
+              <label class="block text-[11px] font-bold text-[#424245] mb-1">Delivery Type</label>
+              <select id="cust-delivery-mode" class="apple-input !py-2 !text-xs">
+                <option value="Store Pickup">Store Pickup (Wyra Rd)</option>
+                <option value="Home Delivery">2-Hr Khammam Delivery</option>
+              </select>
             </div>
             <div>
-              <label class="font-semibold text-neutral-300 block mb-1">Member Passcode (Optional)</label>
-              <input type="password" id="custLoginPin" maxlength="8" placeholder="••••" class="w-full bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 font-bold font-mono tracking-widest text-white placeholder-neutral-500 focus:outline-none focus:border-[#0071e3]">
+              <label class="block text-[11px] font-bold text-[#424245] mb-1">Payment Mode</label>
+              <select id="cust-pay-mode" class="apple-input !py-2 !text-xs">
+                <option value="Pay at Store / COD">Pay on Delivery / Store</option>
+                <option value="UPI Verified">UPI Instant</option>
+              </select>
             </div>
           </div>
           <div>
-            <label class="font-semibold text-neutral-300 block mb-1">Primary Khammam Doorstep Address (Auto-Saved) *</label>
-            <input type="text" id="custLoginDefaultAddress" required placeholder="House/Flat No, Street, Landmark, Khammam 507001" class="w-full bg-white/10 border border-white/15 rounded-xl px-3.5 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-[#0071e3]">
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-white/10">
-            <button type="button" onclick="fillDemoCustomerLogin()" class="px-3 py-2 rounded-full bg-white/10 hover:bg-white/15 text-neutral-200 font-medium text-[11px]">
-              ⚡ 1-Tap Demo Member Fill
-            </button>
-            <div class="flex items-center gap-2">
-              <button type="button" onclick="closeCustomerAuthModal()" class="px-4 py-2.5 rounded-full border border-white/20 text-neutral-300 font-semibold">Cancel</button>
-              <button type="submit" class="btn-buy-now px-6 py-2.5 text-xs flex items-center gap-1.5">
-                <i class="ph-bold ph-sign-in text-base"></i>
-                <span>Sign In &amp; Save Profile</span>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL C: SAVED DELIVERY ADDRESSES MANAGER -->
-  <div id="savedAddressesModal" onclick="if(event.target===this)closeSavedAddressesModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white rounded-[28px] max-w-xl w-full p-5 sm:p-7 shadow-2xl border border-black/10 my-auto space-y-4 max-h-[92vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
-        <div class="flex items-center gap-2.5">
-          <span class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-            <i class="ph-bold ph-map-pin-line text-2xl"></i>
-          </span>
-          <div>
-            <span class="text-[10px] font-semibold uppercase tracking-widest text-emerald-700">Khammam Express Address Book</span>
-            <h3 class="text-base font-bold text-neutral-900">Your Saved Delivery Addresses</h3>
+            <label class="block text-[11px] font-bold text-[#424245] mb-1">Address / Landmark in Khammam</label>
+            <input id="cust-address" type="text" placeholder="House No, Street, Area (or Store Pickup)" class="apple-input !py-2 !text-xs">
           </div>
         </div>
-        <button type="button" onclick="closeSavedAddressesModal()" class="w-8 h-8 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 flex items-center justify-center text-neutral-600 text-lg font-bold">&times;</button>
       </div>
 
-      <div id="savedAddressesListContainer" class="space-y-2.5 max-h-[240px] overflow-y-auto pr-1"></div>
-
-      <form onsubmit="addNewSavedAddress(event)" class="p-4 rounded-2xl bg-[#f5f5f7] space-y-3 text-xs">
-        <div class="font-bold text-neutral-900 uppercase tracking-wider">+ Add New Khammam Delivery Address</div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <div>
-            <label class="font-semibold text-neutral-600 block mb-1">Address Label</label>
-            <select id="newAddrTag" class="input-luxury bg-white py-2 font-bold">
-              <option value="🏠 Home">🏠 Home</option>
-              <option value="🏢 Office">🏢 Office</option>
-              <option value="🏪 Shop / Business">🏪 Shop / Business</option>
-            </select>
-          </div>
-          <div>
-            <label class="font-semibold text-neutral-600 block mb-1">Recipient Name *</label>
-            <input type="text" id="newAddrRecipient" required placeholder="Full Name" class="input-luxury bg-white py-2 font-semibold">
-          </div>
-          <div>
-            <label class="font-semibold text-neutral-600 block mb-1">Mobile Number *</label>
-            <input type="tel" id="newAddrPhone" required maxlength="10" placeholder="10-Digit Phone" class="input-luxury bg-white py-2 font-mono font-semibold">
-          </div>
-        </div>
-        <div>
-          <label class="font-semibold text-neutral-600 block mb-1">Complete Doorstep Address &amp; Landmark in Khammam *</label>
-          <input type="text" id="newAddrFullText" required placeholder="House/Flat No, Street, Landmark, Area, Khammam 507001" class="input-luxury bg-white py-2">
-        </div>
-        <div class="flex justify-end">
-          <button type="submit" class="btn-buy-now px-5 py-2.5 text-xs flex items-center gap-1.5">
-            <i class="ph-bold ph-plus-circle"></i>
-            <span>Save Address &amp; Set Default</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL D: BAG & PREPAID / ALL-BANKS EMI CHECKOUT DRAWER -->
-  <div id="checkoutModal" onclick="if(event.target===this)closeCartDrawer()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white rounded-[28px] max-w-3xl w-full p-5 sm:p-7 shadow-2xl border border-black/10 my-auto max-h-[95vh] overflow-y-auto space-y-4">
-      <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
-        <div class="flex items-center gap-2.5">
-          <span class="w-10 h-10 rounded-2xl bg-blue-50 text-[#0071e3] flex items-center justify-center">
-            <i class="ph-bold ph-bag text-2xl"></i>
-          </span>
-          <div>
-            <span class="text-[10px] font-semibold uppercase tracking-widest text-[#0071e3]">Cell Planet Khammam • Secure Online Checkout</span>
-            <h3 class="text-lg font-bold text-neutral-900">Your Bag &amp; Express Home Checkout</h3>
-          </div>
-        </div>
-        <button type="button" onclick="closeCartDrawer()" class="w-8 h-8 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 flex items-center justify-center text-neutral-600 text-lg font-bold">&times;</button>
-      </div>
-
-      <div id="storeCartItemsList" class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1"></div>
-
-      <!-- Old Phone Exchange Option -->
-      <div class="p-3.5 rounded-2xl bg-[#f5f5f7] text-xs space-y-2">
+      <!-- Drawer Footer -->
+      <div class="p-5 border-t border-[#E5E5EA] bg-white space-y-3">
         <div class="flex items-center justify-between">
-          <label class="flex items-center gap-2 font-semibold text-neutral-900 cursor-pointer">
-            <input type="checkbox" id="chkExchangeToggle" onchange="updateStoreCheckoutTotals()" class="accent-[#0071e3]">
-            <span>🔄 Have an Old Phone to Trade In? (Instant Doorstep Exchange Credit)</span>
-          </label>
-          <span id="chkExchangeSavedBadge" class="font-bold text-emerald-700 hidden">-₹0</span>
+          <span class="text-xs font-bold text-[#86868B]">Total Payable (Incl. GST)</span>
+          <span id="cart-total-amount" class="text-2xl font-extrabold text-[#1D1D1F]">₹0</span>
         </div>
-        <div id="chkExchangeFields" class="grid grid-cols-1 sm:grid-cols-3 gap-2 hidden pt-1">
-          <input type="text" id="chkOldModel" placeholder="Your Old Phone Model (e.g. iPhone 12)" class="input-luxury bg-white py-1.5">
-          <input type="text" id="chkOldImei" placeholder="Old Phone Serial (Optional)" class="input-luxury bg-white py-1.5 font-mono">
-          <select id="chkOldValue" onchange="updateStoreCheckoutTotals()" class="input-luxury bg-white py-1.5 font-bold text-emerald-800">
-            <option value="8000">4G / Budget Phone (~₹8,000 Off)</option>
-            <option value="15000">Mid-Range 5G Phone (~₹15,000 Off)</option>
-            <option value="24000">iPhone 12 / 13 / S22 (~₹24,000 Off)</option>
-            <option value="38000">iPhone 14 Pro / S23 Ultra (~₹38,000 Off)</option>
-          </select>
-        </div>
+        <button onclick="placeCustomerOrder()" class="btn-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 shadow-md">
+          <i class="ph-bold ph-check-circle text-lg"></i> Confirm Order Now
+        </button>
       </div>
-
-      <!-- Saved Address Quick Selector -->
-      <div class="p-3.5 rounded-2xl bg-blue-50/50 border border-blue-100 text-xs space-y-2">
-        <div class="flex items-center justify-between">
-          <span class="font-semibold text-neutral-900 flex items-center gap-1">
-            <i class="ph-fill ph-map-pin text-[#0071e3]"></i> Saved Delivery Addresses (1-Tap Auto-Fill):
-          </span>
-          <button type="button" onclick="openSavedAddressesModal()" class="text-[#0071e3] font-semibold hover:underline">+ Manage / Add Address</button>
-        </div>
-        <div id="checkoutSavedAddressChips" class="flex flex-wrap gap-1.5"></div>
-      </div>
-
-      <form onsubmit="submitCustomerOnlineOrder(event)" class="space-y-4 text-xs">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="font-semibold text-neutral-600 block mb-1">Full Name *</label>
-            <input type="text" id="chkCustName" required placeholder="Enter your full name" class="input-luxury py-2.5 font-semibold">
-          </div>
-          <div>
-            <label class="font-semibold text-neutral-600 block mb-1">10-Digit WhatsApp Mobile Number *</label>
-            <input type="tel" id="chkCustPhone" required maxlength="10" placeholder="e.g. 9848012345" class="input-luxury py-2.5 font-semibold">
-          </div>
-          <div class="sm:col-span-2">
-            <div class="flex items-center justify-between mb-1">
-              <label class="font-semibold text-neutral-600">Delivery Address in Khammam (Or Select Store Pickup) *</label>
-              <label class="flex items-center gap-1 text-[11px] font-semibold text-[#0071e3] cursor-pointer">
-                <input type="checkbox" id="chkSaveThisAddress" checked class="accent-[#0071e3]">
-                <span>Save this address for future orders</span>
-              </label>
-            </div>
-            <input type="text" id="chkCustAddress" required placeholder="House/Flat No, Street, Landmark, Khammam 507001" class="input-luxury py-2.5">
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <label class="font-bold text-neutral-800 uppercase tracking-wider block">
-            Select Payment / Bank Finance Option:
-          </label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button type="button" onclick="selectStorePaymentMode('PREPAID_UPI')" id="stPay-PREPAID_UPI" class="p-3 rounded-2xl border-2 border-[#0071e3] bg-blue-50/50 text-neutral-900 font-semibold text-left">
-              <div class="flex items-center justify-between">
-                <span>⚡ Prepaid UPI</span>
-                <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-full">-₹1,000</span>
-              </div>
-              <div class="text-[10px] text-neutral-500 mt-0.5">PhonePe / GPay / Paytm</div>
-            </button>
-            <button type="button" onclick="selectStorePaymentMode('BANK_EMI')" id="stPay-BANK_EMI" class="p-3 rounded-2xl border border-neutral-200 bg-white text-neutral-800 font-semibold text-left">
-              <div>🏦 All-Bank 0% EMI</div>
-              <div class="text-[10px] text-neutral-500 mt-0.5">Poonawalla, IDBI, ICICI, Bajaj</div>
-            </button>
-            <button type="button" onclick="selectStorePaymentMode('PREPAID_CARD')" id="stPay-PREPAID_CARD" class="p-3 rounded-2xl border border-neutral-200 bg-white text-neutral-800 font-semibold text-left">
-              <div class="flex items-center justify-between">
-                <span>💳 Credit/Debit</span>
-                <span class="text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-full">-₹1,000</span>
-              </div>
-              <div class="text-[10px] text-neutral-500 mt-0.5">All Visa / MasterCard / RuPay</div>
-            </button>
-            <button type="button" onclick="selectStorePaymentMode('COD')" id="stPay-COD" class="p-3 rounded-2xl border border-neutral-200 bg-white text-neutral-800 font-semibold text-left">
-              <div>🚚 Pay on Delivery</div>
-              <div class="text-[10px] text-neutral-500 mt-0.5">Cash / UPI at Doorstep</div>
-            </button>
-          </div>
-
-          <div id="storePaymentSubBox" class="p-3.5 rounded-2xl bg-[#f5f5f7] space-y-2"></div>
-        </div>
-
-        <div class="bg-[#1d1d1f] text-white rounded-3xl p-5 space-y-1.5">
-          <div class="flex justify-between text-xs text-neutral-400">
-            <span>Items Total (Online Store Rate, Incl. 18% GST):</span>
-            <span id="chkSumItems">₹0</span>
-          </div>
-          <div id="chkPrepaidRow" class="flex justify-between text-xs text-emerald-400">
-            <span>⚡ Instant Prepaid Cashback Discount:</span>
-            <span id="chkSumPrepaidDisc">-₹1,000</span>
-          </div>
-          <div id="chkExchangeRow" class="flex justify-between text-xs text-amber-300 hidden">
-            <span>🔄 Old Phone Exchange Deduction:</span>
-            <span id="chkSumExchange">-₹0</span>
-          </div>
-          <div class="flex justify-between text-xs text-neutral-400">
-            <span>Express 2-Hour Khammam Delivery:</span>
-            <span class="text-emerald-400 font-semibold">FREE</span>
-          </div>
-          <div class="border-t border-white/10 pt-2.5 flex justify-between items-baseline">
-            <span class="text-sm font-semibold text-neutral-300">Net Payable Total:</span>
-            <span id="chkSumNetPayable" class="text-2xl font-bold text-white">₹0</span>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-end gap-2 pt-2">
-          <button type="button" onclick="closeCartDrawer()" class="btn-add-cart px-5 py-2.5 text-xs">Continue Shopping</button>
-          <button type="submit" class="btn-buy-now px-6 py-3 text-sm flex items-center gap-2">
-            <i class="ph-bold ph-check-circle text-lg"></i>
-            <span>Place Order &amp; Sync with Store</span>
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 
-  <!-- MODAL E: LIVE ORDER CONFIRMATION & TRACKING MODAL -->
-  <div id="trackOrdersModal" onclick="if(event.target===this)closeTrackOrdersModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white rounded-[28px] max-w-3xl w-full p-5 sm:p-7 shadow-2xl border border-black/10 my-auto max-h-[95vh] overflow-y-auto space-y-4">
-      <div class="flex items-center justify-between border-b border-neutral-200 pb-3">
-        <div>
-          <span class="text-[10px] font-semibold uppercase tracking-widest text-[#0071e3]">Live Order Tracking &amp; Official Receipts</span>
-          <h3 class="text-lg font-bold text-neutral-900">My Cell Planet Khammam Orders</h3>
+  <!-- AI SHOPPING ADVISOR MODAL (PRE-CONFIGURED WITH USER API KEY) -->
+  <div id="ai-advisor-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#E5E5EA] space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-[#0071E3] text-white flex items-center justify-center">
+            <i class="ph-fill ph-sparkle text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-[#1D1D1F]">Cell Planet AI Mobile Advisor</h3>
+            <p class="text-[11px] text-[#34C759] font-semibold">● Powered by Pre-Configured AI Key</p>
+          </div>
         </div>
-        <button type="button" onclick="closeTrackOrdersModal()" class="w-8 h-8 rounded-full bg-[#f5f5f7] hover:bg-neutral-200 flex items-center justify-center text-neutral-600 text-lg font-bold">&times;</button>
+        <button onclick="closeAiAdvisorModal()" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center">
+          <i class="ph-bold ph-x"></i>
+        </button>
       </div>
 
-      <div id="myOrdersContainer" class="space-y-3 max-h-[65vh] overflow-y-auto pr-1"></div>
+      <p class="text-xs text-[#86868B]">Ask which phone in our live Khammam showroom stock is best for gaming, camera, battery life, or your budget:</p>
+      <div class="flex gap-2">
+        <input id="ai-advisor-input" type="text" placeholder="e.g. Best 5G camera phone under ₹30,000 in stock?" class="apple-input !text-xs" onkeydown="if(event.key==='Enter') askStoreAiAdvisor()">
+        <button onclick="askStoreAiAdvisor()" id="ai-advisor-btn" class="btn-primary px-4 py-2 text-xs font-bold whitespace-nowrap">Ask AI</button>
+      </div>
+      <div id="ai-advisor-output" class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs text-[#1D1D1F] leading-relaxed min-h-[90px] whitespace-pre-line">
+        Ready! Type your requirement above and I will check our live showroom inventory for you.
+      </div>
+    </div>
+  </div>
+
+  <!-- MY ORDERS MODAL -->
+  <div id="track-orders-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-[#E5E5EA] max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E5E5EA]">
+        <h3 class="font-extrabold text-base text-[#1D1D1F]">My Recent Store Orders</h3>
+        <button onclick="closeTrackOrdersModal()" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+      <div id="my-orders-list" class="flex-1 overflow-y-auto py-4 space-y-3 custom-scroll"></div>
+    </div>
+  </div>
+
+  <!-- RESET STORE MODAL -->
+  <div id="reset-store-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#E5E5EA] text-center space-y-4">
+      <div class="w-12 h-12 rounded-2xl bg-[#FFF2F2] text-[#FF3B30] flex items-center justify-center mx-auto">
+        <i class="ph-bold ph-trash text-2xl"></i>
+      </div>
+      <h3 class="font-extrabold text-lg text-[#1D1D1F]">Clear All Store Data &amp; Start Fresh?</h3>
+      <p class="text-xs text-[#86868B] leading-relaxed">This will delete all products, shopping bag items, and customer orders in shared storage so both the Storefront and Admin POS start from zero.</p>
+      <div class="flex gap-2.5 pt-2">
+        <button onclick="closeResetStoreModal()" class="btn-secondary flex-1 py-2.5 text-xs font-bold">Cancel</button>
+        <button onclick="confirmCleanResetStore()" class="flex-1 py-2.5 rounded-xl bg-[#FF3B30] text-white text-xs font-bold hover:bg-[#D70015]">Yes, Delete All Data</button>
+      </div>
     </div>
   </div>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toastStore" class="toast-notification">✅ Added to Bag</div>
+  <div id="store-toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-2xl bg-[#1D1D1F] text-white text-xs font-semibold shadow-xl flex items-center gap-2">
+    <i class="ph-fill ph-check-circle text-[#34C759] text-base"></i>
+    <span id="store-toast-msg">Updated</span>
+  </div>
 
-  <!-- ================================================================= -->
-  <!-- PURE ULTRA-FAST CUSTOMER ONLINE STOREFRONT JAVASCRIPT ENGINE      -->
-  <!-- ================================================================= -->
   <script>
-    const STORE_INFO = {
-      name: "CELL PLANET KHAMMAM",
-      tagline: "Premium Smartphones, Foldables, Smart TVs & Accessories",
-      address: "Station Rd, opposite Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001",
-      phone: "9550677795",
-      gstin: "36ACVPK3564C1ZE"
+    // =========================================================================
+    // CLEAN SLATE V3 INITIALIZATION & PRE-CONFIGURED AI KEY
+    // =========================================================================
+    const DEFAULT_USER_AI_KEY = 'AQ.Ab8RN6L5ZNOnuIMbWxy8qyFFPYKcCSZ0H6lwISZP4b8VWVbkGA';
+    const STORAGE_KEYS = {
+      INV: 'cp_local_inventory',
+      ORDERS: 'cp_online_orders',
+      CLEAN_RESET_FLAG: 'cp_v3_clean_reset_done',
+      AI_KEY: 'cp_gemini_api_key'
     };
 
-    // Lightweight Web Audio API Synthesizer
-    let sfxMuted = false;
-    let audioCtx = null;
+    let storeInventory = [];
+    let shoppingBag = [];
+    let activeCategory = 'ALL';
+    let selectedColorByProduct = {}; // sku -> color
+    let currentDetailItem = null;
 
-    function ensureAudioCtx() {
-      if (sfxMuted) return null;
+    function ensureCleanSlateAndApiKey() {
       try {
-        if (!audioCtx) {
-          const Ctx = window.AudioContext || window.webkitAudioContext;
-          if (Ctx) audioCtx = new Ctx();
+        if (!localStorage.getItem(STORAGE_KEYS.AI_KEY)) {
+          localStorage.setItem(STORAGE_KEYS.AI_KEY, DEFAULT_USER_AI_KEY);
         }
-        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-        return audioCtx;
+        // Wipe old clumsy dummy data on first V3 boot so user starts 100% clean
+        if (localStorage.getItem(STORAGE_KEYS.CLEAN_RESET_FLAG) !== 'true') {
+          localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify([]));
+          localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
+          localStorage.removeItem('cp_local_daily_invoices');
+          localStorage.setItem(STORAGE_KEYS.CLEAN_RESET_FLAG, 'true');
+        }
       } catch (e) {
-        return null;
+        console.warn('Storage init warning:', e);
       }
     }
 
-    window.playSfx = function(type = 'CLICK') {
-      const ctx = ensureAudioCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      try {
-        if (type === 'VERIFY') {
-          [1046.5, 1318.5].forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + i * 0.05);
-            gain.gain.setValueAtTime(0.06, now + i * 0.05);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.12);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + i * 0.05);
-            osc.stop(now + i * 0.05 + 0.12);
-          });
-        } else if (type === 'SUCCESS') {
-          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + i * 0.055);
-            gain.gain.setValueAtTime(0.08, now + i * 0.055);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.055 + 0.16);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + i * 0.055);
-            osc.stop(now + i * 0.055 + 0.16);
-          });
-        } else if (type === 'ERROR') {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(220, now);
-          osc.frequency.setValueAtTime(165, now + 0.07);
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.18);
-        } else {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(820, now);
-          gain.gain.setValueAtTime(0.03, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.035);
-        }
-      } catch (e) {}
-    };
+    function showToast(msg) {
+      const t = document.getElementById('store-toast');
+      const m = document.getElementById('store-toast-msg');
+      if (!t || !m) return;
+      m.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+    }
 
-    window.toggleGlobalSfxMute = function() {
-      sfxMuted = !sfxMuted;
-      const icon = document.getElementById('globalSfxIcon');
-      const txt = document.getElementById('globalSfxText');
-      if (sfxMuted) {
-        if (icon) icon.className = 'ph-bold ph-speaker-slash';
-        if (txt) txt.innerText = 'Audio: OFF';
+    function formatINR(num) {
+      const n = Number(num) || 0;
+      return '₹' + n.toLocaleString('en-IN');
+    }
+
+    // Group color counts from item.units (supports multi-piece lot with different colors/IMEIs)
+    function getColorSummaryForItem(item) {
+      const colorCounts = {};
+      if (Array.isArray(item.units) && item.units.length > 0) {
+        item.units.forEach(u => {
+          const c = (u.color || item.color || 'Standard').trim();
+          colorCounts[c] = (colorCounts[c] || 0) + 1;
+        });
+      } else if (item.color) {
+        colorCounts[item.color] = Number(item.stock) || 0;
       } else {
-        if (icon) icon.className = 'ph-bold ph-speaker-high';
-        if (txt) txt.innerText = 'Audio: ON';
-        playSfx('VERIFY');
+        colorCounts['Standard'] = Number(item.stock) || 0;
       }
-    };
-
-    // High-Speed Memoized SVG Artwork Generator (0ms repeat lookups!)
-    const svgThumbCache = new Map();
-
-    function getDeviceColorPalette(colorName = "", category = "Smartphone", modelName = "") {
-      const c = (colorName || "").toLowerCase();
-      const m = (modelName || "").toLowerCase();
-      let bodyHex = "#334155";
-      let accentHex = "#bfa06d";
-      let screenHex = "#1d1d1f";
-      let boxHex = "#1e293b";
-
-      if (c.includes("desert") || c.includes("gold") || c.includes("sand") || c.includes("bronze")) {
-        bodyHex = "#785c42"; accentHex = "#d4af37"; screenHex = "#1c1917"; boxHex = "#292524";
-      } else if (c.includes("gray") || c.includes("grey") || c.includes("natural") || c.includes("titanium")) {
-        bodyHex = "#4b5563"; accentHex = "#bfa06d"; screenHex = "#111827"; boxHex = "#1f2937";
-      } else if (c.includes("ocean") || c.includes("blue") || c.includes("spectre") || c.includes("sky") || c.includes("icy")) {
-        bodyHex = "#0369a1"; accentHex = "#38bdf8"; screenHex = "#082f49"; boxHex = "#0f172a";
-      } else if (c.includes("purple") || c.includes("violet") || c.includes("lavender") || c.includes("lilac")) {
-        bodyHex = "#581c87"; accentHex = "#c084fc"; screenHex = "#2e1065"; boxHex = "#1e1b4b";
-      } else if (c.includes("white") || c.includes("silver") || c.includes("clear") || c.includes("starlight")) {
-        bodyHex = "#e2e8f0"; accentHex = "#0071e3"; screenHex = "#1e293b"; boxHex = "#334155";
-      } else if (c.includes("green") || c.includes("emerald") || c.includes("mint") || c.includes("teal")) {
-        bodyHex = "#047857"; accentHex = "#34d399"; screenHex = "#064e3b"; boxHex = "#0f172a";
-      } else if (c.includes("red") || c.includes("rose") || c.includes("coral") || c.includes("orange")) {
-        bodyHex = "#b91c1c"; accentHex = "#fbbf24"; screenHex = "#450a0a"; boxHex = "#1c1917";
-      } else if (c.includes("black") || c.includes("cosmos") || c.includes("crafted") || c.includes("midnight") || c.includes("noir")) {
-        bodyHex = "#18181b"; accentHex = "#bfa06d"; screenHex = "#09090b"; boxHex = "#0f172a";
-      }
-
-      let formFactor = "PHONE";
-      if (m.includes("fold")) formFactor = "FOLD";
-      else if (category === "Smart TV" || m.includes("bravia") || m.includes("tv")) formFactor = "TV";
-      else if (m.includes("airpods") || m.includes("buds")) formFactor = "EARBUDS";
-      else if (category === "Accessory" || m.includes("adapter") || m.includes("charger")) formFactor = "ACCESSORY";
-      else if (category === "Service" || m.includes("repair") || m.includes("display")) formFactor = "SERVICE";
-
-      return { bodyHex, accentHex, screenHex, boxHex, formFactor };
+      return colorCounts;
     }
 
-    function createOnlineStoreSvgThumb(itemOrTitle, mode = "BOX") {
-      const isObj = typeof itemOrTitle === "object" && itemOrTitle !== null;
-      const title = isObj ? (itemOrTitle.name || "Smartphone") : String(itemOrTitle || "Smartphone");
-      const variantText = isObj ? (itemOrTitle.variant || "8GB / 256GB") : "8GB / 256GB";
-      const colorName = isObj ? (itemOrTitle.color || "Official") : "Official";
-      const category = isObj ? (itemOrTitle.category || "Smartphone") : "Smartphone";
-
-      const cacheKey = `${mode}|${title}|${variantText}|${colorName}|${category}`;
-      if (svgThumbCache.has(cacheKey)) return svgThumbCache.get(cacheKey);
-
-      const pal = getDeviceColorPalette(colorName, category, title);
-      const shortTitle = title.replace(/^\[Pre-Owned\]\s*/i, "").slice(0, 20);
-      const shortVar = variantText.slice(0, 14);
-      const shortCol = colorName.slice(0, 15);
-
-      if (mode === "VARIANT") {
-        const svgVar = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
-          <rect width="180" height="180" rx="24" fill="#f5f5f7"/>
-          <rect x="28" y="16" width="66" height="112" rx="14" fill="${pal.bodyHex}" stroke="${pal.accentHex}" stroke-width="2"/>
-          <circle cx="44" cy="32" r="6" fill="${pal.accentHex}"/>
-          <circle cx="44" cy="48" r="6" fill="${pal.accentHex}" opacity="0.85"/>
-          <rect x="86" y="22" width="66" height="106" rx="14" fill="${pal.screenHex}" stroke="${pal.accentHex}" stroke-width="2"/>
-          <rect x="12" y="136" width="156" height="32" rx="10" fill="#1d1d1f"/>
-          <text x="90" y="150" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#f5d799" text-anchor="middle">${shortCol} • ${shortVar}</text>
-          <text x="90" y="162" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortTitle}</text>
-        </svg>`;
-        const uri = "data:image/svg+xml;utf8," + encodeURIComponent(svgVar);
-        svgThumbCache.set(cacheKey, uri);
-        return uri;
-      }
-
-      let deviceIllustration = "";
-      if (pal.formFactor === "TV") {
-        deviceIllustration = `
-          <rect x="16" y="20" width="110" height="72" rx="6" fill="#1d1d1f" stroke="#bfa06d" stroke-width="2"/>
-          <text x="71" y="48" font-family="sans-serif" font-size="9" font-weight="bold" fill="#f5d799" text-anchor="middle">SEALED 4K TV BOX</text>
-          <rect x="52" y="38" width="112" height="74" rx="6" fill="#0071e3" stroke="#ffffff" stroke-width="2"/>
-          <text x="108" y="76" font-family="sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">4K GOOGLE TV</text>
-          <text x="108" y="92" font-family="sans-serif" font-size="8.5" fill="#e0f2fe" text-anchor="middle">${shortVar}</text>
-        `;
-      } else if (pal.formFactor === "FOLD") {
-        deviceIllustration = `
-          <rect x="20" y="14" width="72" height="112" rx="8" fill="${pal.boxHex}" stroke="#bfa06d" stroke-width="2"/>
-          <text x="56" y="34" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#f5d799" text-anchor="middle">FOLD RETAIL BOX</text>
-          <rect x="74" y="22" width="44" height="104" rx="9" fill="${pal.bodyHex}" stroke="${pal.accentHex}" stroke-width="2"/>
-          <rect x="116" y="22" width="44" height="104" rx="9" fill="${pal.screenHex}" stroke="${pal.accentHex}" stroke-width="2"/>
-          <line x1="116" y1="22" x2="116" y2="126" stroke="#f5d799" stroke-width="2"/>
-        `;
-      } else {
-        deviceIllustration = `
-          <rect x="20" y="14" width="76" height="112" rx="10" fill="${pal.boxHex}" stroke="#bfa06d" stroke-width="1.8"/>
-          <text x="58" y="32" font-family="sans-serif" font-size="7.5" font-weight="bold" fill="#f5d799" text-anchor="middle">RETAIL BOX</text>
-          <rect x="30" y="40" width="56" height="3" rx="1.5" fill="#bfa06d"/>
-          <text x="58" y="60" font-family="sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-          <text x="58" y="74" font-family="sans-serif" font-size="7.5" fill="#cbd5e1" text-anchor="middle">${shortCol}</text>
-          <rect x="82" y="22" width="70" height="108" rx="14" fill="${pal.bodyHex}" stroke="${pal.accentHex}" stroke-width="2.2"/>
-          <rect x="88" y="28" width="58" height="96" rx="10" fill="${pal.screenHex}"/>
-          <circle cx="100" cy="40" r="5.5" fill="${pal.accentHex}"/>
-          <circle cx="100" cy="54" r="5.5" fill="${pal.accentHex}" opacity="0.85"/>
-          <circle cx="112" cy="47" r="4" fill="#38bdf8"/>
-          <rect x="106" y="10" width="64" height="18" rx="9" fill="#0071e3"/>
-          <text x="138" y="22" font-family="sans-serif" font-size="8" font-weight="bold" fill="#ffffff" text-anchor="middle">${shortVar}</text>
-        `;
-      }
-
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 180 180">
-        <rect width="180" height="180" rx="24" fill="#ffffff"/>
-        ${deviceIllustration}
-        <text x="90" y="148" font-family="sans-serif" font-size="10.5" font-weight="bold" fill="#1d1d1f" text-anchor="middle">${shortTitle}</text>
-        <text x="90" y="163" font-family="sans-serif" font-size="9" font-weight="600" fill="#0071e3" text-anchor="middle">${shortCol} • ${shortVar}</text>
-      </svg>`;
-      const uri = "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-      svgThumbCache.set(cacheKey, uri);
-      return uri;
-    }
-
-    const DEFAULT_INVENTORY = [
-      {
-        id: "item-1",
-        barcode: "8901001",
-        name: "Apple iPhone 16 Pro Max",
-        category: "Smartphone",
-        color: "Desert Titanium",
-        variant: "8GB / 256GB",
-        imei: "359876104512890",
-        specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR ProMotion, 48MP Fusion Camera, 5G",
-        hsn: "8517",
-        buyPrice: 126500,
-        sellPrice: 137900,
-        onlinePrice: 135900,
-        mrpPrice: 144900,
-        stock: 6,
-        rating: "4.9",
-        reviews: 342,
-        warranty: "1 Year Apple India Official Warranty"
-      },
-      {
-        id: "item-2",
-        barcode: "8901002",
-        name: "Samsung Galaxy S24 Ultra 5G",
-        category: "Smartphone",
-        color: "Titanium Gray",
-        variant: "12GB / 256GB",
-        imei: "354120987654321",
-        specs: "Snapdragon 8 Gen 3, 200MP Quad Telephoto, Built-in S-Pen, Galaxy AI, 5000mAh",
-        hsn: "8517",
-        buyPrice: 108000,
-        sellPrice: 119999,
-        onlinePrice: 117999,
-        mrpPrice: 129999,
-        stock: 5,
-        rating: "4.8",
-        reviews: 289,
-        warranty: "1 Year Samsung India Warranty"
-      },
-      {
-        id: "item-3",
-        barcode: "8901003",
-        name: "Samsung Galaxy Z Fold 6 5G",
-        category: "Smartphone",
-        color: "Crafted Black",
-        variant: "12GB / 512GB",
-        imei: "357788990011223",
-        specs: "7.6-inch Dynamic AMOLED 2X Foldable Display, Snapdragon 8 Gen 3, IP48, Galaxy AI",
-        hsn: "8517",
-        buyPrice: 149000,
-        sellPrice: 164999,
-        onlinePrice: 162999,
-        mrpPrice: 176999,
-        stock: 3,
-        rating: "4.9",
-        reviews: 124,
-        warranty: "1 Year Samsung Foldable Care Warranty"
-      },
-      {
-        id: "item-4",
-        barcode: "8901004",
-        name: "OnePlus 13 5G",
-        category: "Smartphone",
-        color: "Midnight Ocean",
-        variant: "16GB / 512GB",
-        imei: "864210987612340",
-        specs: "Snapdragon 8 Elite, Hasselblad Triple 50MP Camera, 6000mAh Silicon-Carbon, 100W SUPERVOOC",
-        hsn: "8517",
-        buyPrice: 66500,
-        sellPrice: 74999,
-        onlinePrice: 73499,
-        mrpPrice: 79999,
-        stock: 8,
-        rating: "4.8",
-        reviews: 410,
-        warranty: "1 Year OnePlus Official Warranty"
-      },
-      {
-        id: "item-5",
-        barcode: "8901005",
-        name: "Vivo X200 Pro 5G",
-        category: "Smartphone",
-        color: "Cosmos Black",
-        variant: "16GB / 512GB",
-        imei: "869911223344556",
-        specs: "MediaTek Dimensity 9400, 200MP ZEISS APO Telephoto, V3+ Imaging Chip, 6000mAh",
-        hsn: "8517",
-        buyPrice: 84000,
-        sellPrice: 94999,
-        onlinePrice: 92999,
-        mrpPrice: 99999,
-        stock: 4,
-        rating: "4.9",
-        reviews: 198,
-        warranty: "1 Year Vivo India Warranty"
-      },
-      {
-        id: "item-6",
-        barcode: "8901006",
-        name: "Redmi Note 14 Pro+ 5G",
-        category: "Smartphone",
-        color: "Spectre Blue",
-        variant: "8GB / 256GB",
-        imei: "861122334455667",
-        specs: "1.5K Curved AMOLED 120Hz, 200MP OIS Camera, IP68 Water Resistant, 6200mAh Battery",
-        hsn: "8517",
-        buyPrice: 26500,
-        sellPrice: 30999,
-        onlinePrice: 29999,
-        mrpPrice: 34999,
-        stock: 12,
-        rating: "4.7",
-        reviews: 620,
-        warranty: "1 Year Xiaomi Official Warranty"
-      },
-      {
-        id: "item-7",
-        barcode: "8901007",
-        name: "Apple AirPods Pro (2nd Gen USB-C)",
-        category: "Accessory",
-        color: "White",
-        variant: "MagSafe USB-C Case",
-        imei: "SN-H0YLP9821Q",
-        specs: "H2 Chip, 2x Active Noise Cancellation, Adaptive Audio, Personalized Spatial Audio",
-        hsn: "8518",
-        buyPrice: 18500,
-        sellPrice: 22900,
-        onlinePrice: 21900,
-        mrpPrice: 24900,
-        stock: 10,
-        rating: "4.9",
-        reviews: 512,
-        warranty: "1 Year Apple Warranty"
-      },
-      {
-        id: "item-8",
-        barcode: "8901008",
-        name: "Sony Bravia 55-inch 4K Ultra HD Google TV",
-        category: "Smart TV",
-        color: "Matte Black",
-        variant: "55 Inch (KD-55X74L)",
-        imei: "SN-SONY55X74L901",
-        specs: "4K Processor X1, Dolby Audio 20W, Google TV, Apple AirPlay, ALLM Gaming",
-        hsn: "8528",
-        buyPrice: 48000,
-        sellPrice: 55990,
-        onlinePrice: 54490,
-        mrpPrice: 69990,
-        stock: 4,
-        rating: "4.8",
-        reviews: 175,
-        warranty: "1 Year Sony Comprehensive Warranty"
-      },
-      {
-        id: "item-9",
-        barcode: "8901009",
-        name: "Original 20W USB-C Fast Power Adapter + UV Glass Combo",
-        category: "Accessory",
-        color: "White / Clear",
-        variant: "20W PD + 9H UV Tempered",
-        imei: "ACC-20W-UV99",
-        specs: "Fast PD Charging Adapter + Edge-to-Edge Bubble-Free UV Screen Protector",
-        hsn: "8504",
-        buyPrice: 950,
-        sellPrice: 1999,
-        onlinePrice: 1799,
-        mrpPrice: 2999,
-        stock: 35,
-        rating: "4.8",
-        reviews: 890,
-        warranty: "6 Months Replacement Warranty"
-      },
-      {
-        id: "item-10",
-        barcode: "8901010",
-        name: "Pre-Owned Apple iPhone 14 Pro (Mint Certified)",
-        category: "Pre-Owned",
-        color: "Deep Purple",
-        variant: "6GB / 256GB",
-        imei: "356789102345612",
-        specs: "Certified Pre-Owned Grade A+, 92% Original Battery Health, FaceID & TrueTone OK",
-        hsn: "8517",
-        buyPrice: 58000,
-        sellPrice: 65999,
-        onlinePrice: 64499,
-        mrpPrice: 79999,
-        stock: 2,
-        rating: "4.9",
-        reviews: 94,
-        warranty: "3 Months Store Testing Warranty"
-      },
-      {
-        id: "item-11",
-        barcode: "8901011",
-        name: "Express OLED Display / Combo Replacement Service",
-        category: "Service",
-        color: "OEM Original",
-        variant: "Full Assembly + Fitting",
-        imei: "SRV-OLED-PRO",
-        specs: "Original Touch & AMOLED Display Replacement with Frame Seal & Diagnostic Check",
-        hsn: "9987",
-        buyPrice: 1400,
-        sellPrice: 2999,
-        onlinePrice: 2799,
-        mrpPrice: 3999,
-        stock: 50,
-        rating: "4.9",
-        reviews: 310,
-        warranty: "3 Months Touch & Display Service Warranty"
-      }
-    ];
-
-    const DEFAULT_ONLINE_ORDERS = [
-      {
-        orderId: "ORD-CP-501",
-        timestamp: Date.now() - 3600000 * 2,
-        dateStr: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-        timeStr: "11:20 AM",
-        custName: "Srinivas Rao",
-        custPhone: "9848123456",
-        address: "H.No 4-2-110, Mamillagudem, Near Collectorate, Khammam 507001",
-        itemId: "item-1",
-        itemName: "Apple iPhone 16 Pro Max",
-        color: "Desert Titanium",
-        variant: "8GB / 256GB",
-        imei: "359876104512890",
-        specs: "A18 Pro Bionic Chip, 6.9-inch Super Retina XDR",
-        price: 135900,
-        exchangeDeduction: 22000,
-        exchangeInfo: "Old iPhone 13 128GB (Good)",
-        netPayable: 113900,
-        paymentType: "HOME EMI - Poonawalla Fincorp",
-        paymentRef: "PF-EMI-99412 (0% Down | 12 Months)",
-        isPrepaid: true,
-        isEmi: true,
-        status: "NEW"
-      },
-      {
-        orderId: "ORD-CP-502",
-        timestamp: Date.now() - 1800000,
-        dateStr: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-        timeStr: "01:45 PM",
-        custName: "Ayesha Siddiqui",
-        custPhone: "9550677795",
-        address: "Opp. Urdu Ghar Shadi Khana, Station Rd, Braman Bazar, Khammam 507001",
-        itemId: "item-4",
-        itemName: "OnePlus 13 5G",
-        color: "Midnight Ocean",
-        variant: "16GB / 512GB",
-        imei: "864210987612340",
-        specs: "Snapdragon 8 Elite, Hasselblad Camera, 100W",
-        price: 73499,
-        exchangeDeduction: 0,
-        exchangeInfo: "",
-        netPayable: 72499,
-        paymentType: "PREPAID UPI (PhonePe / GPay)",
-        paymentRef: "UTR-431987654120 (₹1,000 Prepaid Off)",
-        isPrepaid: true,
-        isEmi: false,
-        status: "PACKED"
-      },
-      {
-        orderId: "ORD-CP-503",
-        timestamp: Date.now() - 900000,
-        dateStr: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-        timeStr: "03:10 PM",
-        custName: "Venkatesh Goud",
-        custPhone: "9989012345",
-        address: "Wyra Road, Beside Reliance Trends, Khammam 507001",
-        itemId: "item-6",
-        itemName: "Redmi Note 14 Pro+ 5G",
-        color: "Spectre Blue",
-        variant: "8GB / 256GB",
-        imei: "861122334455667",
-        specs: "200MP OIS Camera, IP68, 6200mAh",
-        price: 29999,
-        exchangeDeduction: 0,
-        exchangeInfo: "",
-        netPayable: 29999,
-        paymentType: "HOME EMI - ICICI Bank Insta EMI",
-        paymentRef: "ICICI-EMI-7721 (6 Months No-Cost)",
-        isPrepaid: false,
-        isEmi: true,
-        status: "NEW"
-      }
-    ];
-
-    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const inr = v => `₹${Math.round(Number(v) || 0).toLocaleString('en-IN')}`;
-    const stockOf = it => Math.max(0, Math.floor(Number(it && it.stock) || 0));
-    const onlineRateOf = it => Number(it && it.onlinePrice) || Number(it && it.sellPrice) || 0;
-    const safeId = v => String(v ?? '').replace(/[^\w-]/g, '_');
-    const digitsOnly = v => String(v ?? '').replace(/\D/g, '');
-
-    const STATUS_LABEL = {
-      NEW: 'Order received — awaiting confirmation',
-      PACKED: 'Packed & confirmed',
-      OUT_FOR_DELIVERY: 'Out for delivery',
-      DELIVERED: 'Delivered'
-    };
-
-    let inventoryList = [...DEFAULT_INVENTORY];
-    let onlineOrdersList = [...DEFAULT_ONLINE_ORDERS];
-    let storeCatalog = [];
-    let storeCart = [];
-    let customerOrders = [...onlineOrdersList];
-    let activeCategory = "ALL";
-    let storePayMode = "PREPAID_UPI";
-    let currentInspectedOnlineItem = null;
-    let customerSession = null;
-    let savedAddresses = [
-      {
-        id: "addr-default-1",
-        tag: "🏠 Home",
-        recipient: "Rahul Sharma",
-        phone: "9848012345",
-        fullText: "Flat 201, Wyra Road, Near New Bus Stand, Khammam 507001",
-        isDefault: true
-      }
-    ];
-
-    function resolveOnlineProductImage(item, mode = "BOX") {
-      if (mode === "BOX" && item.onlineImage && !item.onlineImage.includes("SKU #") && !item.onlineImage.includes("POS #")) {
-        if (!item.onlineImage.includes("svg+xml")) return item.onlineImage;
-      }
-      return createOnlineStoreSvgThumb(item, mode);
-    }
-
-    function loadLocalState() {
+    function syncLiveStock(showFeedback = false) {
       try {
-        const savedInv = JSON.parse(localStorage.getItem('cp_local_inventory') || 'null');
-        if (savedInv && Array.isArray(savedInv) && savedInv.length > 0) {
-          inventoryList = savedInv;
-        }
-        const savedOnline = JSON.parse(localStorage.getItem('cp_online_orders') || 'null');
-        if (savedOnline && Array.isArray(savedOnline) && savedOnline.length > 0) {
-          onlineOrdersList = savedOnline;
-          customerOrders = [...onlineOrdersList];
-        }
-        const savedCust = JSON.parse(localStorage.getItem('cp_customer_session') || 'null');
-        if (savedCust) customerSession = savedCust;
-        const savedAddrList = JSON.parse(localStorage.getItem('cp_saved_addresses') || 'null');
-        if (savedAddrList && Array.isArray(savedAddrList) && savedAddrList.length > 0) {
-          savedAddresses = savedAddrList;
-        }
-      } catch (e) {}
-    }
-
-    function saveLocalOrdersBackup() {
-      try {
-        localStorage.setItem('cp_online_orders', JSON.stringify(onlineOrdersList));
-      } catch (e) {}
-    }
-
-    function syncStorefrontCatalogFromErp() {
-      storeCatalog = inventoryList.map(it => ({
-        ...it,
-        onlinePrice: Number(it.onlinePrice) || Number(it.sellPrice) || 0,
-        mrpPrice: it.mrpPrice || Math.round((Number(it.sellPrice) || 0) * 1.12),
-        rating: it.rating || "4.8",
-        reviews: it.reviews || 150,
-        image: resolveOnlineProductImage(it, "BOX")
-      }));
-      syncCartWithCatalog();
-      renderStoreProducts();
-      const vfsBadge = document.getElementById('vfsGlobalSyncBadge');
-      if (vfsBadge) {
-        vfsBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Showroom Stock (${storeCatalog.length} Products)`;
+        const raw = localStorage.getItem(STORAGE_KEYS.INV);
+        const parsed = raw ? JSON.parse(raw) : [];
+        storeInventory = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        storeInventory = [];
+      }
+      populateBrandFilter();
+      renderStoreCatalog();
+      updateMyOrdersBadge();
+      if (showFeedback) {
+        showToast('Synced live stock (' + storeInventory.length + ' models)');
       }
     }
 
-    function syncCartWithCatalog() {
-      const notes = [];
-      storeCart = storeCart.filter(line => {
-        const live = storeCatalog.find(x => x.id === line.id);
-        const avail = stockOf(live);
-        if (!live || avail === 0) {
-          notes.push(`${line.name} is out of stock and was removed from your bag.`);
-          return false;
+    function populateBrandFilter() {
+      const sel = document.getElementById('brand-filter');
+      if (!sel) return;
+      const current = sel.value || 'ALL';
+      const brands = Array.from(new Set(storeInventory.map(i => (i.brand || '').trim()).filter(Boolean))).sort();
+      sel.innerHTML = '<option value="ALL">All Brands</option>' +
+        brands.map(b => `<option value="${b}">${b}</option>`).join('');
+      if (brands.includes(current)) sel.value = current;
+    }
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('#category-pills .cat-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
+      });
+      renderStoreCatalog();
+    }
+
+    function resetFilters() {
+      activeCategory = 'ALL';
+      const s = document.getElementById('store-search');
+      if (s) s.value = '';
+      const b = document.getElementById('brand-filter');
+      if (b) b.value = 'ALL';
+      setCategory('ALL');
+    }
+
+    function renderStoreCatalog() {
+      const grid = document.getElementById('store-product-grid');
+      const emptyState = document.getElementById('store-empty-state');
+      if (!grid || !emptyState) return;
+
+      const availableItems = storeInventory.filter(i => (Number(i.stock) || 0) > 0);
+      const totalPieces = availableItems.reduce((sum, i) => sum + (Number(i.stock) || 0), 0);
+
+      const statModels = document.getElementById('stat-live-models');
+      const statPieces = document.getElementById('stat-live-pieces');
+      if (statModels) statModels.textContent = String(availableItems.length);
+      if (statPieces) statPieces.textContent = String(totalPieces);
+
+      if (storeInventory.length === 0) {
+        emptyState.classList.remove('hidden');
+        grid.innerHTML = '';
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      const q = (document.getElementById('store-search')?.value || '').trim().toLowerCase();
+      const brand = document.getElementById('brand-filter')?.value || 'ALL';
+      const sortBy = document.getElementById('sort-filter')?.value || 'featured';
+
+      let filtered = storeInventory.filter(item => {
+        if (activeCategory !== 'ALL' && item.category !== activeCategory) return false;
+        if (brand !== 'ALL' && (item.brand || '') !== brand) return false;
+        if (q) {
+          const unitColors = Array.isArray(item.units) ? item.units.map(u => u.color || '').join(' ') : '';
+          const hay = `${item.name || ''} ${item.brand || ''} ${item.variant || ''} ${item.color || ''} ${item.specs || ''} ${unitColors}`.toLowerCase();
+          if (!hay.includes(q)) return false;
         }
-        if (line.qty > avail) {
-          notes.push(`${line.name}: only ${avail} left, quantity adjusted.`);
-          line.qty = avail;
-        }
-        line.sellPrice = onlineRateOf(live);
         return true;
       });
-      updateHeaderCounts();
-      return notes;
-    }
 
-    window.showStoreToast = function(msg) {
-      const t = document.getElementById('toastStore');
-      if (!t) return;
-      t.innerText = msg;
-      t.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
-    };
-
-    // Debounced search for instant 60fps typing response
-    let searchRafTimer = null;
-    window.scheduleStoreProductsRender = function() {
-      const q = document.getElementById('storeSearchInput')?.value || '';
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (clearBtn) {
-        if (q.length > 0) clearBtn.classList.remove('hidden');
-        else clearBtn.classList.add('hidden');
-      }
-      clearTimeout(searchRafTimer);
-      searchRafTimer = setTimeout(() => renderStoreProducts(), 60);
-    };
-
-    window.clearStoreSearch = function() {
-      const inp = document.getElementById('storeSearchInput');
-      if (inp) inp.value = '';
-      document.getElementById('clearSearchBtn')?.classList.add('hidden');
-      renderStoreProducts();
-    };
-
-    function updateCustomerAuthUI() {
-      const authText = document.getElementById('headerCustAuthText');
-      const logoutBtn = document.getElementById('headerCustLogoutBtn');
-      const mobBadge = document.getElementById('mobileCustomerStatusBadge');
-      const mobLoginLink = document.getElementById('mobileLoginQuickLink');
-      const mobLogoutLink = document.getElementById('mobileLogoutQuickLink');
-      const addrCount = document.getElementById('headerSavedAddrCount');
-      const activeAddrLabel = document.getElementById('headerActiveAddressLabel');
-
-      if (addrCount) addrCount.innerText = String(savedAddresses.length);
-
-      const defaultAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
-      if (activeAddrLabel && defaultAddr) {
-        activeAddrLabel.innerHTML = `Deliver to <strong>${esc(defaultAddr.recipient)} (${esc(defaultAddr.tag)})</strong> • ${esc(defaultAddr.fullText.slice(0, 32))}...`;
-      }
-
-      if (customerSession && customerSession.name) {
-        if (authText) authText.innerText = `Hi, ${customerSession.name.split(' ')[0]}`;
-        logoutBtn?.classList.remove('hidden');
-        logoutBtn?.classList.add('inline-flex');
-        if (mobBadge) mobBadge.innerHTML = `<i class="ph-fill ph-check-circle text-emerald-600"></i> Signed in: <strong>${esc(customerSession.name)}</strong>`;
-        if (mobLoginLink) mobLoginLink.innerText = "Profile";
-        mobLogoutLink?.classList.remove('hidden');
-      } else {
-        if (authText) authText.innerText = "Sign In";
-        logoutBtn?.classList.add('hidden');
-        logoutBtn?.classList.remove('inline-flex');
-        if (mobBadge) mobBadge.innerHTML = `Guest Shopper • 0% No-Cost EMI Available`;
-        if (mobLoginLink) mobLoginLink.innerText = "Sign In";
-        mobLogoutLink?.classList.add('hidden');
-      }
-    }
-
-    window.handleCustomerAccountBtnClick = function() {
-      playSfx('CLICK');
-      if (customerSession) {
-        document.getElementById('custLoginName').value = customerSession.name || '';
-        document.getElementById('custLoginPhone').value = customerSession.phone || '';
-        const def = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
-        document.getElementById('custLoginDefaultAddress').value = def ? def.fullText : '';
-      }
-      const modal = document.getElementById('customerAuthModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeCustomerAuthModal = function() {
-      const modal = document.getElementById('customerAuthModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
-
-    window.fillDemoCustomerLogin = function() {
-      playSfx('CLICK');
-      document.getElementById('custLoginName').value = "Rahul Sharma";
-      document.getElementById('custLoginPhone').value = "9848012345";
-      document.getElementById('custLoginPin').value = "";
-      document.getElementById('custLoginDefaultAddress').value = "Flat 201, Wyra Road, Near New Bus Stand, Khammam 507001";
-    };
-
-    window.submitCustomerLoginForm = function(e) {
-      e.preventDefault();
-      const name = document.getElementById('custLoginName').value.trim();
-      const phone = digitsOnly(document.getElementById('custLoginPhone').value);
-      const addrText = document.getElementById('custLoginDefaultAddress').value.trim();
-
-      if (!name || phone.length !== 10) {
-        playSfx('ERROR');
-        showStoreToast('⚠️ Enter your name and a valid 10-digit mobile number.');
-        return;
-      }
-
-      playSfx('SUCCESS');
-      customerSession = { name, phone, loggedInAt: Date.now() };
-      try {
-        localStorage.setItem('cp_customer_session', JSON.stringify(customerSession));
-      } catch (err) {}
-
-      if (addrText) {
-        savedAddresses.forEach(a => a.isDefault = false);
-        savedAddresses.unshift({
-          id: 'addr-' + Date.now(),
-          tag: '🏠 Home',
-          recipient: name,
-          phone: phone,
-          fullText: addrText,
-          isDefault: true
-        });
-        try {
-          localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-        } catch (err) {}
-      }
-
-      updateCustomerAuthUI();
-      renderSavedAddressesList();
-      renderCheckoutSavedAddressChips();
-      closeCustomerAuthModal();
-      showStoreToast(`👋 Welcome, ${name}! Your Khammam delivery address is saved.`);
-    };
-
-    window.openCustomerLogoutConfirm = function() {
-      playSfx('CLICK');
-      customerSession = null;
-      try {
-        localStorage.removeItem('cp_customer_session');
-      } catch (err) {}
-      updateCustomerAuthUI();
-      showStoreToast("🚪 Signed out of your Customer Account.");
-    };
-
-    window.openSavedAddressesModal = function() {
-      playSfx('CLICK');
-      renderSavedAddressesList();
-      if (customerSession) {
-        document.getElementById('newAddrRecipient').value = customerSession.name || '';
-        document.getElementById('newAddrPhone').value = customerSession.phone || '';
-      }
-      const modal = document.getElementById('savedAddressesModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeSavedAddressesModal = function() {
-      const modal = document.getElementById('savedAddressesModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
-
-    function renderSavedAddressesList() {
-      const container = document.getElementById('savedAddressesListContainer');
-      if (!container) return;
-      if (savedAddresses.length === 0) {
-        container.innerHTML = `<div class="p-4 text-center text-xs text-neutral-500 bg-[#f5f5f7] rounded-xl">No saved addresses yet. Add one below!</div>`;
-        return;
-      }
-      container.innerHTML = savedAddresses.map(addr => `
-        <div class="p-3 rounded-2xl border ${addr.isDefault ? 'border-[#0071e3] bg-blue-50/40' : 'border-neutral-200 bg-white'} flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div class="space-y-0.5 max-w-md">
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-full bg-[#1d1d1f] text-white font-semibold text-[10px]">${esc(addr.tag)}</span>
-              <span class="font-bold text-neutral-900">${esc(addr.recipient)} (${esc(addr.phone)})</span>
-              ${addr.isDefault ? `<span class="text-[10px] font-semibold text-[#0071e3] bg-blue-50 px-2 py-0.5 rounded-full">✓ Default</span>` : ''}
-            </div>
-            <div class="text-neutral-600">${esc(addr.fullText)}</div>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="selectSavedAddressAsDefault('${safeId(addr.id)}')" class="px-3 py-1.5 rounded-full bg-[#0071e3] text-white font-semibold text-[11px]">
-              Deliver Here
-            </button>
-            <button type="button" onclick="deleteSavedAddress('${safeId(addr.id)}')" class="px-2.5 py-1.5 rounded-full border border-rose-200 text-rose-600 font-semibold text-[11px]">
-              Delete
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    window.addNewSavedAddress = function(e) {
-      e.preventDefault();
-      const tag = document.getElementById('newAddrTag').value;
-      const recipient = document.getElementById('newAddrRecipient').value.trim();
-      const phone = digitsOnly(document.getElementById('newAddrPhone').value);
-      const fullText = document.getElementById('newAddrFullText').value.trim();
-      if (phone.length !== 10) {
-        playSfx('ERROR');
-        showStoreToast('⚠️ Enter a valid 10-digit mobile number.');
-        return;
-      }
-
-      playSfx('SUCCESS');
-      savedAddresses.forEach(a => a.isDefault = false);
-      savedAddresses.unshift({
-        id: 'addr-' + Date.now(),
-        tag,
-        recipient,
-        phone,
-        fullText,
-        isDefault: true
-      });
-      try {
-        localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-      } catch (err) {}
-
-      document.getElementById('newAddrFullText').value = '';
-      renderSavedAddressesList();
-      renderCheckoutSavedAddressChips();
-      updateCustomerAuthUI();
-      showStoreToast("📍 Saved new Khammam delivery address!");
-    };
-
-    window.selectSavedAddressAsDefault = function(addrId) {
-      playSfx('CLICK');
-      savedAddresses.forEach(a => a.isDefault = (a.id === addrId));
-      try {
-        localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-      } catch (err) {}
-      const chosen = savedAddresses.find(a => a.id === addrId);
-      if (chosen) {
-        const nameEl = document.getElementById('chkCustName');
-        const phoneEl = document.getElementById('chkCustPhone');
-        const addrEl = document.getElementById('chkCustAddress');
-        if (nameEl) nameEl.value = chosen.recipient;
-        if (phoneEl) phoneEl.value = chosen.phone;
-        if (addrEl) addrEl.value = chosen.fullText;
-      }
-      renderSavedAddressesList();
-      renderCheckoutSavedAddressChips();
-      updateCustomerAuthUI();
-      showStoreToast("📍 Delivery address selected!");
-    };
-
-    window.deleteSavedAddress = function(addrId) {
-      savedAddresses = savedAddresses.filter(a => a.id !== addrId);
-      if (savedAddresses.length > 0 && !savedAddresses.some(a => a.isDefault)) {
-        savedAddresses[0].isDefault = true;
-      }
-      try {
-        localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-      } catch (err) {}
-      renderSavedAddressesList();
-      renderCheckoutSavedAddressChips();
-      updateCustomerAuthUI();
-    };
-
-    function renderCheckoutSavedAddressChips() {
-      const wrap = document.getElementById('checkoutSavedAddressChips');
-      if (!wrap) return;
-      if (savedAddresses.length === 0) {
-        wrap.innerHTML = `<span class="text-[11px] text-neutral-500">No saved addresses yet. Type below to save automatically.</span>`;
-        return;
-      }
-      wrap.innerHTML = savedAddresses.map(a => `
-        <button type="button" onclick="selectSavedAddressAsDefault('${safeId(a.id)}')" class="px-3 py-1 rounded-full border text-[11px] font-semibold ${a.isDefault ? 'bg-[#0071e3] text-white border-[#0071e3]' : 'bg-white text-neutral-800 border-neutral-300'}">
-          ${esc(a.tag)}: ${esc(a.recipient)} (${esc(a.fullText.slice(0, 22))}...)
-        </button>
-      `).join('');
-    }
-
-    function setBuyButtons(inStock) {
-      ['onlineInspectAddCartBtn', 'onlineInspectBuyNowBtn'].forEach(id => {
-        const b = document.getElementById(id);
-        if (!b) return;
-        b.disabled = !inStock;
-        b.classList.toggle('is-disabled', !inStock);
-      });
-    }
-
-    window.openOnlineProductInspector = function(itemId) {
-      playSfx('CLICK');
-      const item = storeCatalog.find(x => x.id === itemId);
-      if (!item) return;
-      currentInspectedOnlineItem = item;
-
-      const onlineRate = onlineRateOf(item);
-      const offlineRate = Number(item.sellPrice) || onlineRate;
-      const mrp = Number(item.mrpPrice) || Math.round(onlineRate * 1.12);
-      const emi = Math.round(onlineRate / 12);
-      const stock = stockOf(item);
-
-      document.getElementById('onlineInspectTitle').innerText = item.name;
-      document.getElementById('onlineInspectCategory').innerText = item.category || 'Smartphone';
-      document.getElementById('onlineInspectColor').innerText = `🎨 Color: ${item.color}`;
-      document.getElementById('onlineInspectVariant').innerText = `⚡ Variant: ${item.variant}`;
-      document.getElementById('onlineInspectPrice').innerText = inr(onlineRate);
-      document.getElementById('onlineInspectMrp').innerText = inr(mrp);
-      document.getElementById('onlineInspectOfflineCompare').innerText = offlineRate > onlineRate
-        ? `Save ${inr(offlineRate - onlineRate)} vs Counter Rate (${inr(offlineRate)})`
-        : `Official Showroom Rate`;
-      document.getElementById('onlineInspectEmi').innerText = `🏦 0% No-Cost EMI from ${inr(emi)}/mo (Poonawalla, IDBI, ICICI, Bajaj)`;
-      const stEl = document.getElementById('onlineInspectStock');
-      if (stEl) {
-        stEl.innerText = stock > 0
-          ? (stock <= 2 ? `⚠️ Only ${stock} left at this price` : `✓ ${stock} in stock`)
-          : '❌ Currently out of stock';
-      }
-      document.getElementById('onlineInspectSpecs').innerText = item.specs || '100% Genuine Sealed Box Device with Brand Warranty';
-      setBuyButtons(stock > 0);
-
-      switchOnlineInspectGallery('BOX');
-
-      const modal = document.getElementById('onlineProductInspectorModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeOnlineProductInspector = function() {
-      const modal = document.getElementById('onlineProductInspectorModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
-
-    window.switchOnlineInspectGallery = function(mode) {
-      if (!currentInspectedOnlineItem) return;
-      const it = currentInspectedOnlineItem;
-      const imgEl = document.getElementById('onlineInspectMainImg');
-      imgEl.src = resolveOnlineProductImage(it, mode);
-
-      document.getElementById('onlineGalBtn-BOX').className = mode === 'BOX'
-        ? "py-1.5 px-2 rounded-full border-2 border-[#0071e3] bg-blue-50 text-[#0071e3]"
-        : "py-1.5 px-2 rounded-full border border-neutral-300 bg-white text-neutral-700";
-      document.getElementById('onlineGalBtn-VARIANT').className = mode === 'VARIANT'
-        ? "py-1.5 px-2 rounded-full border-2 border-[#0071e3] bg-blue-50 text-[#0071e3]"
-        : "py-1.5 px-2 rounded-full border border-neutral-300 bg-white text-neutral-700";
-    };
-
-    window.triggerOnlineInspectAction = function(buyNow) {
-      if (!currentInspectedOnlineItem) return;
-      const id = currentInspectedOnlineItem.id;
-      closeOnlineProductInspector();
-      addToStoreCart(id, buyNow);
-    };
-
-    window.setStoreCategory = function(cat) {
-      playSfx('CLICK');
-      activeCategory = cat;
-      document.querySelectorAll('.store-cat-chip').forEach(btn => {
-        btn.className = "store-cat-chip px-3.5 py-1.5 rounded-full text-neutral-600 hover:bg-neutral-100";
-      });
-      const activeBtn = document.getElementById(`catChip-${cat}`);
-      if (activeBtn) {
-        activeBtn.className = "store-cat-chip px-3.5 py-1.5 rounded-full bg-[#1d1d1f] text-white font-semibold";
-      }
-      renderStoreProducts();
-    };
-
-    window.renderStoreProducts = function() {
-      const grid = document.getElementById('storeProductGrid');
-      if (!grid) return;
-      const q = (document.getElementById('storeSearchInput')?.value || '').toLowerCase().trim();
-      const sortMode = document.getElementById('storeSortSelect')?.value || 'POPULAR';
-
-      let filtered = storeCatalog.filter(item => {
-        const matchCat = activeCategory === 'ALL' || item.category === activeCategory;
-        const matchQ = !q ||
-          item.name.toLowerCase().includes(q) ||
-          item.color.toLowerCase().includes(q) ||
-          item.variant.toLowerCase().includes(q) ||
-          (item.specs && item.specs.toLowerCase().includes(q));
-        return matchCat && matchQ;
-      });
-
-      if (sortMode === 'PRICE_LOW') filtered.sort((a, b) => onlineRateOf(a) - onlineRateOf(b));
-      else if (sortMode === 'PRICE_HIGH') filtered.sort((a, b) => onlineRateOf(b) - onlineRateOf(a));
-      filtered = [...filtered.filter(i => stockOf(i) > 0), ...filtered.filter(i => stockOf(i) === 0)];
-
-      const rcEl = document.getElementById('storeResultCountText');
-      if (rcEl) rcEl.innerText = `Showing ${filtered.length} Genuine Sealed-Box Products`;
+      if (sortBy === 'price-asc') filtered.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+      if (sortBy === 'price-desc') filtered.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
 
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full bg-white rounded-3xl p-10 text-center text-sm text-neutral-500">No matching products found. Try another search term.</div>`;
+        grid.innerHTML = `
+          <div class="col-span-full apple-card p-8 text-center">
+            <p class="text-sm font-bold text-[#1D1D1F]">No matching products found.</p>
+            <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-xs mt-3">Reset Filters</button>
+          </div>`;
         return;
       }
 
       grid.innerHTML = filtered.map(item => {
-        const onlinePrice = onlineRateOf(item);
-        const offlinePrice = Number(item.sellPrice) || onlinePrice;
-        const mrp = Number(item.mrpPrice) || Math.round(onlinePrice * 1.12);
-        const monthlyEmi = Math.round(onlinePrice / 12);
-        const boxImgSrc = item.image || resolveOnlineProductImage(item, "BOX");
-        const stock = stockOf(item);
-        const inStock = stock > 0;
-        const dis = inStock ? '' : 'disabled';
-        const dimCls = inStock ? '' : 'is-disabled';
+        const sku = item.sku || item.id;
+        const stock = Number(item.stock) || 0;
+        const colorMap = getColorSummaryForItem(item);
+        const colors = Object.keys(colorMap);
+        if (!selectedColorByProduct[sku] || !colorMap[selectedColorByProduct[sku]]) {
+          selectedColorByProduct[sku] = colors[0] || 'Standard';
+        }
+        const activeColor = selectedColorByProduct[sku];
+        const price = Number(item.price) || 0;
+        const mrp = Number(item.mrp) || Math.round(price * 1.12);
+        const imgUrl = item.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80';
+
+        const colorPillsHtml = colors.map(c => {
+          const isSel = c === activeColor;
+          return `<button onclick="event.stopPropagation(); selectProductColor('${sku}', '${c.replace(/'/g, "\\'")}')" class="color-chip ${isSel ? 'active' : ''}">${c} (${colorMap[c]})</button>`;
+        }).join('');
 
         return `
-        <div class="product-card p-5">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-semibold uppercase tracking-wider text-[#bf4800]">
-                ${inStock ? (offlinePrice > onlinePrice ? `Online Exclusive • Save ${inr(offlinePrice - onlinePrice)}` : 'New') : 'Out of Stock'}
-              </span>
-              <span class="assured-badge">
-                <i class="ph-fill ph-seal-check text-[#0071e3]"></i> Sealed Box
-              </span>
-            </div>
-
-            <h3 onclick="openOnlineProductInspector('${item.id}')" class="text-lg font-bold text-neutral-900 leading-snug hover:text-[#0071e3] cursor-pointer">${esc(item.name)}</h3>
-            <p class="text-xs text-neutral-500 mt-0.5">${esc(item.color)} • ${esc(item.variant)}</p>
-
-            <div onclick="openOnlineProductInspector('${item.id}')" class="relative flex items-center justify-center bg-[#f5f5f7] rounded-2xl p-4 my-4 cursor-pointer group">
-              <img src="${boxImgSrc}" loading="lazy" alt="${esc(item.name)}" class="w-40 h-40 object-contain group-hover:scale-105 transition-transform duration-300 ${dimCls}">
-            </div>
-
-            <p class="text-xs text-neutral-500 line-clamp-2 leading-relaxed">${esc(item.specs)}</p>
-          </div>
-
-          <div class="pt-4 mt-4 border-t border-black/5 space-y-3">
+          <div class="apple-card p-5 flex flex-col justify-between cursor-pointer" onclick="openProductDetailModal('${sku}')">
             <div>
-              <div class="flex items-baseline gap-2 flex-wrap">
-                <span class="text-xl font-bold text-neutral-900">${inr(onlinePrice)}</span>
-                <span class="text-xs text-neutral-400 line-through">${inr(mrp)}</span>
-                <span class="ml-auto text-[11px] font-semibold ${stock > 2 ? 'text-emerald-700' : (inStock ? 'text-amber-700' : 'text-rose-600')}">
-                  ${inStock ? (stock > 2 ? `${stock} in stock` : `Only ${stock} left`) : 'Unavailable'}
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#F2F2F7] text-[#424245]">${item.brand || 'Official'}</span>
+                <span class="text-[11px] font-bold ${stock > 0 ? 'text-[#1D8348]' : 'text-[#FF3B30]'}">
+                  ${stock > 0 ? `● ${stock} pcs in stock` : 'Out of Stock'}
                 </span>
               </div>
-              <div class="text-[11px] text-neutral-500 mt-0.5">
-                From ${inr(monthlyEmi)}/mo. with 0% No-Cost EMI
+
+              <div class="h-40 rounded-2xl bg-[#F5F5F7] flex items-center justify-center p-4 mb-4">
+                <img src="${imgUrl}" alt="${item.name}" class="max-h-32 object-contain">
+              </div>
+
+              <h3 class="font-extrabold text-base text-[#1D1D1F] leading-snug">${item.name}</h3>
+              <p class="text-xs font-semibold text-[#86868B] mt-0.5">${item.variant || 'Standard Variant'}</p>
+              ${item.specs ? `<p class="text-[11px] text-[#424245] mt-1.5 line-clamp-1">${item.specs}</p>` : ''}
+
+              <div class="mt-3">
+                <div class="text-[10px] font-bold uppercase text-[#86868B] mb-1">Select Color:</div>
+                <div class="flex flex-wrap gap-1.5">${colorPillsHtml}</div>
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" ${dis} onclick="addToStoreCart('${item.id}', false)" class="btn-add-cart py-2.5 px-3 text-xs flex items-center justify-center gap-1 ${dimCls}">
-                <span>Add to Bag</span>
-              </button>
-              <button type="button" ${dis} onclick="addToStoreCart('${item.id}', true)" class="btn-buy-now py-2.5 px-3 text-xs flex items-center justify-center gap-1 ${dimCls}">
-                <span>Buy</span>
-              </button>
+            <div class="pt-4 mt-4 border-t border-[#F2F2F7]">
+              <div class="flex items-baseline justify-between mb-3">
+                <div>
+                  <span class="text-xl font-extrabold text-[#1D1D1F]">${formatINR(price)}</span>
+                  <span class="text-xs text-[#86868B] line-through ml-1.5">${formatINR(mrp)}</span>
+                </div>
+                <span class="text-[10px] font-bold text-[#0071E3]">GST Incl.</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2" onclick="event.stopPropagation()">
+                <button onclick="addToBag('${sku}', false)" ${stock <= 0 ? 'disabled' : ''} class="btn-secondary py-2.5 text-xs font-bold flex items-center justify-center gap-1 ${stock <= 0 ? 'opacity-40 cursor-not-allowed' : ''}">
+                  <i class="ph-bold ph-plus"></i> Add Bag
+                </button>
+                <button onclick="addToBag('${sku}', true)" ${stock <= 0 ? 'disabled' : ''} class="btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-1 ${stock <= 0 ? 'opacity-40 cursor-not-allowed' : ''}">
+                  <i class="ph-bold ph-lightning"></i> Buy Now
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      `}).join('');
-    };
+        `;
+      }).join('');
+    }
 
-    window.addToStoreCart = function(itemId, openCheckoutImmediately = false) {
-      const item = storeCatalog.find(x => x.id === itemId);
+    function selectProductColor(sku, color) {
+      selectedColorByProduct[sku] = color;
+      renderStoreCatalog();
+      if (currentDetailItem && (currentDetailItem.sku === sku || currentDetailItem.id === sku)) {
+        openProductDetailModal(sku);
+      }
+    }
+
+    function openProductDetailModal(sku) {
+      const item = storeInventory.find(i => (i.sku || i.id) === sku);
       if (!item) return;
-      const avail = stockOf(item);
-      if (avail < 1) {
-        playSfx('ERROR');
-        showStoreToast(`😔 ${item.name} is out of stock right now.`);
+      currentDetailItem = item;
+
+      const colorMap = getColorSummaryForItem(item);
+      const colors = Object.keys(colorMap);
+      const activeColor = selectedColorByProduct[sku] || colors[0] || 'Standard';
+      selectedColorByProduct[sku] = activeColor;
+
+      document.getElementById('detail-brand').textContent = item.brand || 'Cell Planet Official';
+      document.getElementById('detail-name').textContent = item.name || '';
+      document.getElementById('detail-variant').textContent = item.variant || 'Official Retail Unit';
+      document.getElementById('detail-img').src = item.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80';
+      document.getElementById('detail-price').textContent = formatINR(item.price);
+      document.getElementById('detail-mrp').textContent = formatINR(item.mrp || Math.round((Number(item.price) || 0) * 1.12));
+      document.getElementById('detail-specs').textContent = item.specs || '100% Genuine Sealed Box with Manufacturer Warranty & GST Tax Invoice.';
+      document.getElementById('detail-stock-badge').textContent = `${item.stock || 0} Pieces Available in Showroom`;
+
+      const colorList = document.getElementById('detail-color-list');
+      colorList.innerHTML = colors.map(c => `
+        <button onclick="selectProductColor('${sku}', '${c.replace(/'/g, "\\'")}')" class="color-chip ${c === activeColor ? 'active' : ''}">
+          ${c} (${colorMap[c]} available)
+        </button>
+      `).join('');
+
+      document.getElementById('detail-add-btn').onclick = () => { closeProductDetailModal(); addToBag(sku, false); };
+      document.getElementById('detail-buy-btn').onclick = () => { closeProductDetailModal(); addToBag(sku, true); };
+
+      document.getElementById('product-detail-modal').classList.remove('hidden');
+    }
+
+    function closeProductDetailModal() {
+      document.getElementById('product-detail-modal').classList.add('hidden');
+      currentDetailItem = null;
+    }
+
+    function addToBag(sku, openDrawerImmediately) {
+      const item = storeInventory.find(i => (i.sku || i.id) === sku);
+      if (!item || (Number(item.stock) || 0) <= 0) {
+        showToast('Item is out of stock');
         return;
       }
+      const chosenColor = selectedColorByProduct[sku] || item.color || 'Standard';
+      const bagKey = `${sku}__${chosenColor}`;
+      const existing = shoppingBag.find(b => b.bagKey === bagKey);
 
-      const existing = storeCart.find(c => c.id === itemId);
-      const nextQty = (existing ? existing.qty : 0) + 1;
-      if (nextQty > avail) {
-        playSfx('ERROR');
-        showStoreToast(`⚠️ Only ${avail} unit(s) of this model available.`);
-        return;
-      }
-
-      playSfx('VERIFY');
-      const unitOnlinePrice = onlineRateOf(item);
       if (existing) {
-        existing.qty = nextQty;
+        if (existing.qty + 1 > (Number(item.stock) || 1)) {
+          showToast('Maximum available showroom stock reached');
+          return;
+        }
+        existing.qty += 1;
       } else {
-        storeCart.push({ ...item, sellPrice: unitOnlinePrice, qty: 1 });
+        shoppingBag.push({
+          bagKey,
+          sku,
+          name: item.name,
+          brand: item.brand || '',
+          variant: item.variant || '',
+          color: chosenColor,
+          price: Number(item.price) || 0,
+          qty: 1
+        });
       }
-      updateHeaderCounts();
-      showStoreToast(`🛍️ Added ${item.name} (${item.variant}) to Bag!`);
 
-      if (openCheckoutImmediately) {
-        openCartDrawer();
+      renderBag();
+      showToast(`Added ${item.name} (${chosenColor}) to Bag`);
+      if (openDrawerImmediately) {
+        toggleCartDrawer(true);
       }
-    };
-
-    function updateHeaderCounts() {
-      const totalCart = storeCart.reduce((s, i) => s + i.qty, 0);
-      const cEl = document.getElementById('headerCartCount');
-      if (cEl) cEl.innerText = String(totalCart);
-      const oEl = document.getElementById('headerMyOrdersCount');
-      if (oEl) oEl.innerText = String(customerOrders.length);
     }
 
-    window.openCartDrawer = function() {
-      const notes = syncCartWithCatalog();
-      if (notes.length) showStoreToast(`⚠️ ${notes[0]}`);
-      renderStoreCartModal();
-      renderCheckoutSavedAddressChips();
-
-      const defAddr = savedAddresses.find(a => a.isDefault) || savedAddresses[0];
-      const nameEl = document.getElementById('chkCustName');
-      const phoneEl = document.getElementById('chkCustPhone');
-      const addrEl = document.getElementById('chkCustAddress');
-      if (customerSession) {
-        if (!nameEl.value) nameEl.value = customerSession.name || '';
-        if (!phoneEl.value) phoneEl.value = customerSession.phone || '';
-      }
-      if (defAddr) {
-        if (!nameEl.value) nameEl.value = defAddr.recipient || '';
-        if (!phoneEl.value) phoneEl.value = defAddr.phone || '';
-        if (!addrEl.value) addrEl.value = defAddr.fullText || '';
-      }
-
-      selectStorePaymentMode(storePayMode);
-      updateStoreCheckoutTotals();
-      const modal = document.getElementById('checkoutModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeCartDrawer = function() {
-      const modal = document.getElementById('checkoutModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
-
-    function renderStoreCartModal() {
-      const list = document.getElementById('storeCartItemsList');
-      if (!list) return;
-      if (storeCart.length === 0) {
-        list.innerHTML = `<div class="p-6 text-center bg-[#f5f5f7] rounded-2xl text-xs text-neutral-500">Your bag is empty. Click "Buy" or "Add to Bag" on any product.</div>`;
-        return;
-      }
-
-      list.innerHTML = storeCart.map(it => {
-        const live = storeCatalog.find(x => x.id === it.id);
-        const avail = stockOf(live);
-        const atMax = it.qty >= avail;
-        return `
-        <div class="p-3 rounded-2xl bg-[#f5f5f7] flex items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-3">
-            <img src="${resolveOnlineProductImage(it, 'BOX')}" alt="${esc(it.name)}" class="w-12 h-12 rounded-xl object-contain bg-white border border-black/5">
-            <div>
-              <div class="font-bold text-neutral-900">${esc(it.name)}</div>
-              <div class="text-[11px] text-neutral-500">${esc(it.color)} • ${esc(it.variant)} (Sealed Box)</div>
-              ${atMax ? `<div class="text-[10px] font-semibold text-amber-700">Max available quantity reached</div>` : ''}
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="flex items-center border border-neutral-300 rounded-full bg-white px-1">
-              <button type="button" onclick="changeStoreCartQty('${it.id}', -1)" class="px-2 py-1 font-bold">-</button>
-              <span class="px-2 font-bold">${it.qty}</span>
-              <button type="button" onclick="changeStoreCartQty('${it.id}', 1)" class="px-2 py-1 font-bold ${atMax ? 'opacity-40' : ''}">+</button>
-            </div>
-            <div class="font-bold text-sm text-neutral-900">${inr(it.sellPrice * it.qty)}</div>
-          </div>
-        </div>
-      `}).join('');
-    }
-
-    window.changeStoreCartQty = function(itemId, delta) {
-      const idx = storeCart.findIndex(x => x.id === itemId);
+    function updateBagQty(bagKey, delta) {
+      const idx = shoppingBag.findIndex(b => b.bagKey === bagKey);
       if (idx === -1) return;
-      const live = storeCatalog.find(x => x.id === itemId);
-      const avail = stockOf(live);
-      if (delta > 0 && storeCart[idx].qty + 1 > avail) {
-        playSfx('ERROR');
-        showStoreToast(`⚠️ Only ${avail} unit(s) available.`);
-        return;
+      shoppingBag[idx].qty += delta;
+      if (shoppingBag[idx].qty <= 0) {
+        shoppingBag.splice(idx, 1);
       }
-      storeCart[idx].qty += delta;
-      if (storeCart[idx].qty <= 0) storeCart.splice(idx, 1);
-      updateHeaderCounts();
-      renderStoreCartModal();
-      updateStoreCheckoutTotals();
-    };
-
-    window.selectStorePaymentMode = function(mode) {
-      storePayMode = mode;
-      ['PREPAID_UPI', 'BANK_EMI', 'PREPAID_CARD', 'COD'].forEach(m => {
-        const btn = document.getElementById(`stPay-${m}`);
-        if (!btn) return;
-        if (m === mode) {
-          btn.className = "p-3 rounded-2xl border-2 border-[#0071e3] bg-blue-50/50 text-neutral-900 font-semibold text-left shadow-sm";
-        } else {
-          btn.className = "p-3 rounded-2xl border border-neutral-200 bg-white text-neutral-800 font-semibold text-left";
-        }
-      });
-
-      const sub = document.getElementById('storePaymentSubBox');
-      if (!sub) return;
-      if (mode === 'PREPAID_UPI') {
-        sub.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-            <div>
-              <div class="font-bold text-neutral-900">⚡ Instant Prepaid UPI (Extra ₹1,000 Off Applied!)</div>
-              <p class="text-[11px] text-neutral-500 mt-0.5">Pay to Store Merchant UPI: <strong>9550677795@ybl</strong> (Cell Planet Khammam)</p>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <select id="stUpiApp" class="input-luxury bg-white py-2 font-bold">
-                <option value="PhonePe">PhonePe</option>
-                <option value="Google Pay">Google Pay</option>
-                <option value="Paytm">Paytm</option>
-              </select>
-              <input type="text" id="stUpiRef" placeholder="UTR / Last 4 Digits" class="input-luxury bg-white py-2 font-mono">
-            </div>
-          </div>
-        `;
-      } else if (mode === 'BANK_EMI') {
-        sub.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-            <div>
-              <label class="font-semibold text-neutral-700 block mb-1">Select Bank / NBFC Finance *</label>
-              <select id="stEmiBank" class="input-luxury bg-white py-2 font-bold">
-                <option value="Poonawalla Fincorp">Poonawalla Fincorp (0% EMI)</option>
-                <option value="IDBI Bank Finance">IDBI Bank Finance / EMI</option>
-                <option value="ICICI Bank Insta EMI">ICICI Bank Insta EMI</option>
-                <option value="Bajaj Finserv">Bajaj Finserv No-Cost EMI</option>
-                <option value="IDFC First Bank">IDFC First Bank</option>
-                <option value="HDFC Bank EasyEMI">HDFC Bank EasyEMI</option>
-                <option value="SBI Card EMI">SBI Card EasyEMI</option>
-                <option value="Axis Bank EMI">Axis Bank Instant EMI</option>
-                <option value="Kotak Bank EMI">Kotak Mahindra Bank EMI</option>
-              </select>
-            </div>
-            <div>
-              <label class="font-semibold text-neutral-700 block mb-1">EMI Tenure</label>
-              <select id="stEmiTenure" class="input-luxury bg-white py-2 font-bold">
-                <option value="3 Months">3 Months No-Cost EMI</option>
-                <option value="6 Months" selected>6 Months No-Cost EMI</option>
-                <option value="9 Months">9 Months Low-Cost EMI</option>
-                <option value="12 Months">12 Months Easy EMI</option>
-                <option value="18 Months">18 Months EMI</option>
-                <option value="24 Months">24 Months EMI</option>
-              </select>
-            </div>
-            <div>
-              <label class="font-semibold text-neutral-700 block mb-1">Card / Approval Note</label>
-              <input type="text" id="stEmiRef" placeholder="Last 4 digits or Mobile linked" class="input-luxury bg-white py-2">
-            </div>
-          </div>
-        `;
-      } else if (mode === 'PREPAID_CARD') {
-        sub.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
-              <label class="font-semibold text-neutral-700 block mb-1">Select Card Bank (Extra ₹1,000 Off Applied!)</label>
-              <select id="stCardBank" class="input-luxury bg-white py-2 font-bold">
-                <option value="ICICI Bank Card">ICICI Bank Credit/Debit Card</option>
-                <option value="IDBI Bank Card">IDBI Bank Credit/Debit Card</option>
-                <option value="HDFC Bank Card">HDFC Bank Credit/Debit Card</option>
-                <option value="SBI Card">SBI Credit/Debit Card</option>
-                <option value="Axis Bank Card">Axis Bank Card</option>
-              </select>
-            </div>
-            <div>
-              <label class="font-semibold text-neutral-700 block mb-1">Card Last 4 Digits / Auth Ref</label>
-              <input type="text" id="stCardRef" maxlength="8" placeholder="e.g. 4921" class="input-luxury bg-white py-2 font-mono">
-            </div>
-          </div>
-        `;
-      } else {
-        sub.innerHTML = `
-          <div class="text-xs text-neutral-700 font-medium">
-            🚚 <strong>Pay on Delivery in Khammam:</strong> Our store executive will deliver the sealed box to your doorstep and collect Cash, UPI, or Card Swipe at delivery.
-          </div>
-        `;
-      }
-      updateStoreCheckoutTotals();
-    };
-
-    window.updateStoreCheckoutTotals = function() {
-      const rawSum = storeCart.reduce((s, i) => s + (i.sellPrice * i.qty), 0);
-      const isExch = document.getElementById('chkExchangeToggle')?.checked;
-      const exFields = document.getElementById('chkExchangeFields');
-      const exBadge = document.getElementById('chkExchangeSavedBadge');
-      const exRow = document.getElementById('chkExchangeRow');
-
-      let exVal = 0;
-      if (isExch && rawSum > 0) {
-        exFields?.classList.remove('hidden');
-        exBadge?.classList.remove('hidden');
-        exRow?.classList.remove('hidden');
-        exVal = Number(document.getElementById('chkOldValue')?.value) || 8000;
-        if (exBadge) exBadge.innerText = `-₹${exVal.toLocaleString('en-IN')}`;
-        const sumEx = document.getElementById('chkSumExchange');
-        if (sumEx) sumEx.innerText = `-₹${exVal.toLocaleString('en-IN')}`;
-      } else {
-        exFields?.classList.add('hidden');
-        exBadge?.classList.add('hidden');
-        exRow?.classList.add('hidden');
-      }
-
-      const isPrepaidDiscount = (storePayMode === 'PREPAID_UPI' || storePayMode === 'PREPAID_CARD') && rawSum > 5000;
-      const prepaidDisc = isPrepaidDiscount ? 1000 : 0;
-      const prepRow = document.getElementById('chkPrepaidRow');
-      if (isPrepaidDiscount) {
-        prepRow?.classList.remove('hidden');
-      } else {
-        prepRow?.classList.add('hidden');
-      }
-
-      const net = Math.max(0, rawSum - exVal - prepaidDisc);
-      const sItems = document.getElementById('chkSumItems');
-      if (sItems) sItems.innerText = `₹${rawSum.toLocaleString('en-IN')}`;
-      const sNet = document.getElementById('chkSumNetPayable');
-      if (sNet) sNet.innerText = `₹${net.toLocaleString('en-IN')}`;
-      return { rawSum, exVal, prepaidDisc, net };
-    };
-
-    const vfsBroadcast = (typeof BroadcastChannel !== 'undefined') ? new BroadcastChannel('cellplanet_khammam_vfs_sync') : null;
-    let db = null;
-    let auth = null;
-    let userId = null;
-    let fbSetDoc = null;
-    let fbDoc = null;
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'cell-planet-khammam-erp';
-
-    async function persistOnlineOrder(ordObj) {
-      const idx = onlineOrdersList.findIndex(x => x.orderId === ordObj.orderId);
-      if (idx > -1) {
-        onlineOrdersList[idx] = ordObj;
-      } else {
-        onlineOrdersList.unshift(ordObj);
-      }
-      customerOrders = [...onlineOrdersList];
-      saveLocalOrdersBackup();
-      updateHeaderCounts();
-      renderMyOrdersList();
-
-      if (vfsBroadcast) {
-        try {
-          vfsBroadcast.postMessage({ type: 'ONLINE_ORDER_PLACED', orderId: ordObj.orderId, timestamp: Date.now() });
-        } catch (e) {}
-      }
-
-      if (db && userId && fbSetDoc && fbDoc) {
-        try {
-          await fbSetDoc(fbDoc(db, 'artifacts', appId, 'public', 'data', 'online_orders', ordObj.orderId), ordObj);
-        } catch (e) {}
-      }
+      renderBag();
     }
 
-    window.submitCustomerOnlineOrder = async function(e) {
-      e.preventDefault();
-      if (storeCart.length === 0) {
-        playSfx('ERROR');
-        showStoreToast("⚠️ Your bag is empty!");
-        return;
-      }
+    function renderBag() {
+      const countBadge = document.getElementById('cart-count-badge');
+      const container = document.getElementById('cart-items-container');
+      const totalEl = document.getElementById('cart-total-amount');
 
-      const custName = document.getElementById('chkCustName').value.trim();
-      const custPhone = digitsOnly(document.getElementById('chkCustPhone').value);
-      const address = document.getElementById('chkCustAddress').value.trim();
+      const totalQty = shoppingBag.reduce((s, i) => s + i.qty, 0);
+      const totalAmt = shoppingBag.reduce((s, i) => s + (i.price * i.qty), 0);
 
-      if (!custName || custPhone.length !== 10 || address.length < 6) {
-        playSfx('ERROR');
-        showStoreToast('⚠️ Enter your full name, 10-digit WhatsApp mobile, and Khammam delivery address.');
-        return;
-      }
+      if (countBadge) countBadge.textContent = String(totalQty);
+      if (totalEl) totalEl.textContent = formatINR(totalAmt);
 
-      const totals = updateStoreCheckoutTotals();
-      const saveAddrChecked = document.getElementById('chkSaveThisAddress')?.checked;
-
-      if (saveAddrChecked && address) {
-        const exists = savedAddresses.some(a => a.fullText.toLowerCase() === address.toLowerCase());
-        if (!exists) {
-          savedAddresses.forEach(a => a.isDefault = false);
-          savedAddresses.unshift({
-            id: 'addr-' + Date.now(),
-            tag: '🏠 Home',
-            recipient: custName,
-            phone: custPhone,
-            fullText: address,
-            isDefault: true
-          });
-          try {
-            localStorage.setItem('cp_saved_addresses', JSON.stringify(savedAddresses));
-          } catch (err) {}
-          updateCustomerAuthUI();
-        }
-      }
-
-      let paymentType = "CASH ON DELIVERY (Khammam)";
-      let paymentRef = "Pay at Doorstep";
-      let isPrepaid = false;
-      let isEmi = false;
-
-      if (storePayMode === 'PREPAID_UPI') {
-        const app = document.getElementById('stUpiApp')?.value || 'UPI';
-        const ref = document.getElementById('stUpiRef')?.value || 'Verified';
-        paymentType = `PREPAID UPI (${app})`;
-        paymentRef = `UTR: ${ref} (₹1,000 Prepaid Off)`;
-        isPrepaid = true;
-      } else if (storePayMode === 'BANK_EMI') {
-        const bank = document.getElementById('stEmiBank')?.value || 'Poonawalla Fincorp';
-        const tenure = document.getElementById('stEmiTenure')?.value || '6 Months';
-        const ref = document.getElementById('stEmiRef')?.value || 'Instant Approval';
-        paymentType = `HOME EMI - ${bank}`;
-        paymentRef = `${tenure} | Ref: ${ref}`;
-        isPrepaid = true;
-        isEmi = true;
-      } else if (storePayMode === 'PREPAID_CARD') {
-        const bank = document.getElementById('stCardBank')?.value || 'Card';
-        const ref = document.getElementById('stCardRef')?.value || 'XXXX';
-        paymentType = `PREPAID CARD (${bank})`;
-        paymentRef = `Card xx${ref} (₹1,000 Prepaid Off)`;
-        isPrepaid = true;
-      }
-
-      const mainItem = storeCart[0];
-      const allNames = storeCart.map(i => `${i.name} x${i.qty}`).join(' + ');
-      const isExch = document.getElementById('chkExchangeToggle')?.checked;
-      const oldModel = document.getElementById('chkOldModel')?.value || 'Old Smartphone';
-
-      const now = new Date();
-      const orderRecord = {
-        orderId: `ORD-CP-${501 + onlineOrdersList.length}`,
-        source: 'STOREFRONT',
-        timestamp: now.getTime(),
-        dateStr: now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-        timeStr: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-        custName,
-        custPhone,
-        address,
-        itemId: mainItem.id,
-        itemName: allNames,
-        color: mainItem.color,
-        variant: mainItem.variant,
-        imei: 'Assigned at Dispatch',
-        specs: mainItem.specs,
-        price: totals.rawSum,
-        exchangeDeduction: totals.exVal,
-        exchangeInfo: isExch ? oldModel : '',
-        netPayable: totals.net,
-        paymentType,
-        paymentRef,
-        isPrepaid,
-        isEmi,
-        status: "NEW"
-      };
-
-      playSfx('SUCCESS');
-      await persistOnlineOrder(orderRecord);
-
-      storeCart = [];
-      updateHeaderCounts();
-      closeCartDrawer();
-      openTrackOrdersModal();
-      showStoreToast(`🎉 Order ${orderRecord.orderId} Placed & Synced with Cell Planet Khammam!`);
-    };
-
-    window.openTrackOrdersModal = function() {
-      playSfx('CLICK');
-      renderMyOrdersList();
-      const modal = document.getElementById('trackOrdersModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    };
-
-    window.closeTrackOrdersModal = function() {
-      const modal = document.getElementById('trackOrdersModal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    };
-
-    function renderMyOrdersList() {
-      const container = document.getElementById('myOrdersContainer');
       if (!container) return;
-
-      if (customerOrders.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-xs text-neutral-500">You haven't placed any orders yet.</div>`;
+      if (shoppingBag.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 rounded-2xl bg-[#F5F5F7] text-center text-xs text-[#86868B]">
+            Your shopping bag is empty. Select a mobile or accessory from the showroom catalog.
+          </div>`;
         return;
       }
 
-      container.innerHTML = customerOrders.map(ord => `
-        <div class="p-4 rounded-2xl bg-[#f5f5f7] space-y-2 text-xs">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-2">
-            <div>
-              <span class="font-bold text-sm text-neutral-900">${esc(ord.orderId)}</span>
-              <span class="text-neutral-500 ml-2">${esc(ord.dateStr)} • ${esc(ord.timeStr)}</span>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-semibold text-[11px]">
-              🚚 ${esc(STATUS_LABEL[ord.status] || ord.status || 'Order received')}
-            </span>
+      container.innerHTML = shoppingBag.map(item => `
+        <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-between gap-3">
+          <div>
+            <div class="font-extrabold text-xs text-[#1D1D1F]">${item.name}</div>
+            <div class="text-[11px] font-semibold text-[#0071E3] mt-0.5">${item.variant} • Color: ${item.color}</div>
+            <div class="text-xs font-bold text-[#1D1D1F] mt-1">${formatINR(item.price)} × ${item.qty}</div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div>
-              <div class="font-bold text-neutral-900">${esc(ord.itemName)}</div>
-              <div class="text-neutral-600">Variant: ${esc(ord.color)} | ${esc(ord.variant)} (Sealed Box)</div>
-              <div class="text-neutral-500">Deliver To: ${esc(ord.custName)} (${esc(ord.custPhone)}) — ${esc(ord.address)}</div>
-            </div>
-            <div class="sm:text-right">
-              <div class="text-base font-bold text-neutral-900">${inr(ord.netPayable)}</div>
-              <div class="font-semibold text-[#0071e3]">${esc(ord.paymentType)}</div>
-              <div class="text-[11px] text-neutral-500">${esc(ord.paymentRef)}</div>
-            </div>
-          </div>
-          <div class="flex items-center justify-end gap-2 pt-2">
-            <button type="button" onclick="sendCustomerOrderToStoreWhatsApp('${esc(ord.orderId)}')" class="btn-emerald px-4 py-1.5 text-xs flex items-center gap-1">
-              <i class="ph-bold ph-whatsapp-logo"></i>
-              <span>Send Order to Store WhatsApp</span>
-            </button>
+          <div class="flex items-center gap-1.5">
+            <button onclick="updateBagQty('${item.bagKey.replace(/'/g, "\\'")}', -1)" class="w-7 h-7 rounded-lg bg-white border border-[#D2D2D7] font-bold text-xs">-</button>
+            <span class="text-xs font-extrabold px-1.5">${item.qty}</span>
+            <button onclick="updateBagQty('${item.bagKey.replace(/'/g, "\\'")}', 1)" class="w-7 h-7 rounded-lg bg-white border border-[#D2D2D7] font-bold text-xs">+</button>
           </div>
         </div>
       `).join('');
     }
 
-    window.sendCustomerOrderToStoreWhatsApp = function(orderId) {
-      const ord = customerOrders.find(x => x.orderId === orderId);
-      if (!ord) return;
-      const msg =
-`🛒 *NEW ONLINE HOME ORDER — ${STORE_INFO.name}*
-📦 *Order ID:* ${ord.orderId}
-👤 *Customer:* ${ord.custName} (${ord.custPhone})
-📍 *Delivery Address:* ${ord.address}
---------------------------------
-📱 *Ordered Item:* ${ord.itemName} (${ord.color} • ${ord.variant})
-${ord.exchangeDeduction > 0 ? `🔄 *Old Phone Exchange:* -${inr(ord.exchangeDeduction)} (${ord.exchangeInfo})\n` : ''}💳 *Payment / Finance:* ${ord.paymentType} (${ord.paymentRef})
-💰 *NET PAYABLE TOTAL: ${inr(ord.netPayable)}*
---------------------------------
-Please confirm express Khammam delivery!`;
-
-      window.open(`https://wa.me/91${STORE_INFO.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-    };
-
-    function reloadFromStorageSync() {
-      loadLocalState();
-      syncStorefrontCatalogFromErp();
-      updateHeaderCounts();
-      renderMyOrdersList();
+    function toggleCartDrawer(show) {
+      const el = document.getElementById('cart-drawer-backdrop');
+      if (!el) return;
+      el.classList.toggle('hidden', !show);
+      if (show) renderBag();
     }
 
-    if (vfsBroadcast) {
-      vfsBroadcast.onmessage = (ev) => {
-        if (ev.data && (ev.data.type === 'VFS_UPDATED' || ev.data.type === 'ONLINE_ORDER_PLACED')) {
-          reloadFromStorageSync();
-        }
-      };
-    }
-
-    window.addEventListener('storage', (ev) => {
-      if (ev.key === 'cp_local_inventory' || ev.key === 'cp_online_orders') {
-        reloadFromStorageSync();
+    function placeCustomerOrder() {
+      if (shoppingBag.length === 0) {
+        showToast('Your shopping bag is empty');
+        return;
       }
-    });
+      const name = (document.getElementById('cust-name')?.value || '').trim();
+      const phone = (document.getElementById('cust-phone')?.value || '').trim();
+      const deliveryMode = document.getElementById('cust-delivery-mode')?.value || 'Store Pickup';
+      const payMode = document.getElementById('cust-pay-mode')?.value || 'Pay at Store / COD';
+      const address = (document.getElementById('cust-address')?.value || '').trim() || 'Store Pickup - Wyra Road, Khammam';
 
-    async function initCustomerFirebaseSync() {
+      if (!name || phone.length < 10) {
+        showToast('Please enter your Name and 10-digit Mobile Number');
+        return;
+      }
+
+      const totalAmount = shoppingBag.reduce((s, i) => s + (i.price * i.qty), 0);
+      const orderId = 'ORD-' + Date.now().toString().slice(-6);
+
+      const newOrder = {
+        orderId,
+        customerName: name,
+        customerPhone: phone,
+        customerAddress: `${deliveryMode} • ${address}`,
+        paymentMode: payMode,
+        status: 'PENDING',
+        createdAt: new Date().toLocaleString('en-IN'),
+        total: totalAmount,
+        items: shoppingBag.map(i => ({
+          sku: i.sku,
+          name: `${i.name} (${i.color})`,
+          variant: i.variant,
+          color: i.color,
+          qty: i.qty,
+          price: i.price
+        }))
+      };
+
       try {
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-          const fbAppMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js");
-          const fbAuthMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
-          const fbFsMod = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
+        existing.unshift(newOrder);
+        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(existing));
+      } catch (e) {
+        console.error(e);
+      }
 
-          fbSetDoc = fbFsMod.setDoc;
-          fbDoc = fbFsMod.doc;
+      shoppingBag = [];
+      renderBag();
+      toggleCartDrawer(false);
+      updateMyOrdersBadge();
+      showToast(`Order ${orderId} sent to Cell Planet POS!`);
+      openTrackOrdersModal();
+    }
 
-          const firebaseConfig = JSON.parse(__firebase_config);
-          const app = fbAppMod.getApps().length ? fbAppMod.getApp() : fbAppMod.initializeApp(firebaseConfig);
-          db = fbFsMod.getFirestore(app);
-          auth = fbAuthMod.getAuth(app);
-
-          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-            await fbAuthMod.signInWithCustomToken(auth, __initial_auth_token);
-          } else {
-            await fbAuthMod.signInAnonymously(auth);
-          }
-          userId = auth.currentUser?.uid || crypto.randomUUID();
-
-          const invColRef = fbFsMod.collection(db, 'artifacts', appId, 'public', 'data', 'inventory');
-          fbFsMod.onSnapshot(invColRef, (snapshot) => {
-            if (!snapshot.empty) {
-              inventoryList = snapshot.docs.map(d => d.data());
-              try { localStorage.setItem('cp_local_inventory', JSON.stringify(inventoryList)); } catch (e) {}
-              syncStorefrontCatalogFromErp();
-            }
-          }, () => {});
-
-          const ordColRef = fbFsMod.collection(db, 'artifacts', appId, 'public', 'data', 'online_orders');
-          fbFsMod.onSnapshot(ordColRef, (snapshot) => {
-            if (!snapshot.empty) {
-              onlineOrdersList = snapshot.docs.map(d => d.data());
-              onlineOrdersList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-              customerOrders = [...onlineOrdersList];
-              saveLocalOrdersBackup();
-              updateHeaderCounts();
-              renderMyOrdersList();
-            }
-          }, () => {});
-        }
+    function updateMyOrdersBadge() {
+      try {
+        const orders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
+        const badge = document.getElementById('my-orders-badge');
+        if (badge) badge.textContent = String(orders.length);
       } catch (e) {}
     }
 
+    function openTrackOrdersModal() {
+      const list = document.getElementById('my-orders-list');
+      const modal = document.getElementById('track-orders-modal');
+      if (!list || !modal) return;
+
+      let orders = [];
+      try {
+        orders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
+      } catch (e) {}
+
+      if (orders.length === 0) {
+        list.innerHTML = `<div class="p-6 rounded-2xl bg-[#F5F5F7] text-center text-xs text-[#86868B]">No orders placed yet.</div>`;
+      } else {
+        list.innerHTML = orders.map(o => `
+          <div class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-[#0071E3]">${o.orderId}</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${o.status === 'COMPLETED' ? 'bg-[#E8F8EE] text-[#1D8348]' : 'bg-[#FFF8E6] text-[#B25000]'}">${o.status || 'PENDING'}</span>
+            </div>
+            <div class="text-xs font-bold text-[#1D1D1F]">${o.customerName} • ${o.customerPhone}</div>
+            <div class="text-[11px] text-[#424245]">${(o.items || []).map(i => `${i.name} × ${i.qty}`).join(', ')}</div>
+            <div class="flex items-center justify-between pt-2 border-t border-[#E5E5EA] text-xs">
+              <span class="text-[#86868B]">${o.createdAt || ''}</span>
+              <span class="font-extrabold text-[#1D1D1F]">${formatINR(o.total)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeTrackOrdersModal() {
+      document.getElementById('track-orders-modal').classList.add('hidden');
+    }
+
+    // Optional sample loader if user wants to preview storefront before adding items in ERP
+    function loadDemoSampleMobiles() {
+      const sampleLot = [
+        {
+          id: 'SKU-VIVO-V40',
+          sku: 'SKU-VIVO-V40',
+          name: 'Vivo V40 5G',
+          brand: 'Vivo',
+          category: 'Smartphones',
+          variant: '8GB / 256GB',
+          color: 'Lotus Purple, Ganges Blue',
+          specs: 'ZEISS 50MP OIS Portrait Camera • 5500mAh Battery • 80W FlashCharge',
+          price: 36999,
+          mrp: 41999,
+          cost: 33500,
+          gst: 18,
+          stock: 4,
+          units: [
+            { unitId: 'U1', imei: '864210987654321', color: 'Lotus Purple', variant: '8GB / 256GB' },
+            { unitId: 'U2', imei: '864210987654322', color: 'Lotus Purple', variant: '8GB / 256GB' },
+            { unitId: 'U3', imei: '864210987654323', color: 'Ganges Blue', variant: '8GB / 256GB' },
+            { unitId: 'U4', imei: '864210987654324', color: 'Titanium Grey', variant: '8GB / 256GB' }
+          ]
+        },
+        {
+          id: 'SKU-IPHONE-16',
+          sku: 'SKU-IPHONE-16',
+          name: 'Apple iPhone 16',
+          brand: 'Apple',
+          category: 'Smartphones',
+          variant: '8GB / 128GB',
+          color: 'Ultramarine, Teal',
+          specs: 'A18 Bionic Chip • 48MP Fusion Camera • Camera Control Button',
+          price: 77900,
+          mrp: 79900,
+          cost: 73200,
+          gst: 18,
+          stock: 2,
+          units: [
+            { unitId: 'U5', imei: '359876543210111', color: 'Ultramarine', variant: '8GB / 128GB' },
+            { unitId: 'U6', imei: '359876543210112', color: 'Teal', variant: '8GB / 128GB' }
+          ]
+        }
+      ];
+      localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify(sampleLot));
+      syncLiveStock(false);
+      showToast('Loaded sample multi-color mobiles!');
+    }
+
+    // AI Advisor Modal
+    function openAiAdvisorModal() {
+      document.getElementById('ai-advisor-modal').classList.remove('hidden');
+    }
+    function closeAiAdvisorModal() {
+      document.getElementById('ai-advisor-modal').classList.add('hidden');
+    }
+
+    async function askStoreAiAdvisor() {
+      const q = (document.getElementById('ai-advisor-input')?.value || '').trim();
+      const out = document.getElementById('ai-advisor-output');
+      const btn = document.getElementById('ai-advisor-btn');
+      if (!q || !out) return;
+
+      out.textContent = 'Analyzing live showroom stock...';
+      if (btn) btn.disabled = true;
+
+      const stockSummary = storeInventory.length > 0
+        ? storeInventory.map(i => `${i.name} (${i.variant}) - Colors: ${Object.keys(getColorSummaryForItem(i)).join('/')} - Price: ₹${i.price} - Specs: ${i.specs || '5G Smartphone'}`).join('\n')
+        : 'Currently 0 items in stock (clean slate).';
+
+      const apiKey = localStorage.getItem(STORAGE_KEYS.AI_KEY) || DEFAULT_USER_AI_KEY;
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `You are the helpful sales advisor at Cell Planet Mobile Showroom in Khammam. Answer concisely in 3 short bullet points based on our live stock:\n${stockSummary}\n\nCustomer Question: ${q}`
+              }]
+            }]
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (reply) {
+            out.textContent = reply.trim();
+            if (btn) btn.disabled = false;
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // Instant local smart advisor fallback if offline
+      if (storeInventory.length === 0) {
+        out.textContent = 'Our catalog is currently in a fresh clean-slate state. Once you add mobile lots in the Admin ERP Suite, I will recommend exact matching models and colors from your live stock!';
+      } else {
+        const matches = storeInventory.slice(0, 3).map(i => `• ${i.name} (${i.variant}) at ${formatINR(i.price)} — Available in ${Object.keys(getColorSummaryForItem(i)).join(', ')}`).join('\n');
+        out.textContent = `Here are our top matching showroom picks ready for instant delivery in Khammam:\n${matches}`;
+      }
+      if (btn) btn.disabled = false;
+    }
+
+    function openResetStoreModal() {
+      document.getElementById('reset-store-modal').classList.remove('hidden');
+    }
+    function closeResetStoreModal() {
+      document.getElementById('reset-store-modal').classList.add('hidden');
+    }
+    function confirmCleanResetStore() {
+      localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
+      localStorage.removeItem('cp_local_daily_invoices');
+      localStorage.setItem(STORAGE_KEYS.CLEAN_RESET_FLAG, 'true');
+      shoppingBag = [];
+      closeResetStoreModal();
+      syncLiveStock(false);
+      renderBag();
+      showToast('All store & POS data wiped clean to zero!');
+    }
+
+    // Listen for live stock updates from Admin ERP tab
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEYS.INV || e.key === STORAGE_KEYS.ORDERS) {
+        syncLiveStock(false);
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
-      loadLocalState();
-      syncStorefrontCatalogFromErp();
-      updateCustomerAuthUI();
-      updateHeaderCounts();
-      renderCheckoutSavedAddressChips();
-      initCustomerFirebaseSync();
+      ensureCleanSlateAndApiKey();
+      syncLiveStock(false);
+      renderBag();
     });
   </script>
 </body>
