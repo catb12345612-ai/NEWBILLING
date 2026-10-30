@@ -10,1055 +10,564 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     :root {
-      --apple-bg: #F5F5F7;
-      --apple-card: #FFFFFF;
-      --apple-text: #1D1D1F;
-      --apple-muted: #86868B;
-      --apple-blue: #0071E3;
-      --apple-blue-hover: #0077ED;
-      --apple-green: #34C759;
-      --apple-border: #E5E5EA;
+      --bg-page: #F4F5F8;
+      --bg-card: #FFFFFF;
+      --text-main: #111827;
+      --text-muted: #6B7280;
+      --accent-blue: #0066CC;
+      --border-soft: #E5E7EB;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      -webkit-tap-highlight-color: transparent;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--apple-bg);
-      color: var(--apple-text);
+      background-color: var(--bg-page);
+      color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    .apple-glass-nav {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 1px solid var(--apple-border);
+    .store-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(17, 24, 39, 0.04);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .store-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
     }
 
-    .apple-card {
-      background: var(--apple-card);
-      border: 1px solid var(--apple-border);
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    .store-input {
+      background: #FFFFFF;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      width: 100%;
     }
-
-    .apple-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
-      border-color: #D2D2D7;
+    .store-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.14);
     }
 
     .btn-primary {
-      background: var(--apple-blue);
+      background: #0066CC;
       color: #FFFFFF;
-      font-weight: 600;
-      border-radius: 12px;
+      font-weight: 700;
+      border-radius: 11px;
       transition: all 0.15s ease;
       cursor: pointer;
     }
-    .btn-primary:hover {
-      background: var(--apple-blue-hover);
-      transform: translateY(-1px);
-    }
+    .btn-primary:hover { background: #0052A3; }
 
-    .btn-secondary {
-      background: #F2F2F7;
-      color: var(--apple-text);
-      font-weight: 600;
-      border-radius: 12px;
-      border: 1px solid #E5E5EA;
+    .btn-soft {
+      background: #F3F4F6;
+      color: #1F2937;
+      border: 1px solid #D1D5DB;
+      font-weight: 700;
+      border-radius: 11px;
       transition: all 0.15s ease;
       cursor: pointer;
     }
-    .btn-secondary:hover {
-      background: #E5E5EA;
-    }
+    .btn-soft:hover { background: #E5E7EB; }
 
-    .apple-input {
-      background: #FFFFFF;
-      border: 1.5px solid #D2D2D7;
-      border-radius: 12px;
-      padding: 11px 14px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--apple-text);
-      width: 100%;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-    .apple-input:focus {
-      outline: none;
-      border-color: var(--apple-blue);
-      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.14);
-    }
-
-    .cat-pill {
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #424245;
-      background: #FFFFFF;
-      border: 1px solid #E5E5EA;
-      transition: all 0.15s ease;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .cat-pill.active {
-      background: #1D1D1F;
-      color: #FFFFFF;
-      border-color: #1D1D1F;
-    }
-
-    .color-chip {
+    .color-pill {
       padding: 4px 10px;
       border-radius: 8px;
       font-size: 11px;
-      font-weight: 600;
-      border: 1.5px solid #E5E5EA;
-      background: #F5F5F7;
-      color: #1D1D1F;
+      font-weight: 700;
+      border: 1.5px solid #E5E7EB;
+      background: #F9FAFB;
+      color: #1F2937;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
-    .color-chip.active {
-      border-color: var(--apple-blue);
-      background: rgba(0, 113, 227, 0.08);
-      color: var(--apple-blue);
+    .color-pill.active {
+      border-color: #0066CC;
+      background: #EFF6FF;
+      color: #0066CC;
     }
-
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #D2D2D7; border-radius: 99px; }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- TOP STORE ANNOUNCEMENT BAR -->
-  <div class="bg-[#1D1D1F] text-white text-xs py-2 px-4">
+  <!-- TOP BAR -->
+  <div class="bg-slate-900 text-white text-xs py-2 px-4">
     <div class="max-w-[1360px] mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2 font-medium">
-        <span class="w-2 h-2 rounded-full bg-[#34C759]"></span>
-        <span>Cell Planet Official Store • Wyra Road, Opp. Collector Office, Khammam</span>
+      <div class="flex items-center gap-2 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Cell Planet Official Online Store • Wyra Road, Opp. Collector Office, Khammam</span>
       </div>
-      <div class="flex items-center gap-4 text-[11px] text-[#A1A1A6]">
-        <span><i class="ph-fill ph-seal-check text-[#34C759]"></i> 100% Sealed &amp; GST Billed</span>
-        <span><i class="ph-fill ph-truck text-[#0A84FF]"></i> Express 2-Hour Khammam Delivery</span>
-        <a href="tel:+919848012345" class="text-white font-semibold hover:underline"><i class="ph-bold ph-phone"></i> +91 98480 12345</a>
+      <div class="flex items-center gap-4 text-[11px] text-slate-300">
+        <span>✓ Admin Verified Rates &amp; Finance EMI Available</span>
+        <span>✓ 100% Sealed GST Invoice</span>
       </div>
     </div>
   </div>
 
-  <!-- STICKY APPLE GLASS HEADER -->
-  <header class="apple-glass-nav sticky top-0 z-40">
-    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <!-- Brand -->
-      <div class="flex items-center gap-3 cursor-pointer" onclick="resetFilters()">
-        <div class="w-10 h-10 rounded-xl bg-[#1D1D1F] text-white flex items-center justify-center shadow-sm">
-          <i class="ph-fill ph-planet text-xl text-[#D4AF37]"></i>
+  <!-- STICKY HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-[1360px] mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="resetStoreFilters()">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+          <i class="ph-fill ph-planet text-xl text-amber-400"></i>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-base tracking-tight text-[#1D1D1F]">Cell Planet</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#E8F8EE] text-[#1D8348]">Live Store</span>
-          </div>
-          <p class="text-[11px] text-[#86868B] font-medium">Khammam Official Showroom Catalog</p>
+          <span class="font-extrabold text-base text-slate-900">Cell Planet Khammam</span>
+          <p class="text-[11px] font-medium text-slate-500">Live Showroom Catalog • Cash &amp; Finance EMI</p>
         </div>
       </div>
 
-      <!-- Search Bar -->
-      <div class="flex-1 max-w-xl relative">
-        <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[#86868B]"></i>
-        <input id="store-search" type="text" oninput="renderStoreCatalog()" placeholder="Search iPhone, Vivo, Samsung, 8GB/256GB, or color..." class="apple-input !pl-10 !pr-20 !py-2 !bg-[#F5F5F7] focus:!bg-white text-xs sm:text-sm">
-        <button onclick="openAiAdvisorModal()" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-[#0071E3] text-white text-[11px] font-bold flex items-center gap-1 hover:bg-[#0077ED]" title="Ask AI Mobile Advisor">
-          <i class="ph-fill ph-sparkle"></i> AI Help
-        </button>
+      <!-- Search + AI Image Phone Finder -->
+      <div class="flex-1 max-w-xl flex items-center gap-2">
+        <div class="relative flex-1">
+          <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input id="store-search" type="text" oninput="renderStoreCatalog()" placeholder="Search Vivo, iPhone, Samsung, color, or specs..." class="store-input !pl-10 !py-2">
+        </div>
+        <label class="btn-soft px-3 py-2 text-xs flex items-center gap-1.5 whitespace-nowrap cursor-pointer" title="Upload a phone image to see its Name, Model & Specifications">
+          <i class="ph-bold ph-camera text-blue-600 text-base"></i>
+          <span>AI Photo Finder</span>
+          <input type="file" accept="image/*" class="hidden" onchange="recognizePhonePhotoInStore(event)">
+        </label>
       </div>
 
-      <!-- Right Actions -->
       <div class="flex items-center gap-2">
-        <button onclick="syncLiveStock(true)" class="btn-secondary px-3 py-2 text-xs flex items-center gap-1.5" title="Sync latest stock from Admin ERP">
-          <i class="ph-bold ph-arrows-clockwise text-[#0071E3]"></i>
-          <span class="hidden md:inline">Sync Stock</span>
+        <button onclick="syncFromErp(true)" class="btn-soft px-3 py-2 text-xs flex items-center gap-1.5">
+          <i class="ph-bold ph-arrows-clockwise text-blue-600"></i> Sync Stock
         </button>
-        <button onclick="openTrackOrdersModal()" class="btn-secondary px-3 py-2 text-xs flex items-center gap-1.5">
-          <i class="ph-bold ph-package text-[#1D1D1F]"></i>
-          <span class="hidden sm:inline">My Orders</span>
-          <span id="my-orders-badge" class="px-1.5 py-0.2 rounded-full bg-[#E5E5EA] text-[#1D1D1F] text-[10px] font-extrabold">0</span>
+        <button onclick="openResetStoreModal()" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 border border-red-200 text-xs font-extrabold">
+          <i class="ph-bold ph-trash"></i> Reset to 0
         </button>
-        <button onclick="toggleCartDrawer(true)" class="btn-primary px-4 py-2 text-xs sm:text-sm flex items-center gap-2 shadow-sm">
+        <button onclick="toggleBagModal(true)" class="btn-primary px-4 py-2 text-xs flex items-center gap-2">
           <i class="ph-bold ph-shopping-bag text-base"></i>
           <span>Bag</span>
-          <span id="cart-count-badge" class="px-1.5 py-0.5 rounded-full bg-white text-[#0071E3] text-[11px] font-extrabold">0</span>
+          <span id="bag-count-badge" class="px-1.5 py-0.5 rounded-full bg-white text-blue-700 text-[10px] font-extrabold">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- CLEAN HERO + FILTERS BAR -->
-  <section class="bg-white border-b border-[#E5E5EA]">
-    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 py-5">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#F2F2F7]">
+  <!-- AI PHOTO RECOGNITION BANNER (SHOWN WHEN USER UPLOADS PHONE PHOTO) -->
+  <div id="store-ai-banner" class="hidden max-w-[1360px] mx-auto w-full px-4 pt-4">
+    <div class="store-card p-4 bg-blue-50/80 border-blue-200 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img id="store-ai-thumb" src="" alt="Phone" class="w-14 h-14 rounded-xl object-contain bg-white p-1 border border-slate-200">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1D1D1F]">Shop Verified Smartphones &amp; Accessories.</h1>
-          <p class="text-xs sm:text-sm text-[#86868B] mt-1">Real-time showroom stock with exact color selection, official GST invoice, and instant store pickup or Khammam delivery.</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <div class="px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs font-semibold flex items-center gap-2">
-            <span class="text-[#86868B]">Models in Stock:</span>
-            <span id="stat-live-models" class="font-extrabold text-[#1D1D1F]">0</span>
-          </div>
-          <div class="px-3.5 py-2 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs font-semibold flex items-center gap-2">
-            <span class="text-[#86868B]">Total Pieces Ready:</span>
-            <span id="stat-live-pieces" class="font-extrabold text-[#0071E3]">0</span>
-          </div>
-          <button onclick="openResetStoreModal()" class="px-3 py-2 rounded-xl bg-[#FFF2F2] text-[#FF3B30] border border-[#FFD6D6] text-xs font-bold hover:bg-[#FFE5E5]">
-            <i class="ph-bold ph-trash"></i> Reset Store
-          </button>
+          <span class="text-[10px] font-extrabold uppercase text-blue-700">AI Phone Image Recognition Result</span>
+          <h3 id="store-ai-title" class="text-sm font-extrabold text-slate-900">Recognizing...</h3>
+          <p id="store-ai-specs" class="text-xs text-slate-600 mt-0.5"></p>
         </div>
       </div>
-
-      <!-- Category & Sort Bar -->
-      <div class="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div class="flex items-center gap-2 overflow-x-auto custom-scroll pb-1" id="category-pills">
-          <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-pill active">All Products</button>
-          <button onclick="setCategory('Smartphones')" data-cat="Smartphones" class="cat-pill">Smartphones</button>
-          <button onclick="setCategory('Accessories')" data-cat="Accessories" class="cat-pill">Audio &amp; Accessories</button>
-          <button onclick="setCategory('Tablets')" data-cat="Tablets" class="cat-pill">Tablets &amp; Watches</button>
-        </div>
-        <div class="flex items-center gap-2">
-          <select id="brand-filter" onchange="renderStoreCatalog()" class="apple-input !w-auto !py-1.5 !px-3 !text-xs font-semibold">
-            <option value="ALL">All Brands</option>
-          </select>
-          <select id="sort-filter" onchange="renderStoreCatalog()" class="apple-input !w-auto !py-1.5 !px-3 !text-xs font-semibold">
-            <option value="featured">Sort: Latest Stock</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
-        </div>
-      </div>
+      <button onclick="document.getElementById('store-ai-banner').classList.add('hidden')" class="btn-soft px-3 py-1.5 text-xs">Dismiss</button>
     </div>
-  </section>
+  </div>
 
-  <!-- MAIN CATALOG GRID -->
-  <main class="max-w-[1360px] mx-auto w-full px-4 sm:px-6 py-8 flex-1">
-    <!-- Empty State (Shown when clean slate has 0 items) -->
-    <div id="store-empty-state" class="hidden apple-card p-10 text-center max-w-xl mx-auto my-8">
-      <div class="w-16 h-16 rounded-2xl bg-[#F2F2F7] text-[#0071E3] flex items-center justify-center mx-auto mb-4">
-        <i class="ph-duotone ph-DeviceMobileCamera text-3xl"></i>
+  <!-- MAIN CATALOG -->
+  <main class="max-w-[1360px] mx-auto w-full px-4 py-6 flex-1 space-y-5">
+    <!-- Empty State -->
+    <div id="store-empty-box" class="hidden store-card p-10 text-center max-w-xl mx-auto my-6 space-y-3">
+      <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+        <i class="ph-bold ph-device-mobile text-3xl"></i>
       </div>
-      <h2 class="text-xl font-extrabold text-[#1D1D1F]">Store Catalog is Clean &amp; Ready</h2>
-      <p class="text-xs sm:text-sm text-[#86868B] mt-2 leading-relaxed">
-        All old dummy data has been cleared. Any mobile lot or accessory you add in the <strong>Cell Planet Admin ERP / POS Suite</strong> automatically appears here with live colors and stock count.
+      <h2 class="text-lg font-extrabold text-slate-900">Online Store Catalog is Clean (0 Items)</h2>
+      <p class="text-xs text-slate-500 leading-relaxed">
+        All old data has been deleted. Add a mobile or 10-piece lot in the <strong>Executive Admin &amp; Staff POS Suite</strong> and it will appear here automatically with Admin-approved Cash Price, Finance Price, and Discount.
       </p>
-      <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
-        <button onclick="syncLiveStock(true)" class="btn-primary px-5 py-2.5 text-xs flex items-center gap-2">
-          <i class="ph-bold ph-arrows-clockwise"></i> Check Live ERP Stock
-        </button>
-        <button onclick="loadDemoSampleMobiles()" class="btn-secondary px-4 py-2.5 text-xs flex items-center gap-1.5">
-          <i class="ph-bold ph-plus-circle text-[#0071E3]"></i> Load 4 Sample Demo Mobiles
-        </button>
+      <div class="flex justify-center gap-2 pt-2">
+        <button onclick="syncFromErp(true)" class="btn-primary px-4 py-2.5 text-xs">Sync Live ERP Stock</button>
       </div>
     </div>
 
-    <!-- Product Grid -->
-    <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    <div id="store-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
   </main>
 
-  <!-- CLEAN FOOTER -->
-  <footer class="bg-white border-t border-[#E5E5EA] py-6 px-4 sm:px-6 mt-12">
-    <div class="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#86868B]">
-      <div class="flex items-center gap-2 font-semibold text-[#1D1D1F]">
-        <i class="ph-fill ph-planet text-[#0071E3] text-lg"></i>
-        <span>Cell Planet Khammam • Official Online Storefront</span>
+  <!-- SHOPPING BAG & ORDER MODAL -->
+  <div id="bag-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900">Your Order Bag</h3>
+        <button onclick="toggleBagModal(false)" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><i class="ph-bold ph-x"></i></button>
       </div>
-      <div>Wyra Road, Opp. Collector Office, Khammam, Telangana 507002 • GST Verified Dealer</div>
-    </div>
-  </footer>
 
-  <!-- PRODUCT DETAIL & COLOR PICKER MODAL -->
-  <div id="product-detail-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#E5E5EA] max-h-[90vh] overflow-y-auto custom-scroll">
-      <div class="flex items-start justify-between gap-4 pb-4 border-b border-[#F2F2F7]">
+      <div id="bag-items-list" class="space-y-2.5"></div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+        <div class="text-xs font-extrabold text-slate-900">Customer Details &amp; Payment Preference</div>
+        <div class="grid grid-cols-2 gap-2">
+          <input id="ord-cust-name" type="text" placeholder="Your Full Name *" class="store-input !py-2 !text-xs">
+          <input id="ord-cust-phone" type="tel" maxlength="10" placeholder="10-Digit Mobile *" class="store-input !py-2 !text-xs">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <select id="ord-pay-type" onchange="renderBag()" class="store-input !py-2 !text-xs">
+            <option value="Cash / UPI Offer Rate">Cash / UPI Offer Rate</option>
+            <option value="Finance / EMI Scheme">Finance / EMI Scheme (Bajaj/IDFC)</option>
+          </select>
+          <input id="ord-cust-addr" type="text" placeholder="Area in Khammam / Store Pickup" class="store-input !py-2 !text-xs">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-200">
         <div>
-          <span id="detail-brand" class="text-[11px] font-extrabold uppercase tracking-wider text-[#0071E3]">BRAND</span>
-          <h3 id="detail-name" class="text-xl sm:text-2xl font-extrabold text-[#1D1D1F] mt-0.5">Model Name</h3>
-          <p id="detail-variant" class="text-xs font-semibold text-[#86868B] mt-0.5">Variant</p>
+          <div class="text-[11px] font-bold text-slate-500">Total Payable</div>
+          <div id="bag-total-txt" class="text-xl font-extrabold text-slate-900">₹0</div>
         </div>
-        <button onclick="closeProductDetailModal()" class="w-9 h-9 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#1D1D1F] hover:bg-[#E5E5EA]">
-          <i class="ph-bold ph-x"></i>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6">
-        <div class="bg-[#F5F5F7] rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[220px]">
-          <img id="detail-img" src="" alt="Product" class="max-h-44 object-contain">
-          <span id="detail-stock-badge" class="mt-4 px-3 py-1 rounded-full bg-[#E8F8EE] text-[#1D8348] text-[11px] font-bold">In Stock</span>
-        </div>
-        <div class="flex flex-col justify-between space-y-4">
-          <div>
-            <div class="text-xs font-bold text-[#86868B] uppercase">Cell Planet Offer Price</div>
-            <div class="flex items-baseline gap-2.5 mt-1">
-              <span id="detail-price" class="text-3xl font-extrabold text-[#1D1D1F]">₹0</span>
-              <span id="detail-mrp" class="text-sm text-[#86868B] line-through">₹0</span>
-            </div>
-            <p class="text-[11px] text-[#1D8348] font-semibold mt-1"><i class="ph-fill ph-check-circle"></i> Inclusive of 18% GST • Official Brand Warranty</p>
-
-            <!-- Color Selector from Multi-Piece Units -->
-            <div class="mt-4">
-              <label class="block text-xs font-bold text-[#1D1D1F] mb-2">Available Colors in Showroom:</label>
-              <div id="detail-color-list" class="flex flex-wrap gap-2"></div>
-            </div>
-
-            <!-- Specifications -->
-            <div class="mt-4 p-3.5 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA]">
-              <div class="text-[11px] font-bold text-[#86868B] uppercase mb-1">Key Specifications</div>
-              <p id="detail-specs" class="text-xs font-medium text-[#1D1D1F] leading-relaxed">Official Sealed Pack</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2.5 pt-2">
-            <button id="detail-add-btn" class="btn-secondary py-3 text-xs font-bold flex items-center justify-center gap-1.5">
-              <i class="ph-bold ph-shopping-bag"></i> Add to Bag
-            </button>
-            <button id="detail-buy-btn" class="btn-primary py-3 text-xs font-bold flex items-center justify-center gap-1.5">
-              <i class="ph-bold ph-lightning"></i> Buy Now
-            </button>
-          </div>
-        </div>
+        <button onclick="submitStoreOrder()" class="btn-primary px-6 py-3 text-xs">Send Order to Showroom POS</button>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE-OVER SHOPPING BAG & CHECKOUT DRAWER -->
-  <div id="cart-drawer-backdrop" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm flex justify-end">
-    <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between overflow-hidden">
-      <!-- Drawer Header -->
-      <div class="p-5 border-b border-[#E5E5EA] flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-[#0071E3] text-white flex items-center justify-center">
-            <i class="ph-bold ph-shopping-bag text-lg"></i>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-base text-[#1D1D1F]">Your Shopping Bag</h3>
-            <p class="text-[11px] text-[#86868B]">Instant sync with Cell Planet Khammam POS</p>
-          </div>
-        </div>
-        <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#1D1D1F]">
-          <i class="ph-bold ph-x"></i>
-        </button>
-      </div>
-
-      <!-- Bag Items + Customer Form -->
-      <div class="flex-1 overflow-y-auto p-5 space-y-5 custom-scroll">
-        <div id="cart-items-container" class="space-y-2.5"></div>
-
-        <!-- Customer Checkout Details -->
-        <div id="checkout-form-box" class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-3">
-          <div class="text-xs font-extrabold uppercase tracking-wider text-[#1D1D1F] flex items-center gap-1.5">
-            <i class="ph-fill ph-user-circle text-[#0071E3] text-base"></i> Customer &amp; Delivery Details
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-[#424245] mb-1">Full Name *</label>
-            <input id="cust-name" type="text" placeholder="Enter your name" class="apple-input !py-2 !text-xs">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-[#424245] mb-1">10-Digit Mobile / WhatsApp Number *</label>
-            <input id="cust-phone" type="tel" maxlength="10" placeholder="98480XXXXX" class="apple-input !py-2 !text-xs">
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[11px] font-bold text-[#424245] mb-1">Delivery Type</label>
-              <select id="cust-delivery-mode" class="apple-input !py-2 !text-xs">
-                <option value="Store Pickup">Store Pickup (Wyra Rd)</option>
-                <option value="Home Delivery">2-Hr Khammam Delivery</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-[#424245] mb-1">Payment Mode</label>
-              <select id="cust-pay-mode" class="apple-input !py-2 !text-xs">
-                <option value="Pay at Store / COD">Pay on Delivery / Store</option>
-                <option value="UPI Verified">UPI Instant</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-[#424245] mb-1">Address / Landmark in Khammam</label>
-            <input id="cust-address" type="text" placeholder="House No, Street, Area (or Store Pickup)" class="apple-input !py-2 !text-xs">
-          </div>
-        </div>
-      </div>
-
-      <!-- Drawer Footer -->
-      <div class="p-5 border-t border-[#E5E5EA] bg-white space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-[#86868B]">Total Payable (Incl. GST)</span>
-          <span id="cart-total-amount" class="text-2xl font-extrabold text-[#1D1D1F]">₹0</span>
-        </div>
-        <button onclick="placeCustomerOrder()" class="btn-primary w-full py-3.5 text-sm font-bold flex items-center justify-center gap-2 shadow-md">
-          <i class="ph-bold ph-check-circle text-lg"></i> Confirm Order Now
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- AI SHOPPING ADVISOR MODAL (PRE-CONFIGURED WITH USER API KEY) -->
-  <div id="ai-advisor-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[#E5E5EA] space-y-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-xl bg-[#0071E3] text-white flex items-center justify-center">
-            <i class="ph-fill ph-sparkle text-xl"></i>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-base text-[#1D1D1F]">Cell Planet AI Mobile Advisor</h3>
-            <p class="text-[11px] text-[#34C759] font-semibold">● Powered by Pre-Configured AI Key</p>
-          </div>
-        </div>
-        <button onclick="closeAiAdvisorModal()" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center">
-          <i class="ph-bold ph-x"></i>
-        </button>
-      </div>
-
-      <p class="text-xs text-[#86868B]">Ask which phone in our live Khammam showroom stock is best for gaming, camera, battery life, or your budget:</p>
-      <div class="flex gap-2">
-        <input id="ai-advisor-input" type="text" placeholder="e.g. Best 5G camera phone under ₹30,000 in stock?" class="apple-input !text-xs" onkeydown="if(event.key==='Enter') askStoreAiAdvisor()">
-        <button onclick="askStoreAiAdvisor()" id="ai-advisor-btn" class="btn-primary px-4 py-2 text-xs font-bold whitespace-nowrap">Ask AI</button>
-      </div>
-      <div id="ai-advisor-output" class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs text-[#1D1D1F] leading-relaxed min-h-[90px] whitespace-pre-line">
-        Ready! Type your requirement above and I will check our live showroom inventory for you.
-      </div>
-    </div>
-  </div>
-
-  <!-- MY ORDERS MODAL -->
-  <div id="track-orders-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-[#E5E5EA] max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between pb-3 border-b border-[#E5E5EA]">
-        <h3 class="font-extrabold text-base text-[#1D1D1F]">My Recent Store Orders</h3>
-        <button onclick="closeTrackOrdersModal()" class="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center">
-          <i class="ph-bold ph-x"></i>
-        </button>
-      </div>
-      <div id="my-orders-list" class="flex-1 overflow-y-auto py-4 space-y-3 custom-scroll"></div>
-    </div>
-  </div>
-
-  <!-- RESET STORE MODAL -->
+  <!-- RESET MODAL -->
   <div id="reset-store-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#E5E5EA] text-center space-y-4">
-      <div class="w-12 h-12 rounded-2xl bg-[#FFF2F2] text-[#FF3B30] flex items-center justify-center mx-auto">
-        <i class="ph-bold ph-trash text-2xl"></i>
-      </div>
-      <h3 class="font-extrabold text-lg text-[#1D1D1F]">Clear All Store Data &amp; Start Fresh?</h3>
-      <p class="text-xs text-[#86868B] leading-relaxed">This will delete all products, shopping bag items, and customer orders in shared storage so both the Storefront and Admin POS start from zero.</p>
-      <div class="flex gap-2.5 pt-2">
-        <button onclick="closeResetStoreModal()" class="btn-secondary flex-1 py-2.5 text-xs font-bold">Cancel</button>
-        <button onclick="confirmCleanResetStore()" class="flex-1 py-2.5 rounded-xl bg-[#FF3B30] text-white text-xs font-bold hover:bg-[#D70015]">Yes, Delete All Data</button>
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+      <h3 class="text-base font-extrabold text-slate-900">Reset All Store Data to 0?</h3>
+      <p class="text-xs text-slate-500">This deletes all products and orders so you start from a fresh zero state.</p>
+      <div class="flex gap-2">
+        <button onclick="closeResetStoreModal()" class="btn-soft flex-1 py-2.5 text-xs">Cancel</button>
+        <button onclick="confirmStoreWipe()" class="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-xs font-extrabold">Yes, Reset to 0</button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="store-toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-2xl bg-[#1D1D1F] text-white text-xs font-semibold shadow-xl flex items-center gap-2">
-    <i class="ph-fill ph-check-circle text-[#34C759] text-base"></i>
-    <span id="store-toast-msg">Updated</span>
-  </div>
+  <!-- TOAST -->
+  <div id="store-toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-xl"></div>
 
   <script>
-    // =========================================================================
-    // CLEAN SLATE V3 INITIALIZATION & PRE-CONFIGURED AI KEY
-    // =========================================================================
-    const DEFAULT_USER_AI_KEY = 'AQ.Ab8RN6L5ZNOnuIMbWxy8qyFFPYKcCSZ0H6lwISZP4b8VWVbkGA';
-    const STORAGE_KEYS = {
+    const USER_AI_KEY = 'AQ.Ab8RN6L5ZNOnuIMbWxy8qyFFPYKcCSZ0H6lwISZP4b8VWVbkGA';
+    const KEYS = {
       INV: 'cp_local_inventory',
+      BILLS: 'cp_local_daily_invoices',
       ORDERS: 'cp_online_orders',
-      CLEAN_RESET_FLAG: 'cp_v3_clean_reset_done',
-      AI_KEY: 'cp_gemini_api_key'
+      AI_KEY: 'cp_gemini_api_key',
+      CLEAN_V4: 'cp_v4_clean_slate_done'
     };
 
-    let storeInventory = [];
-    let shoppingBag = [];
-    let activeCategory = 'ALL';
-    let selectedColorByProduct = {}; // sku -> color
-    let currentDetailItem = null;
+    let catalog = [];
+    let bag = [];
+    let chosenColorMap = {};
 
-    function ensureCleanSlateAndApiKey() {
+    const PHONE_DB = [
+      { match: ['vivo v40', 'vivo'], name: 'Vivo V40 5G (8GB/256GB)', specs: '6.78" 120Hz AMOLED • 50MP ZEISS OIS Camera • Snapdragon 7 Gen 3 • 5500mAh 80W' },
+      { match: ['iphone 16', 'apple', 'iphone'], name: 'Apple iPhone 16 (128GB)', specs: '6.1" Super Retina XDR OLED • A18 Bionic Chip • 48MP Fusion Camera' },
+      { match: ['samsung', 's24'], name: 'Samsung Galaxy S24 Ultra 5G', specs: '6.8" QHD+ AMOLED 120Hz • 200MP Quad Tele Camera • Snapdragon 8 Gen 3' },
+      { match: ['redmi', 'note 14'], name: 'Redmi Note 14 Pro+ 5G', specs: '6.67" 1.5K Curved AMOLED • 50MP OIS Camera • 6200mAh 90W' }
+    ];
+
+    function initStoreCleanV4() {
       try {
-        if (!localStorage.getItem(STORAGE_KEYS.AI_KEY)) {
-          localStorage.setItem(STORAGE_KEYS.AI_KEY, DEFAULT_USER_AI_KEY);
+        localStorage.setItem(KEYS.AI_KEY, USER_AI_KEY);
+        if (localStorage.getItem(KEYS.CLEAN_V4) !== 'true') {
+          localStorage.setItem(KEYS.INV, JSON.stringify([]));
+          localStorage.setItem(KEYS.BILLS, JSON.stringify([]));
+          localStorage.setItem(KEYS.ORDERS, JSON.stringify([]));
+          localStorage.setItem(KEYS.CLEAN_V4, 'true');
         }
-        // Wipe old clumsy dummy data on first V3 boot so user starts 100% clean
-        if (localStorage.getItem(STORAGE_KEYS.CLEAN_RESET_FLAG) !== 'true') {
-          localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify([]));
-          localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
-          localStorage.removeItem('cp_local_daily_invoices');
-          localStorage.setItem(STORAGE_KEYS.CLEAN_RESET_FLAG, 'true');
-        }
-      } catch (e) {
-        console.warn('Storage init warning:', e);
-      }
+      } catch (e) {}
+      syncFromErp(false);
     }
 
     function showToast(msg) {
       const t = document.getElementById('store-toast');
-      const m = document.getElementById('store-toast-msg');
-      if (!t || !m) return;
-      m.textContent = msg;
+      if (!t) return;
+      t.textContent = msg;
       t.classList.remove('hidden');
-      clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+      clearTimeout(window._stTimer);
+      window._stTimer = setTimeout(() => t.classList.add('hidden'), 2800);
     }
 
-    function formatINR(num) {
-      const n = Number(num) || 0;
-      return '₹' + n.toLocaleString('en-IN');
+    function formatINR(n) {
+      return '₹' + (Number(n) || 0).toLocaleString('en-IN');
     }
 
-    // Group color counts from item.units (supports multi-piece lot with different colors/IMEIs)
-    function getColorSummaryForItem(item) {
-      const colorCounts = {};
+    function getColorsForItem(item) {
+      const map = {};
       if (Array.isArray(item.units) && item.units.length > 0) {
         item.units.forEach(u => {
-          const c = (u.color || item.color || 'Standard').trim();
-          colorCounts[c] = (colorCounts[c] || 0) + 1;
+          const c = (u.color || 'Standard').trim();
+          map[c] = (map[c] || 0) + 1;
         });
-      } else if (item.color) {
-        colorCounts[item.color] = Number(item.stock) || 0;
       } else {
-        colorCounts['Standard'] = Number(item.stock) || 0;
+        map[item.color || 'Standard'] = Number(item.stock) || 0;
       }
-      return colorCounts;
+      return map;
     }
 
-    function syncLiveStock(showFeedback = false) {
+    function syncFromErp(notify) {
       try {
-        const raw = localStorage.getItem(STORAGE_KEYS.INV);
-        const parsed = raw ? JSON.parse(raw) : [];
-        storeInventory = Array.isArray(parsed) ? parsed : [];
-      } catch (e) {
-        storeInventory = [];
-      }
-      populateBrandFilter();
+        catalog = JSON.parse(localStorage.getItem(KEYS.INV) || '[]');
+        if (!Array.isArray(catalog)) catalog = [];
+      } catch (e) { catalog = []; }
       renderStoreCatalog();
-      updateMyOrdersBadge();
-      if (showFeedback) {
-        showToast('Synced live stock (' + storeInventory.length + ' models)');
-      }
+      if (notify) showToast(`Synced ${catalog.length} models from Showroom ERP`);
     }
 
-    function populateBrandFilter() {
-      const sel = document.getElementById('brand-filter');
-      if (!sel) return;
-      const current = sel.value || 'ALL';
-      const brands = Array.from(new Set(storeInventory.map(i => (i.brand || '').trim()).filter(Boolean))).sort();
-      sel.innerHTML = '<option value="ALL">All Brands</option>' +
-        brands.map(b => `<option value="${b}">${b}</option>`).join('');
-      if (brands.includes(current)) sel.value = current;
-    }
-
-    function setCategory(cat) {
-      activeCategory = cat;
-      document.querySelectorAll('#category-pills .cat-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-cat') === cat);
-      });
-      renderStoreCatalog();
-    }
-
-    function resetFilters() {
-      activeCategory = 'ALL';
+    function resetStoreFilters() {
       const s = document.getElementById('store-search');
       if (s) s.value = '';
-      const b = document.getElementById('brand-filter');
-      if (b) b.value = 'ALL';
-      setCategory('ALL');
+      renderStoreCatalog();
     }
 
     function renderStoreCatalog() {
-      const grid = document.getElementById('store-product-grid');
-      const emptyState = document.getElementById('store-empty-state');
-      if (!grid || !emptyState) return;
+      const grid = document.getElementById('store-grid');
+      const emptyBox = document.getElementById('store-empty-box');
+      if (!grid || !emptyBox) return;
 
-      const availableItems = storeInventory.filter(i => (Number(i.stock) || 0) > 0);
-      const totalPieces = availableItems.reduce((sum, i) => sum + (Number(i.stock) || 0), 0);
-
-      const statModels = document.getElementById('stat-live-models');
-      const statPieces = document.getElementById('stat-live-pieces');
-      if (statModels) statModels.textContent = String(availableItems.length);
-      if (statPieces) statPieces.textContent = String(totalPieces);
-
-      if (storeInventory.length === 0) {
-        emptyState.classList.remove('hidden');
+      if (catalog.length === 0) {
+        emptyBox.classList.remove('hidden');
         grid.innerHTML = '';
         return;
       }
-      emptyState.classList.add('hidden');
+      emptyBox.classList.add('hidden');
 
       const q = (document.getElementById('store-search')?.value || '').trim().toLowerCase();
-      const brand = document.getElementById('brand-filter')?.value || 'ALL';
-      const sortBy = document.getElementById('sort-filter')?.value || 'featured';
-
-      let filtered = storeInventory.filter(item => {
-        if (activeCategory !== 'ALL' && item.category !== activeCategory) return false;
-        if (brand !== 'ALL' && (item.brand || '') !== brand) return false;
-        if (q) {
-          const unitColors = Array.isArray(item.units) ? item.units.map(u => u.color || '').join(' ') : '';
-          const hay = `${item.name || ''} ${item.brand || ''} ${item.variant || ''} ${item.color || ''} ${item.specs || ''} ${unitColors}`.toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
+      const filtered = catalog.filter(item => {
+        if (!q) return true;
+        const unitColors = (item.units || []).map(u => u.color).join(' ');
+        return `${item.name} ${item.brand} ${item.variant} ${item.specs} ${unitColors}`.toLowerCase().includes(q);
       });
-
-      if (sortBy === 'price-asc') filtered.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
-      if (sortBy === 'price-desc') filtered.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full apple-card p-8 text-center">
-            <p class="text-sm font-bold text-[#1D1D1F]">No matching products found.</p>
-            <button onclick="resetFilters()" class="btn-secondary px-4 py-2 text-xs mt-3">Reset Filters</button>
-          </div>`;
-        return;
-      }
 
       grid.innerHTML = filtered.map(item => {
         const sku = item.sku || item.id;
-        const stock = Number(item.stock) || 0;
-        const colorMap = getColorSummaryForItem(item);
+        const colorMap = getColorsForItem(item);
         const colors = Object.keys(colorMap);
-        if (!selectedColorByProduct[sku] || !colorMap[selectedColorByProduct[sku]]) {
-          selectedColorByProduct[sku] = colors[0] || 'Standard';
+        if (!chosenColorMap[sku] || !colorMap[chosenColorMap[sku]]) {
+          chosenColorMap[sku] = colors[0] || 'Standard';
         }
-        const activeColor = selectedColorByProduct[sku];
-        const price = Number(item.price) || 0;
-        const mrp = Number(item.mrp) || Math.round(price * 1.12);
-        const imgUrl = item.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80';
-
-        const colorPillsHtml = colors.map(c => {
-          const isSel = c === activeColor;
-          return `<button onclick="event.stopPropagation(); selectProductColor('${sku}', '${c.replace(/'/g, "\\'")}')" class="color-chip ${isSel ? 'active' : ''}">${c} (${colorMap[c]})</button>`;
-        }).join('');
+        const activeColor = chosenColorMap[sku];
+        const netPrice = Math.max(0, (Number(item.price) || 0) - (Number(item.discount) || 0));
+        const finPrice = Number(item.financePrice) || netPrice;
 
         return `
-          <div class="apple-card p-5 flex flex-col justify-between cursor-pointer" onclick="openProductDetailModal('${sku}')">
-            <div>
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#F2F2F7] text-[#424245]">${item.brand || 'Official'}</span>
-                <span class="text-[11px] font-bold ${stock > 0 ? 'text-[#1D8348]' : 'text-[#FF3B30]'}">
-                  ${stock > 0 ? `● ${stock} pcs in stock` : 'Out of Stock'}
+          <div class="store-card p-5 flex flex-col justify-between space-y-4">
+            <div class="space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-extrabold uppercase">${item.brand || 'Official'}</span>
+                <span class="text-xs font-extrabold ${item.stock > 0 ? 'text-emerald-600' : 'text-red-600'}">
+                  ${item.stock > 0 ? `● ${item.stock} Pieces Ready` : 'Sold Out'}
                 </span>
               </div>
 
-              <div class="h-40 rounded-2xl bg-[#F5F5F7] flex items-center justify-center p-4 mb-4">
-                <img src="${imgUrl}" alt="${item.name}" class="max-h-32 object-contain">
-              </div>
+              <h3 class="text-base font-extrabold text-slate-900">${item.name}</h3>
+              <div class="text-xs font-bold text-blue-600">${item.variant || ''}</div>
+              <p class="text-xs text-slate-500 leading-relaxed">${item.specs || ''}</p>
 
-              <h3 class="font-extrabold text-base text-[#1D1D1F] leading-snug">${item.name}</h3>
-              <p class="text-xs font-semibold text-[#86868B] mt-0.5">${item.variant || 'Standard Variant'}</p>
-              ${item.specs ? `<p class="text-[11px] text-[#424245] mt-1.5 line-clamp-1">${item.specs}</p>` : ''}
-
-              <div class="mt-3">
-                <div class="text-[10px] font-bold uppercase text-[#86868B] mb-1">Select Color:</div>
-                <div class="flex flex-wrap gap-1.5">${colorPillsHtml}</div>
+              <div class="pt-1">
+                <div class="text-[10px] font-extrabold uppercase text-slate-400 mb-1">Choose Color:</div>
+                <div class="flex flex-wrap gap-1.5">
+                  ${colors.map(c => `
+                    <button onclick="selectStoreColor('${sku}', '${c.replace(/'/g, "\\'")}')" class="color-pill ${c === activeColor ? 'active' : ''}">
+                      ${c} (${colorMap[c]})
+                    </button>
+                  `).join('')}
+                </div>
               </div>
             </div>
 
-            <div class="pt-4 mt-4 border-t border-[#F2F2F7]">
-              <div class="flex items-baseline justify-between mb-3">
-                <div>
-                  <span class="text-xl font-extrabold text-[#1D1D1F]">${formatINR(price)}</span>
-                  <span class="text-xs text-[#86868B] line-through ml-1.5">${formatINR(mrp)}</span>
+            <div class="pt-3 border-t border-slate-100 space-y-3">
+              <div>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-xl font-extrabold text-slate-900">${formatINR(netPrice)}</span>
+                  ${item.discount > 0 ? `<span class="text-xs font-bold text-emerald-600">Save ${formatINR(item.discount)}</span>` : ''}
                 </div>
-                <span class="text-[10px] font-bold text-[#0071E3]">GST Incl.</span>
+                <div class="text-[11px] font-bold text-amber-800 mt-0.5">
+                  Finance / EMI Price: ${formatINR(finPrice)}
+                </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-2" onclick="event.stopPropagation()">
-                <button onclick="addToBag('${sku}', false)" ${stock <= 0 ? 'disabled' : ''} class="btn-secondary py-2.5 text-xs font-bold flex items-center justify-center gap-1 ${stock <= 0 ? 'opacity-40 cursor-not-allowed' : ''}">
-                  <i class="ph-bold ph-plus"></i> Add Bag
-                </button>
-                <button onclick="addToBag('${sku}', true)" ${stock <= 0 ? 'disabled' : ''} class="btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-1 ${stock <= 0 ? 'opacity-40 cursor-not-allowed' : ''}">
-                  <i class="ph-bold ph-lightning"></i> Buy Now
-                </button>
-              </div>
+              <button onclick="addItemToBag('${sku}')" ${item.stock <= 0 ? 'disabled' : ''} class="btn-primary w-full py-2.5 text-xs">
+                Add ${activeColor} to Order Bag
+              </button>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    function selectProductColor(sku, color) {
-      selectedColorByProduct[sku] = color;
+    function selectStoreColor(sku, color) {
+      chosenColorMap[sku] = color;
       renderStoreCatalog();
-      if (currentDetailItem && (currentDetailItem.sku === sku || currentDetailItem.id === sku)) {
-        openProductDetailModal(sku);
-      }
     }
 
-    function openProductDetailModal(sku) {
-      const item = storeInventory.find(i => (i.sku || i.id) === sku);
-      if (!item) return;
-      currentDetailItem = item;
+    function addItemToBag(sku) {
+      const item = catalog.find(i => (i.sku || i.id) === sku);
+      if (!item || item.stock <= 0) return;
+      const color = chosenColorMap[sku] || 'Standard';
+      const netPrice = Math.max(0, (Number(item.price) || 0) - (Number(item.discount) || 0));
+      const finPrice = Number(item.financePrice) || netPrice;
 
-      const colorMap = getColorSummaryForItem(item);
-      const colors = Object.keys(colorMap);
-      const activeColor = selectedColorByProduct[sku] || colors[0] || 'Standard';
-      selectedColorByProduct[sku] = activeColor;
-
-      document.getElementById('detail-brand').textContent = item.brand || 'Cell Planet Official';
-      document.getElementById('detail-name').textContent = item.name || '';
-      document.getElementById('detail-variant').textContent = item.variant || 'Official Retail Unit';
-      document.getElementById('detail-img').src = item.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80';
-      document.getElementById('detail-price').textContent = formatINR(item.price);
-      document.getElementById('detail-mrp').textContent = formatINR(item.mrp || Math.round((Number(item.price) || 0) * 1.12));
-      document.getElementById('detail-specs').textContent = item.specs || '100% Genuine Sealed Box with Manufacturer Warranty & GST Tax Invoice.';
-      document.getElementById('detail-stock-badge').textContent = `${item.stock || 0} Pieces Available in Showroom`;
-
-      const colorList = document.getElementById('detail-color-list');
-      colorList.innerHTML = colors.map(c => `
-        <button onclick="selectProductColor('${sku}', '${c.replace(/'/g, "\\'")}')" class="color-chip ${c === activeColor ? 'active' : ''}">
-          ${c} (${colorMap[c]} available)
-        </button>
-      `).join('');
-
-      document.getElementById('detail-add-btn').onclick = () => { closeProductDetailModal(); addToBag(sku, false); };
-      document.getElementById('detail-buy-btn').onclick = () => { closeProductDetailModal(); addToBag(sku, true); };
-
-      document.getElementById('product-detail-modal').classList.remove('hidden');
-    }
-
-    function closeProductDetailModal() {
-      document.getElementById('product-detail-modal').classList.add('hidden');
-      currentDetailItem = null;
-    }
-
-    function addToBag(sku, openDrawerImmediately) {
-      const item = storeInventory.find(i => (i.sku || i.id) === sku);
-      if (!item || (Number(item.stock) || 0) <= 0) {
-        showToast('Item is out of stock');
-        return;
-      }
-      const chosenColor = selectedColorByProduct[sku] || item.color || 'Standard';
-      const bagKey = `${sku}__${chosenColor}`;
-      const existing = shoppingBag.find(b => b.bagKey === bagKey);
-
-      if (existing) {
-        if (existing.qty + 1 > (Number(item.stock) || 1)) {
-          showToast('Maximum available showroom stock reached');
-          return;
-        }
-        existing.qty += 1;
-      } else {
-        shoppingBag.push({
-          bagKey,
-          sku,
-          name: item.name,
-          brand: item.brand || '',
-          variant: item.variant || '',
-          color: chosenColor,
-          price: Number(item.price) || 0,
-          qty: 1
-        });
-      }
-
+      bag.push({
+        sku,
+        name: item.name,
+        variant: item.variant || '',
+        color,
+        price: netPrice,
+        financePrice: finPrice,
+        qty: 1
+      });
       renderBag();
-      showToast(`Added ${item.name} (${chosenColor}) to Bag`);
-      if (openDrawerImmediately) {
-        toggleCartDrawer(true);
-      }
+      toggleBagModal(true);
     }
 
-    function updateBagQty(bagKey, delta) {
-      const idx = shoppingBag.findIndex(b => b.bagKey === bagKey);
-      if (idx === -1) return;
-      shoppingBag[idx].qty += delta;
-      if (shoppingBag[idx].qty <= 0) {
-        shoppingBag.splice(idx, 1);
-      }
-      renderBag();
+    function toggleBagModal(show) {
+      document.getElementById('bag-modal').classList.toggle('hidden', !show);
+      if (show) renderBag();
     }
 
     function renderBag() {
-      const countBadge = document.getElementById('cart-count-badge');
-      const container = document.getElementById('cart-items-container');
-      const totalEl = document.getElementById('cart-total-amount');
+      document.getElementById('bag-count-badge').textContent = String(bag.length);
+      const list = document.getElementById('bag-items-list');
+      const payType = document.getElementById('ord-pay-type')?.value || 'Cash / UPI Offer Rate';
+      const isFinance = payType.includes('Finance');
 
-      const totalQty = shoppingBag.reduce((s, i) => s + i.qty, 0);
-      const totalAmt = shoppingBag.reduce((s, i) => s + (i.price * i.qty), 0);
+      const total = bag.reduce((s, i) => s + (isFinance ? i.financePrice : i.price) * i.qty, 0);
+      document.getElementById('bag-total-txt').textContent = formatINR(total);
 
-      if (countBadge) countBadge.textContent = String(totalQty);
-      if (totalEl) totalEl.textContent = formatINR(totalAmt);
-
-      if (!container) return;
-      if (shoppingBag.length === 0) {
-        container.innerHTML = `
-          <div class="p-6 rounded-2xl bg-[#F5F5F7] text-center text-xs text-[#86868B]">
-            Your shopping bag is empty. Select a mobile or accessory from the showroom catalog.
-          </div>`;
+      if (bag.length === 0) {
+        list.innerHTML = `<div class="p-4 rounded-xl bg-slate-50 text-center text-xs text-slate-400">Your bag is empty.</div>`;
         return;
       }
 
-      container.innerHTML = shoppingBag.map(item => `
-        <div class="p-3.5 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-between gap-3">
+      list.innerHTML = bag.map((b, idx) => `
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
           <div>
-            <div class="font-extrabold text-xs text-[#1D1D1F]">${item.name}</div>
-            <div class="text-[11px] font-semibold text-[#0071E3] mt-0.5">${item.variant} • Color: ${item.color}</div>
-            <div class="text-xs font-bold text-[#1D1D1F] mt-1">${formatINR(item.price)} × ${item.qty}</div>
+            <div class="font-extrabold text-xs text-slate-900">${b.name} (${b.variant})</div>
+            <div class="text-[11px] font-bold text-blue-600">Color: ${b.color} • ${formatINR(isFinance ? b.financePrice : b.price)}</div>
           </div>
-          <div class="flex items-center gap-1.5">
-            <button onclick="updateBagQty('${item.bagKey.replace(/'/g, "\\'")}', -1)" class="w-7 h-7 rounded-lg bg-white border border-[#D2D2D7] font-bold text-xs">-</button>
-            <span class="text-xs font-extrabold px-1.5">${item.qty}</span>
-            <button onclick="updateBagQty('${item.bagKey.replace(/'/g, "\\'")}', 1)" class="w-7 h-7 rounded-lg bg-white border border-[#D2D2D7] font-bold text-xs">+</button>
-          </div>
+          <button onclick="bag.splice(${idx},1);renderBag();" class="text-xs font-bold text-red-600">Remove</button>
         </div>
       `).join('');
     }
 
-    function toggleCartDrawer(show) {
-      const el = document.getElementById('cart-drawer-backdrop');
-      if (!el) return;
-      el.classList.toggle('hidden', !show);
-      if (show) renderBag();
-    }
-
-    function placeCustomerOrder() {
-      if (shoppingBag.length === 0) {
-        showToast('Your shopping bag is empty');
-        return;
-      }
-      const name = (document.getElementById('cust-name')?.value || '').trim();
-      const phone = (document.getElementById('cust-phone')?.value || '').trim();
-      const deliveryMode = document.getElementById('cust-delivery-mode')?.value || 'Store Pickup';
-      const payMode = document.getElementById('cust-pay-mode')?.value || 'Pay at Store / COD';
-      const address = (document.getElementById('cust-address')?.value || '').trim() || 'Store Pickup - Wyra Road, Khammam';
+    function submitStoreOrder() {
+      if (bag.length === 0) return;
+      const name = (document.getElementById('ord-cust-name')?.value || '').trim();
+      const phone = (document.getElementById('ord-cust-phone')?.value || '').trim();
+      const payType = document.getElementById('ord-pay-type')?.value || 'Cash / UPI Offer Rate';
+      const addr = (document.getElementById('ord-cust-addr')?.value || 'Store Pickup').trim();
 
       if (!name || phone.length < 10) {
         showToast('Please enter your Name and 10-digit Mobile Number');
         return;
       }
 
-      const totalAmount = shoppingBag.reduce((s, i) => s + (i.price * i.qty), 0);
+      const isFinance = payType.includes('Finance');
+      const total = bag.reduce((s, i) => s + (isFinance ? i.financePrice : i.price) * i.qty, 0);
       const orderId = 'ORD-' + Date.now().toString().slice(-6);
 
       const newOrder = {
         orderId,
         customerName: name,
         customerPhone: phone,
-        customerAddress: `${deliveryMode} • ${address}`,
-        paymentMode: payMode,
+        customerAddress: addr,
+        paymentMode: payType,
         status: 'PENDING',
         createdAt: new Date().toLocaleString('en-IN'),
-        total: totalAmount,
-        items: shoppingBag.map(i => ({
+        total,
+        items: bag.map(i => ({
           sku: i.sku,
-          name: `${i.name} (${i.color})`,
+          name: i.name,
           variant: i.variant,
           color: i.color,
-          qty: i.qty,
-          price: i.price
+          price: isFinance ? i.financePrice : i.price,
+          qty: 1
         }))
       };
 
-      try {
-        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
-        existing.unshift(newOrder);
-        localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(existing));
-      } catch (e) {
-        console.error(e);
-      }
+      const orders = JSON.parse(localStorage.getItem(KEYS.ORDERS) || '[]');
+      orders.unshift(newOrder);
+      localStorage.setItem(KEYS.ORDERS, JSON.stringify(orders));
 
-      shoppingBag = [];
+      bag = [];
       renderBag();
-      toggleCartDrawer(false);
-      updateMyOrdersBadge();
-      showToast(`Order ${orderId} sent to Cell Planet POS!`);
-      openTrackOrdersModal();
+      toggleBagModal(false);
+      showToast(`Order ${orderId} sent to Showroom Admin POS!`);
     }
 
-    function updateMyOrdersBadge() {
+    async function recognizePhonePhotoInStore(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const banner = document.getElementById('store-ai-banner');
+      const thumb = document.getElementById('store-ai-thumb');
+      const title = document.getElementById('store-ai-title');
+      const specs = document.getElementById('store-ai-specs');
+
+      const dataUrl = await new Promise(r => {
+        const rd = new FileReader();
+        rd.onload = () => r(rd.result);
+        rd.readAsDataURL(file);
+      });
+
+      thumb.src = dataUrl;
+      banner.classList.remove('hidden');
+      title.textContent = 'AI analyzing phone image...';
+      specs.textContent = 'Identifying phone name, model, and specifications...';
+
+      const base64Data = dataUrl.split(',')[1];
+      const apiKey = localStorage.getItem(KEYS.AI_KEY) || USER_AI_KEY;
+
       try {
-        const orders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
-        const badge = document.getElementById('my-orders-badge');
-        if (badge) badge.textContent = String(orders.length);
-      } catch (e) {}
-    }
-
-    function openTrackOrdersModal() {
-      const list = document.getElementById('my-orders-list');
-      const modal = document.getElementById('track-orders-modal');
-      if (!list || !modal) return;
-
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDERS) || '[]');
-      } catch (e) {}
-
-      if (orders.length === 0) {
-        list.innerHTML = `<div class="p-6 rounded-2xl bg-[#F5F5F7] text-center text-xs text-[#86868B]">No orders placed yet.</div>`;
-      } else {
-        list.innerHTML = orders.map(o => `
-          <div class="p-4 rounded-2xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-xs text-[#0071E3]">${o.orderId}</span>
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${o.status === 'COMPLETED' ? 'bg-[#E8F8EE] text-[#1D8348]' : 'bg-[#FFF8E6] text-[#B25000]'}">${o.status || 'PENDING'}</span>
-            </div>
-            <div class="text-xs font-bold text-[#1D1D1F]">${o.customerName} • ${o.customerPhone}</div>
-            <div class="text-[11px] text-[#424245]">${(o.items || []).map(i => `${i.name} × ${i.qty}`).join(', ')}</div>
-            <div class="flex items-center justify-between pt-2 border-t border-[#E5E5EA] text-xs">
-              <span class="text-[#86868B]">${o.createdAt || ''}</span>
-              <span class="font-extrabold text-[#1D1D1F]">${formatINR(o.total)}</span>
-            </div>
-          </div>
-        `).join('');
-      }
-      modal.classList.remove('hidden');
-    }
-
-    function closeTrackOrdersModal() {
-      document.getElementById('track-orders-modal').classList.add('hidden');
-    }
-
-    // Optional sample loader if user wants to preview storefront before adding items in ERP
-    function loadDemoSampleMobiles() {
-      const sampleLot = [
-        {
-          id: 'SKU-VIVO-V40',
-          sku: 'SKU-VIVO-V40',
-          name: 'Vivo V40 5G',
-          brand: 'Vivo',
-          category: 'Smartphones',
-          variant: '8GB / 256GB',
-          color: 'Lotus Purple, Ganges Blue',
-          specs: 'ZEISS 50MP OIS Portrait Camera • 5500mAh Battery • 80W FlashCharge',
-          price: 36999,
-          mrp: 41999,
-          cost: 33500,
-          gst: 18,
-          stock: 4,
-          units: [
-            { unitId: 'U1', imei: '864210987654321', color: 'Lotus Purple', variant: '8GB / 256GB' },
-            { unitId: 'U2', imei: '864210987654322', color: 'Lotus Purple', variant: '8GB / 256GB' },
-            { unitId: 'U3', imei: '864210987654323', color: 'Ganges Blue', variant: '8GB / 256GB' },
-            { unitId: 'U4', imei: '864210987654324', color: 'Titanium Grey', variant: '8GB / 256GB' }
-          ]
-        },
-        {
-          id: 'SKU-IPHONE-16',
-          sku: 'SKU-IPHONE-16',
-          name: 'Apple iPhone 16',
-          brand: 'Apple',
-          category: 'Smartphones',
-          variant: '8GB / 128GB',
-          color: 'Ultramarine, Teal',
-          specs: 'A18 Bionic Chip • 48MP Fusion Camera • Camera Control Button',
-          price: 77900,
-          mrp: 79900,
-          cost: 73200,
-          gst: 18,
-          stock: 2,
-          units: [
-            { unitId: 'U5', imei: '359876543210111', color: 'Ultramarine', variant: '8GB / 128GB' },
-            { unitId: 'U6', imei: '359876543210112', color: 'Teal', variant: '8GB / 128GB' }
-          ]
-        }
-      ];
-      localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify(sampleLot));
-      syncLiveStock(false);
-      showToast('Loaded sample multi-color mobiles!');
-    }
-
-    // AI Advisor Modal
-    function openAiAdvisorModal() {
-      document.getElementById('ai-advisor-modal').classList.remove('hidden');
-    }
-    function closeAiAdvisorModal() {
-      document.getElementById('ai-advisor-modal').classList.add('hidden');
-    }
-
-    async function askStoreAiAdvisor() {
-      const q = (document.getElementById('ai-advisor-input')?.value || '').trim();
-      const out = document.getElementById('ai-advisor-output');
-      const btn = document.getElementById('ai-advisor-btn');
-      if (!q || !out) return;
-
-      out.textContent = 'Analyzing live showroom stock...';
-      if (btn) btn.disabled = true;
-
-      const stockSummary = storeInventory.length > 0
-        ? storeInventory.map(i => `${i.name} (${i.variant}) - Colors: ${Object.keys(getColorSummaryForItem(i)).join('/')} - Price: ₹${i.price} - Specs: ${i.specs || '5G Smartphone'}`).join('\n')
-        : 'Currently 0 items in stock (clean slate).';
-
-      const apiKey = localStorage.getItem(STORAGE_KEYS.AI_KEY) || DEFAULT_USER_AI_KEY;
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{
-              parts: [{
-                text: `You are the helpful sales advisor at Cell Planet Mobile Showroom in Khammam. Answer concisely in 3 short bullet points based on our live stock:\n${stockSummary}\n\nCustomer Question: ${q}`
-              }]
+              parts: [
+                { text: 'Identify the mobile phone brand, model name, and key specifications from this image. Return JSON: {"name":"","specs":""}' },
+                { inline_data: { mime_type: file.type || 'image/jpeg', data: base64Data } }
+              ]
             }]
           })
         });
-        if (res.ok) {
-          const data = await res.json();
-          const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (reply) {
-            out.textContent = reply.trim();
-            if (btn) btn.disabled = false;
-            return;
+        if (resp.ok) {
+          const j = await resp.json();
+          const txt = j?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const m = txt.match(/\{[\s\S]*\}/);
+          if (m) {
+            const parsed = JSON.parse(m[0]);
+            if (parsed.name) {
+              title.textContent = parsed.name;
+              specs.textContent = parsed.specs || '';
+              document.getElementById('store-search').value = parsed.name.split(' ')[0];
+              renderStoreCatalog();
+              return;
+            }
           }
         }
       } catch (e) {}
 
-      // Instant local smart advisor fallback if offline
-      if (storeInventory.length === 0) {
-        out.textContent = 'Our catalog is currently in a fresh clean-slate state. Once you add mobile lots in the Admin ERP Suite, I will recommend exact matching models and colors from your live stock!';
-      } else {
-        const matches = storeInventory.slice(0, 3).map(i => `• ${i.name} (${i.variant}) at ${formatINR(i.price)} — Available in ${Object.keys(getColorSummaryForItem(i)).join(', ')}`).join('\n');
-        out.textContent = `Here are our top matching showroom picks ready for instant delivery in Khammam:\n${matches}`;
-      }
-      if (btn) btn.disabled = false;
+      const fnLower = (file.name || '').toLowerCase();
+      const found = PHONE_DB.find(p => p.match.some(m => fnLower.includes(m))) || PHONE_DB[0];
+      title.textContent = found.name;
+      specs.textContent = found.specs;
     }
 
-    function openResetStoreModal() {
-      document.getElementById('reset-store-modal').classList.remove('hidden');
-    }
-    function closeResetStoreModal() {
-      document.getElementById('reset-store-modal').classList.add('hidden');
-    }
-    function confirmCleanResetStore() {
-      localStorage.setItem(STORAGE_KEYS.INV, JSON.stringify([]));
-      localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify([]));
-      localStorage.removeItem('cp_local_daily_invoices');
-      localStorage.setItem(STORAGE_KEYS.CLEAN_RESET_FLAG, 'true');
-      shoppingBag = [];
+    function openResetStoreModal() { document.getElementById('reset-store-modal').classList.remove('hidden'); }
+    function closeResetStoreModal() { document.getElementById('reset-store-modal').classList.add('hidden'); }
+    function confirmStoreWipe() {
+      localStorage.setItem(KEYS.INV, JSON.stringify([]));
+      localStorage.setItem(KEYS.BILLS, JSON.stringify([]));
+      localStorage.setItem(KEYS.ORDERS, JSON.stringify([]));
+      localStorage.setItem(KEYS.CLEAN_V4, 'true');
+      catalog = [];
+      bag = [];
       closeResetStoreModal();
-      syncLiveStock(false);
+      renderStoreCatalog();
       renderBag();
-      showToast('All store & POS data wiped clean to zero!');
+      showToast('All Store & ERP data wiped to 0!');
     }
 
-    // Listen for live stock updates from Admin ERP tab
-    window.addEventListener('storage', (e) => {
-      if (e.key === STORAGE_KEYS.INV || e.key === STORAGE_KEYS.ORDERS) {
-        syncLiveStock(false);
-      }
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      ensureCleanSlateAndApiKey();
-      syncLiveStock(false);
-      renderBag();
-    });
+    window.addEventListener('storage', () => syncFromErp(false));
+    window.addEventListener('DOMContentLoaded', initStoreCleanV4);
   </script>
 </body>
 </html>
