@@ -1,125 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cell Planet Official Store | Khammam's Flagship Mobile Destination</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cell Planet Khammam | Official Online Store & Instant Review Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background: #000; color: #f5f5f7; }
-    .glass-nav { background: rgba(15, 15, 20, 0.82); backdrop-filter: blur(20px); }
+    body { font-family: 'Inter', sans-serif; background: #000000; color: #f5f5f7; }
+    .apple-blur { background: rgba(22, 22, 24, 0.82); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
     .hero-gradient { background: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #000000 70%); }
   </style>
 </head>
 <body class="min-h-screen">
 
-  <!-- Apple/Huawei Glass Navigation -->
-  <nav class="glass-nav sticky top-0 z-40 border-b border-white/10 px-6 py-4">
-    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+  <!-- APPLE / HUAWEI MINIMALIST NAVBAR -->
+  <nav class="sticky top-0 z-50 apple-blur border-b border-white/10 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <span class="text-xl font-extrabold tracking-tight text-white">CELL PLANET</span>
-        <span class="text-[11px] bg-white/10 px-2.5 py-0.5 rounded-full text-slate-300">Khammam Flagship</span>
+        <div class="h-9 w-9 rounded-full bg-white text-black font-black flex items-center justify-center text-sm">CP</div>
+        <div>
+          <span class="font-extrabold tracking-tight text-lg text-white">CELL PLANET</span>
+          <span class="hidden sm:inline-block ml-2 text-xs text-zinc-400">Station Rd, Khammam • 08899469999</span>
+        </div>
       </div>
-      <div class="flex flex-wrap items-center gap-6 text-xs font-medium text-slate-300">
-        <a href="#storeSection" class="hover:text-white">Flagship Store</a>
-        <a href="#trackSection" class="hover:text-white">Track Delivery</a>
-        <a href="#reviewSection" class="text-amber-400 font-semibold hover:text-amber-300">⭐ 1-Tap Google Review</a>
-        <a href="https://www.instagram.com/" target="_blank" class="hover:text-pink-400">Instagram</a>
-        <a href="tel:08899469999" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-full font-semibold">📞 088994 69999</a>
+      <div class="flex items-center gap-3 text-xs font-semibold">
+        <a href="#storeSection" class="px-3 py-1.5 rounded-full hover:bg-white/10 transition">Store</a>
+        <a href="#trackSection" class="px-3 py-1.5 rounded-full hover:bg-white/10 transition">Track Order</a>
+        <a href="#reviewSection" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full transition">⭐ 1-Tap Google Review</a>
       </div>
     </div>
   </nav>
 
-  <!-- Flagship Hero Banner -->
-  <section class="hero-gradient text-center py-16 px-4 border-b border-white/10">
-    <p class="text-xs uppercase tracking-widest text-blue-400 font-semibold">Direct Flagship Store • Khammam</p>
-    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mt-2 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-      Pro Power. Instant Delivery.
-    </h1>
-    <p class="text-sm text-slate-400 max-w-xl mx-auto mt-3">
-      Station Rd, Opposite Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam — 507001.
-      Zero-Downpayment Finance & Verified GST Billing.
-    </p>
-  </section>
-
-  <!-- Live Synchronized Product Grid -->
-  <section id="storeSection" class="max-w-7xl mx-auto px-6 py-12">
-    <div class="flex justify-between items-end mb-8">
-      <div>
-        <h2 class="text-2xl font-bold text-white">Live In-Stock Smartphones</h2>
-        <p class="text-xs text-slate-400 mt-1">Prices and stock sync live from our Khammam showroom terminal.</p>
-      </div>
+  <!-- HERO BANNER -->
+  <header class="hero-gradient py-16 px-6 text-center border-b border-white/10">
+    <div class="max-w-4xl mx-auto space-y-4">
+      <span class="text-xs uppercase tracking-widest text-blue-400 font-bold">Khammam's Premier Flagship Destination</span>
+      <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white">The Flagship Experience. Delivered Fast.</h1>
+      <p class="text-sm md:text-base text-zinc-400 max-w-2xl mx-auto">
+        Opposite Urdu Ghar Shadi Khana, Station Road, Khammam. Order online with instant store dispatch or zero-downpayment finance options.
+      </p>
     </div>
-    <div id="storeGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-  </section>
+  </header>
 
-  <!-- Live Order Tracking Section -->
-  <section id="trackSection" class="max-w-4xl mx-auto px-6 py-10">
-    <div class="bg-zinc-900/90 border border-white/10 rounded-3xl p-8">
-      <h2 class="text-xl font-bold text-white">📦 Live Order & Delivery Status Tracker</h2>
-      <p class="text-xs text-slate-400 mt-1">Enter your Order ID or Phone Number to see live packing and delivery status.</p>
-      <div class="flex gap-3 mt-4">
-        <input type="text" id="trackInput" placeholder="Enter Order ID (e.g. ORD-9021) or Mobile Number..." class="flex-1 bg-black border border-white/15 rounded-2xl px-4 py-3 text-sm text-white">
-        <button onclick="trackCustomerOrder()" class="bg-white text-black font-bold px-6 py-3 rounded-2xl text-sm hover:bg-slate-200">Track Status</button>
-      </div>
-      <div id="trackResult" class="mt-4"></div>
-    </div>
-  </section>
+  <main class="max-w-7xl mx-auto px-6 py-12 space-y-20">
 
-  <!-- ONE-TAP UNLIMITED GOOGLE REVIEW GENERATOR -->
-  <section id="reviewSection" class="max-w-4xl mx-auto px-6 py-10">
-    <div class="bg-gradient-to-br from-zinc-900 via-slate-900 to-blue-950/40 border border-blue-500/30 rounded-3xl p-8">
-      <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+    <!-- LIVE FLAGSHIP STOREFRONT -->
+    <section id="storeSection" class="space-y-6">
+      <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full font-bold">⭐ Instant Review Assistant</span>
-          <h2 class="text-2xl font-extrabold text-white mt-2">Tap Once to Copy & Post Your Google Review</h2>
-          <p class="text-xs text-slate-300 mt-1">Select any review below or generate fresh unlimited comments—one tap copies the text and opens Cell Planet on Google Maps!</p>
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Live Flagship Catalog</h2>
+          <p class="text-xs text-zinc-400">Real-time stock and exclusive online pricing synchronized with Cell Planet POS</p>
         </div>
-        <button onclick="generateFreshReviews()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">
-          🔄 Generate More Reviews
+        <input id="custSearch" type="text" placeholder="Search iPhone, Vivo, Samsung, Huawei..." oninput="renderStoreCatalog()" class="apple-blur rounded-full px-5 py-2.5 text-xs w-72 focus:outline-none border border-white/15" />
+      </div>
+
+      <div id="storeGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- LIVE ORDER TRACKING SECTION -->
+    <section id="trackSection" class="apple-blur rounded-3xl p-8 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-extrabold">📦 Live Order & Delivery Status</h2>
+          <p class="text-xs text-zinc-400">Enter your Phone Number or Order ID to check real-time packing and delivery status.</p>
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <input id="trackInput" type="text" placeholder="Enter Mobile Number or Order ID..." class="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-2.5 text-xs flex-1 sm:w-64" />
+          <button onclick="searchMyOrder()" class="bg-white text-black font-bold px-5 py-2.5 rounded-xl text-xs">Track Now</button>
+        </div>
+      </div>
+      <div id="trackResultBox" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- 1-CLICK SMART GOOGLE REVIEW HUB (UNLIMITED GENERATOR) -->
+    <section id="reviewSection" class="apple-blur rounded-3xl p-8 border border-blue-500/30 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Instant Customer Appreciation</span>
+          <h2 class="text-2xl md:text-3xl font-black text-white mt-1">Tap Any Review Below → Auto-Copies & Opens Google Reviews!</h2>
+          <p class="text-xs text-zinc-400 mt-1">Simply tap your favorite comment below, paste it on Google Maps, and give Cell Planet 5 Stars ⭐⭐⭐⭐⭐</p>
+        </div>
+        <button onclick="generateUnlimitedReviews()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-2xl text-xs shadow-lg shadow-blue-600/30">
+          🔄 Generate Fresh Unlimited Reviews
         </button>
       </div>
-      <div id="reviewChips" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4"></div>
-    </div>
-  </section>
 
-  <!-- ONLINE PREPAID CHECKOUT MODAL -->
-  <div id="checkoutModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-white/15 rounded-3xl max-w-md w-full p-6 space-y-4">
+      <div id="reviewsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    </section>
+
+  </main>
+
+  <!-- ONLINE CHECKOUT MODAL (ONLINE PAYMENT + PHOTO UPLOAD) -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-4">
+    <div class="apple-blur max-w-lg w-full rounded-3xl p-6 space-y-4 border border-white/15">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-bold text-white">Instant Online Prepaid Checkout</h3>
-        <button onclick="closeCheckout()" class="text-slate-400 hover:text-white text-sm">✕</button>
+        <h3 id="modalPhoneTitle" class="font-extrabold text-lg text-white">Complete Your Order</h3>
+        <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white">✕</button>
       </div>
-      <p id="co_itemTitle" class="text-sm font-bold text-blue-400"></p>
-      <input type="text" id="co_name" placeholder="Your Full Name *" class="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white">
-      <input type="text" id="co_phone" placeholder="10-Digit Mobile / WhatsApp Number *" class="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white">
-      <textarea id="co_address" rows="2" placeholder="Full Delivery Address in Khammam / Telangana with PIN *" class="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white"></textarea>
+      <p class="text-xs text-emerald-400 font-semibold">Online Payment Only • Instant Packing & Home Delivery in Khammam</p>
 
-      <div class="bg-black/60 border border-emerald-500/30 p-3.5 rounded-2xl text-xs space-y-1">
-        <p class="font-bold text-emerald-400">🔒 Online Payment Only (UPI / Card / NetBanking)</p>
-        <p class="text-slate-300">Pay to Official Merchant UPI: <b>08899469999@ybl</b> (Cell Planet Khammam)</p>
-        <input type="text" id="co_utr" placeholder="Enter 12-Digit UPI Ref / UTR Number after payment *" class="w-full mt-2 bg-zinc-900 border border-white/20 rounded-xl px-3 py-2 text-white font-mono">
+      <div class="space-y-3 text-xs">
+        <input id="ordName" type="text" placeholder="Your Full Name *" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white" />
+        <input id="ordPhone" type="text" placeholder="10-Digit WhatsApp Mobile Number *" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white" />
+        <textarea id="ordAddress" rows="2" placeholder="Complete Delivery Address in Khammam with Landmark *" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-2.5 text-white"></textarea>
+
+        <div class="p-3 rounded-xl bg-blue-950/40 border border-blue-500/30 space-y-1">
+          <div class="font-bold text-blue-300">Pay via UPI / PhonePe / GPay to Cell Planet: 08899469999</div>
+          <input id="ordUtr" type="text" placeholder="Enter 12-Digit UPI Reference / UTR Number *" class="w-full mt-2 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-white" />
+        </div>
+
+        <div>
+          <label class="text-zinc-400 block mb-1">Upload Payment Screenshot or Customer Photo (Optional)</label>
+          <input id="ordPhoto" type="file" accept="image/*" onchange="encodeOrderPhoto(this)" class="w-full text-xs text-zinc-300" />
+        </div>
+
+        <button onclick="submitOnlineOrder()" class="w-full bg-white hover:bg-zinc-200 text-black font-black py-3.5 rounded-xl text-sm transition">
+          Confirm Online Payment & Place Order
+        </button>
       </div>
-
-      <button onclick="submitOnlineOrder()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-2xl transition">
-        Confirm Prepaid Order & Get Live Tracking ID
-      </button>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-white/10 py-8 px-6 text-center text-xs text-slate-500">
-    <p class="font-bold text-slate-300">CELL PLANET — KHAMMAM</p>
-    <p>Station Rd, Opposite Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001</p>
-    <p class="mt-1">GSTIN: 36ACVPK3564C1ZE | Helpline: 08899469999</p>
+  <!-- FOOTER -->
+  <footer class="border-t border-white/10 py-8 px-6 text-center text-xs text-zinc-500 space-y-1">
+    <p class="font-bold text-zinc-300">CELL PLANET — Station Rd, Opp. Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001</p>
+    <p>Phone: 08899469999 | GSTIN: 36ACVPK3564C1ZE | Instagram: @cellplanet_khammam</p>
+    <p class="text-blue-400 font-semibold pt-2">Platform Architecture & POS Engineered by @syedzeeshaanali07</p>
   </footer>
 
-  <!-- Firebase Live Storefront Sync -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB8Nom_BQcJExfPWwQ3thT-snf9kMT3soA",
@@ -133,173 +145,199 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    try { getAnalytics(app); } catch (_) {}
     const db = getDatabase(app);
 
-    const GOOGLE_REVIEW_URL = "https://www.google.com/maps/search/?api=1&query=Cell+Planet+Station+Rd+opposite+Urdu+Ghar+Shadi+Khana+Khammam+Telangana+507001";
+    const GOOGLE_REVIEW_URL = "https://search.google.com/local/reviews?placeid=ChIJFxR6ddJZNDoR3SZrd7hOq0c&q=Cell+Planet,+Station+Road,+Urdu+Ghar+Shadi+Khana,+Lenin+Nagar,+Braman+Bazar,+Balaji+Nagar,+Khammam,+Telangana&authuser=0&hl=en&gl=IN";
+
+    let catalogList = {};
+    let inventoryList = {};
+    let ordersList = {};
     let selectedProduct = null;
+    let uploadedCustPhoto = "";
 
-    const normalizeArray = (val) => {
-      if (!val) return [];
-      return Array.isArray(val) ? val.filter(Boolean) : Object.values(val).filter(Boolean);
-    };
+    onValue(ref(db, "catalog"), snap => { catalogList = snap.val() || {}; renderStoreCatalog(); });
+    onValue(ref(db, "inventory"), snap => { inventoryList = snap.val() || {}; renderStoreCatalog(); });
+    onValue(ref(db, "orders"), snap => { ordersList = snap.val() || {}; searchMyOrder(); });
 
-    window.storeData = JSON.parse(localStorage.getItem('cellPlanetState')) || {
-      inventory: [
-        { brand: "Apple", model: "iPhone 16 Pro 128GB", color: "Desert Titanium", onlinePrice: 114900, offer: "₹4000 Instant Cashback + No Cost EMI", photo: "" },
-        { brand: "Huawei", model: "Mate XT Ultimate Design", color: "Rui Red", onlinePrice: 235000, offer: "Free Watch GT + VIP Screen Warranty", photo: "" }
-      ],
-      onlineOrders: []
-    };
+    window.renderStoreCatalog = () => {
+      const grid = document.getElementById("storeGrid");
+      const q = (document.getElementById("custSearch")?.value || "").toLowerCase();
+      grid.innerHTML = "";
 
-    onValue(ref(db, '/'), (snap) => {
-      if (snap.exists()) {
-        const val = snap.val();
-        window.storeData.inventory = normalizeArray(val.inventory);
-        window.storeData.onlineOrders = normalizeArray(val.onlineOrders);
-        localStorage.setItem('cellPlanetState', JSON.stringify(window.storeData));
-        renderStorefront();
-        if (document.getElementById('trackInput').value.trim()) {
-          window.trackCustomerOrder();
-        }
-      }
-    });
-
-    function renderStorefront() {
-      const grid = document.getElementById('storeGrid');
-      const items = window.storeData.inventory || [];
-      if (!items.length) {
-        grid.innerHTML = `<p class="text-sm text-slate-400 col-span-3 text-center py-8">New stock is being scanned in at our Khammam showroom. Check back in a moment!</p>`;
+      const items = Object.values(catalogList);
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center text-zinc-500 py-12">New flagship stock is being scanned into the showroom. Check back shortly!</div>`;
         return;
       }
-      grid.innerHTML = items.map((item, idx) => `
-        <div class="bg-zinc-900/90 border border-white/10 rounded-3xl p-6 flex flex-col justify-between hover:border-blue-500/50 transition">
-          <div>
-            <div class="h-44 bg-gradient-to-b from-zinc-800 to-zinc-950 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
-              ${item.photo ? `<img src="${item.photo}" class="h-full object-contain">` : `<span class="text-4xl">📱</span>`}
-            </div>
-            <span class="text-[11px] bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded-full font-semibold">${item.offer || 'Zero Downpayment EMI Available'}</span>
-            <h3 class="text-xl font-bold text-white mt-3">${item.brand} ${item.model}</h3>
-            <p class="text-xs text-slate-400 mt-0.5">Finish: ${item.color} • Verified Seal Pack</p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex justify-between items-center">
+
+      items.forEach(item => {
+        const match = `${item.brand} ${item.model}`.toLowerCase();
+        if (q && !match.includes(q)) return;
+
+        // Count live available IMEIs for this EAN
+        const availableUnits = Object.values(inventoryList).filter(i => i.ean === item.ean && i.status === "available");
+        const colors = [...new Set(availableUnits.map(i => i.color))].join(", ") || "All Standard Colors";
+
+        grid.innerHTML += `
+          <div class="apple-blur rounded-3xl p-6 flex flex-col justify-between hover:border-blue-500/40 transition">
             <div>
-              <p class="text-[10px] uppercase text-slate-400">Online Exclusive Price</p>
-              <p class="text-2xl font-extrabold text-white">₹${Number(item.onlinePrice || 0).toLocaleString('en-IN')}</p>
+              <div class="flex justify-between items-center text-[11px] text-zinc-400 mb-3">
+                <span class="uppercase font-bold tracking-wider text-blue-400">${item.brand || "FLAGSHIP"}</span>
+                <span class="px-2.5 py-0.5 rounded-full ${availableUnits.length > 0 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'} font-semibold">
+                  ${availableUnits.length > 0 ? `${availableUnits.length} in Stock` : 'Order on Request'}
+                </span>
+              </div>
+              ${item.photo ? `<img src="${item.photo}" class="w-full h-48 object-contain rounded-2xl mb-4 bg-white/5 p-2" />` : `
+                <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 flex items-center justify-center mb-4 font-black text-xl text-zinc-500">
+                  ${item.brand} ${item.model}
+                </div>
+              `}
+              <h3 class="text-xl font-extrabold text-white">${item.brand} ${item.model}</h3>
+              <p class="text-xs text-zinc-400 mt-1">Available Colors: ${colors}</p>
+              <p class="text-xs text-emerald-400 font-semibold mt-2">✨ ${item.financeTag || "Easy EMI & Best Exchange Available"}</p>
             </div>
-            <button onclick="openCheckout(${idx})" class="bg-white text-black hover:bg-blue-500 hover:text-white font-bold px-5 py-2.5 rounded-full text-xs transition">
-              Buy Online
-            </button>
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+              <div>
+                <div class="text-[10px] text-zinc-400">Online Exclusive Price</div>
+                <div class="text-2xl font-black text-white">₹${Number(item.onlineRate || item.offlineRate).toLocaleString('en-IN')}</div>
+              </div>
+              <button onclick="openCheckout('${item.ean}')" class="bg-white hover:bg-zinc-200 text-black font-bold px-5 py-2.5 rounded-full text-xs transition">
+                Buy Online
+              </button>
+            </div>
           </div>
-        </div>
-      `).join('');
-    }
-
-    window.openCheckout = (idx) => {
-      selectedProduct = window.storeData.inventory[idx];
-      document.getElementById('co_itemTitle').textContent = `${selectedProduct.brand} ${selectedProduct.model} (${selectedProduct.color}) — ₹${Number(selectedProduct.onlinePrice).toLocaleString('en-IN')}`;
-      document.getElementById('checkoutModal').classList.remove('hidden');
+        `;
+      });
     };
 
-    window.closeCheckout = () => document.getElementById('checkoutModal').classList.add('hidden');
-
-    window.submitOnlineOrder = () => {
-      const name = document.getElementById('co_name').value.trim();
-      const phone = document.getElementById('co_phone').value.trim();
-      const address = document.getElementById('co_address').value.trim();
-      const utr = document.getElementById('co_utr').value.trim();
-      if (!name || !phone || !address || !utr) return alert("Please fill all delivery fields and your Online Payment UTR reference.");
-
-      const orderId = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-      const newOrder = {
-        id: orderId,
-        customer: `${name} (${phone})`,
-        address,
-        item: `${selectedProduct.brand} ${selectedProduct.model} (${selectedProduct.color})`,
-        amount: selectedProduct.onlinePrice,
-        utr,
-        status: "Order Accepted"
-      };
-
-      window.storeData.onlineOrders.unshift(newOrder);
-      localStorage.setItem('cellPlanetState', JSON.stringify(window.storeData));
-      set(ref(db, 'onlineOrders'), window.storeData.onlineOrders);
-
-      closeCheckout();
-      alert(`Order Confirmed! Your Tracking ID is ${orderId}. You can track live packing & delivery status below.`);
-      document.getElementById('trackInput').value = orderId;
-      window.trackCustomerOrder();
+    window.openCheckout = (ean) => {
+      selectedProduct = catalogList[ean];
+      if (!selectedProduct) return;
+      document.getElementById("modalPhoneTitle").innerText = `Buy ${selectedProduct.brand} ${selectedProduct.model} (₹${selectedProduct.onlineRate})`;
+      document.getElementById("checkoutModal").classList.remove("hidden");
+      document.getElementById("checkoutModal").classList.add("flex");
     };
 
-    window.trackCustomerOrder = () => {
-      const q = document.getElementById('trackInput').value.trim().toLowerCase();
-      if (!q) return;
-      const match = (window.storeData.onlineOrders || []).find(o => o.id.toLowerCase() === q || o.customer.toLowerCase().includes(q));
-      const box = document.getElementById('trackResult');
-      if (!match) {
-        box.innerHTML = `<p class="text-xs text-red-400">No active order found for "${q}".</p>`;
+    window.closeCheckoutModal = () => {
+      document.getElementById("checkoutModal").classList.add("hidden");
+      document.getElementById("checkoutModal").classList.remove("flex");
+    };
+
+    window.encodeOrderPhoto = (input) => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => { uploadedCustPhoto = e.target.result; };
+      reader.readAsDataURL(file);
+    };
+
+    window.submitOnlineOrder = async () => {
+      const customerName = document.getElementById("ordName").value.trim();
+      const customerPhone = document.getElementById("ordPhone").value.trim();
+      const address = document.getElementById("ordAddress").value.trim();
+      const paymentRef = document.getElementById("ordUtr").value.trim();
+
+      if (!customerName || !customerPhone || !address || !paymentRef) {
+        alert("Please fill your Name, WhatsApp Number, Delivery Address, and UPI Payment UTR.");
         return;
       }
-      const stages = ["Order Accepted", "Packing at Khammam Store", "Out for Delivery", "Delivered"];
-      const currentIdx = stages.indexOf(match.status);
-      box.innerHTML = `
-        <div class="bg-black/60 border border-white/10 rounded-2xl p-4 mt-2">
-          <p class="text-xs text-slate-400">Order ID: <b class="text-white">${match.id}</b> | Handset: <b class="text-blue-400">${match.item}</b></p>
-          <p class="text-xs text-slate-400 mt-1">Delivery To: ${match.address}</p>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 text-center text-[11px]">
-            ${stages.map((st, i) => `
-              <div class="p-2 rounded-xl border ${i <= currentIdx ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold' : 'bg-zinc-900 border-white/10 text-slate-500'}">
-                ${i <= currentIdx ? '✓ ' : ''}${st}
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
+
+      const orderId = "ORD-" + Date.now().toString().slice(-5);
+      await set(ref(db, `orders/${orderId}`), {
+        orderId,
+        itemTitle: `${selectedProduct.brand} ${selectedProduct.model}`,
+        price: selectedProduct.onlineRate,
+        customerName,
+        customerPhone,
+        address,
+        paymentRef,
+        customerPhoto: uploadedCustPhoto,
+        status: "Order Accepted",
+        createdAt: new Date().toLocaleString("en-IN")
+      });
+
+      closeCheckoutModal();
+      document.getElementById("trackInput").value = customerPhone;
+      searchMyOrder();
+      alert(`Order #${orderId} Placed! Track your live status below.`);
     };
 
-    const openers = [
-      "Bought my new smartphone at Cell Planet on Station Road, Khammam!",
-      "Best mobile showroom opposite Urdu Ghar Shadi Khana in Khammam.",
-      "Super fast billing and genuine sealed box phone at Cell Planet!",
-      "Got the lowest price in Khammam with instant Bajaj EMI approval.",
-      "Amazing exchange value for my old phone and top-class customer service!"
+    window.searchMyOrder = () => {
+      const q = (document.getElementById("trackInput")?.value || "").trim().toLowerCase();
+      const box = document.getElementById("trackResultBox");
+      box.innerHTML = "";
+      if (!q) return;
+
+      Object.values(ordersList).forEach(o => {
+        if (o.customerPhone.toLowerCase().includes(q) || o.orderId.toLowerCase().includes(q)) {
+          box.innerHTML += `
+            <div class="p-4 rounded-2xl bg-zinc-900 border border-zinc-700 space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="font-mono text-blue-400 font-bold">${o.orderId}</span>
+                <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">${o.status}</span>
+              </div>
+              <div class="text-base font-bold text-white">${o.itemTitle} — ₹${o.price}</div>
+              <div class="text-zinc-400">Delivering to: ${o.address}</div>
+              <div class="text-[11px] text-zinc-500">Ordered on: ${o.createdAt}</div>
+            </div>
+          `;
+        }
+      });
+    };
+
+    // UNLIMITED 1-CLICK GOOGLE REVIEW GENERATOR
+    const openings = [
+      "Purchased my brand new smartphone from Cell Planet Khammam today!",
+      "Best mobile showroom on Station Road, Khammam!",
+      "Super happy with the wholesale pricing and genuine deal at Cell Planet!",
+      "Visited Cell Planet opposite Urdu Ghar Shadi Khana for a phone upgrade.",
+      "Got an unbeatable exchange price and instant EMI approval at Cell Planet!"
     ];
     const middles = [
-      "They gave me a great discount, genuine GST bill, and free accessories.",
-      "The staff explained all finance options clearly and set up my data transfer.",
-      "Both their online ordering and in-store pickup experience are super smooth.",
-      "Fast mobile repair service and 100% original spare parts at honest rates."
+      "They gave me a massive discount compared to online prices plus free accessories.",
+      "The staff explained all features clearly and completed my Bajaj finance in 10 minutes.",
+      "100% original sealed pack mobile with super fast billing and friendly hospitality.",
+      "Even their second-hand and mobile repair service is super transparent and fast.",
+      "Got free tempered glass, back cover, and neckband offer with my purchase!"
     ];
-    const closers = [
+    const closings = [
       "Highly recommend everyone in Khammam to visit Cell Planet!",
-      "5 stars for their honesty and after-sales support.",
-      "Definitely my go-to store for all flagship mobiles in Telangana!"
+      "Definitely my go-to mobile store in Khammam. 5 stars!",
+      "Thank you Cell Planet team for the flagship experience!",
+      "Best mobile deals in Telangana, hands down!",
+      "Will surely bring my family and friends here for their next mobile!"
     ];
 
-    window.generateFreshReviews = () => {
-      const container = document.getElementById('reviewChips');
-      let html = "";
-      for (let i = 0; i < 6; i++) {
-        const text = `${openers[Math.floor(Math.random()*openers.length)]} ${middles[Math.floor(Math.random()*middles.length)]} ${closers[Math.floor(Math.random()*closers.length)]}`;
-        html += `
-          <button onclick="copyAndRedirectReview(this)" data-review="${text}" class="text-left bg-black/50 hover:bg-blue-950/60 border border-white/10 hover:border-blue-400 p-4 rounded-2xl transition group">
-            <p class="text-xs text-slate-200 leading-relaxed">"${text}"</p>
-            <span class="inline-block mt-2 text-[11px] font-bold text-amber-400 group-hover:underline">📋 Tap to Copy & Open Google Review →</span>
+    window.generateUnlimitedReviews = () => {
+      const grid = document.getElementById("reviewsGrid");
+      grid.innerHTML = "";
+      for (let i = 0; i < 9; i++) {
+        const text = `${openings[Math.floor(Math.random()*openings.length)]} ${middles[Math.floor(Math.random()*middles.length)]} ${closings[Math.floor(Math.random()*closings.length)]}`;
+        grid.innerHTML += `
+          <button onclick="copyAndRedirectReview(\`${text}\`)" class="text-left p-4 rounded-2xl bg-zinc-900/90 hover:bg-blue-950/50 border border-white/10 hover:border-blue-500/50 transition group">
+            <div class="text-amber-400 text-xs mb-1">⭐⭐⭐⭐⭐ <span class="text-[10px] text-blue-400 font-bold ml-1 group-hover:underline">Tap to Copy & Open Google</span></div>
+            <p class="text-xs text-zinc-200 leading-relaxed">"${text}"</p>
           </button>
         `;
       }
-      container.innerHTML = html;
     };
 
-    window.copyAndRedirectReview = (btn) => {
-      const reviewText = btn.getAttribute('data-review');
-      navigator.clipboard.writeText(reviewText);
-      btn.innerHTML = `<p class="text-xs font-bold text-emerald-400">✅ Copied to Clipboard! Redirecting to Cell Planet Google Reviews...</p>`;
-      setTimeout(() => { window.open(GOOGLE_REVIEW_URL, '_blank'); }, 600);
+    window.copyAndRedirectReview = async (reviewText) => {
+      try {
+        await navigator.clipboard.writeText(reviewText);
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = reviewText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
+      alert("Review Copied! Now simply Long-Press -> Paste on the Google Review page.");
+      window.open(GOOGLE_REVIEW_URL, "_blank");
     };
 
-    renderStorefront();
-    generateFreshReviews();
+    generateUnlimitedReviews();
   </script>
 </body>
 </html>
