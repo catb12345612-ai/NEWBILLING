@@ -1,362 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cell Planet ERP & POS | Khammam</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cell Planet ERP & POS | Admin & Staff Terminal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body { font-family: 'Inter', sans-serif; background: #090d16; color: #f8fafc; }
     @media print {
       body * { visibility: hidden; }
-      #printableArea, #printableArea * { visibility: visible; }
-      #printableArea { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none !important; }
+      #printableBill, #printableBill * { visibility: visible; }
+      #printableBill { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; padding: 15px; }
       .no-print { display: none !important; }
     }
+    .glass { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="min-h-screen">
 
-  <!-- SECURITY LOGIN GATE -->
-  <div id="authGate" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-8 shadow-2xl">
-      <div class="text-center mb-6">
-        <span class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-semibold uppercase tracking-wider">Enterprise POS Security</span>
-        <h1 class="text-2xl font-extrabold mt-3 text-white">CELL PLANET</h1>
-        <p class="text-xs text-slate-400 mt-1">Station Rd, Opp. Urdu Ghar Shadi Khana, Khammam</p>
-      </div>
-      <div class="space-y-4">
+  <!-- SECURITY GATE MODAL -->
+  <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 no-print">
+    <div class="glass max-w-md w-full rounded-2xl p-8 text-center border border-blue-500/30 shadow-2xl">
+      <div class="text-xs uppercase tracking-widest text-blue-400 font-bold mb-1">High-Security ERP Terminal</div>
+      <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2">CELL PLANET</h1>
+      <p class="text-xs text-slate-400 mb-6">Station Rd, Opp. Urdu Ghar Shadi Khana, Khammam</p>
+
+      <div class="space-y-4 text-left">
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Select Access Role</label>
-          <select id="loginRole" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-            <option value="admin@cellplanet.in">Owner / Master Admin (Full Revenue & Rates)</option>
-            <option value="staff@cellplanet.in">Counter Staff (Billing, Stock-In & Repairs Only)</option>
+          <label class="text-xs text-slate-400 font-semibold">Select Role</label>
+          <select id="roleSelect" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none">
+            <option value="admin">Owner / Admin (Full Control)</option>
+            <option value="staff">Counter Staff (Billing & Stock)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Hidden Security Key / Password</label>
-          <input type="password" id="loginPass" onkeydown="if(event.key==='Enter') authenticatePOS()" placeholder="Enter role password (Default: admin123 or staff123)..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+          <label class="text-xs text-slate-400 font-semibold">Security Passcode (PIN)</label>
+          <input id="pinInput" type="password" placeholder="Enter Hidden Security PIN" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-center tracking-widest text-lg focus:border-blue-500 outline-none" />
         </div>
-        <button onclick="authenticatePOS()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">Unlock Terminal</button>
-        <button onclick="demoUnlock()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold py-2.5 rounded-xl transition">Instant Unlock (Presentation Mode)</button>
-        <p id="authError" class="text-red-400 text-xs text-center hidden"></p>
+        <button onclick="unlockTerminal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30">
+          Unlock POS System
+        </button>
+        <p id="loginError" class="text-xs text-red-400 text-center hidden">Invalid Security PIN. Access Denied.</p>
+      </div>
+      <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
+        System Engineered by <span class="text-blue-400 font-semibold">@syedzeeshaanali07</span>
       </div>
     </div>
   </div>
 
-  <!-- MAIN ERP INTERFACE -->
-  <div id="erpApp" class="hidden">
-    <!-- Top Header -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4 no-print">
-      <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-xl font-extrabold tracking-tight text-white">CELL PLANET <span class="text-blue-500">POS</span></h1>
-          <span id="roleBadge" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">ADMIN MODE</span>
-          <span id="cloudStatus" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">☁️ Connecting Firebase...</span>
+  <!-- MAIN APP WRAPPER -->
+  <div id="appContent" class="hidden no-print">
+    <!-- TOP BAR -->
+    <header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-40 px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center font-black text-xl">CP</div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="font-extrabold text-lg tracking-tight">CELL PLANET ERP</h2>
+            <span id="roleBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">ADMIN</span>
+          </div>
+          <p class="text-xs text-slate-400">GSTIN: 36ACVPK3564C1ZE | Ph: 08899469999 | Dev: @syedzeeshaanali07</p>
         </div>
-        <p class="text-xs text-slate-400 mt-0.5">GSTIN: 36ACVPK3564C1ZE | Ph: 08899469999 | Auto-Backup Active</p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-3">
-        <button onclick="exportMasterExcel(false)" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 transition">
-          📥 Download Daily Excel
-        </button>
-        <button id="purgeBtn" onclick="exportMasterExcel(true)" class="bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 text-xs font-bold px-4 py-2.5 rounded-xl transition">
-          ⚡ Backup & Clear Daily Firebase Load
-        </button>
-        <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-2.5 rounded-xl">Lock</button>
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="switchTab('pos')" class="tab-btn bg-blue-600 text-white px-3.5 py-2 rounded-lg text-xs font-bold">1. Live Billing & POS</button>
+        <button onclick="switchTab('stock')" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg text-xs font-bold">2. 3-Scan Stock In</button>
+        <button onclick="switchTab('repairs')" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg text-xs font-bold">3. Repairs & 2nd Hand</button>
+        <button onclick="switchTab('orders')" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg text-xs font-bold">4. Online Store Orders <span id="orderCountBadge" class="ml-1 px-1.5 py-0.2 bg-red-500 text-white rounded-full text-[10px]">0</span></button>
+        <button id="adminOnlyTab" onclick="switchTab('admin')" class="tab-btn bg-amber-600/20 border border-amber-500/40 text-amber-300 px-3.5 py-2 rounded-lg text-xs font-bold">5. Owner Vault & Excel</button>
+        <a href="index.html" target="_blank" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 px-3.5 py-2 rounded-lg text-xs font-bold">View Live Online Store ↗</a>
       </div>
     </header>
 
-    <!-- Admin Revenue KPI Bar (Hidden for Staff) -->
-    <section id="adminMetrics" class="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 pb-2 no-print">
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-        <p class="text-xs text-slate-400 uppercase font-semibold">Today's Gross Sales</p>
-        <p id="kpiSales" class="text-2xl font-extrabold text-white mt-1">₹0</p>
+    <!--KPI STRIP (ADMIN ONLY) -->
+    <div id="adminKpiStrip" class="grid grid-cols-2 md:grid-cols-5 gap-4 px-6 pt-5">
+      <div class="glass p-4 rounded-xl">
+        <div class="text-xs text-slate-400">Today's Revenue</div>
+        <div id="kpiRevenue" class="text-2xl font-black text-emerald-400 mt-1">₹0</div>
       </div>
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-        <p class="text-xs text-slate-400 uppercase font-semibold">Available IMEI Units</p>
-        <p id="kpiStock" class="text-2xl font-extrabold text-blue-400 mt-1">0</p>
+      <div class="glass p-4 rounded-xl">
+        <div class="text-xs text-slate-400">Units Sold Today</div>
+        <div id="kpiUnitsSold" class="text-2xl font-black text-white mt-1">0</div>
       </div>
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-        <p class="text-xs text-slate-400 uppercase font-semibold">Active Repairs Revenue</p>
-        <p id="kpiRepairs" class="text-2xl font-extrabold text-amber-400 mt-1">₹0</p>
+      <div class="glass p-4 rounded-xl">
+        <div class="text-xs text-slate-400">Available IMEIs in Stock</div>
+        <div id="kpiStockCount" class="text-2xl font-black text-blue-400 mt-1">0</div>
       </div>
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-        <p class="text-xs text-slate-400 uppercase font-semibold">2nd Hand Stock Value</p>
-        <p id="kpiSecondHand" class="text-2xl font-extrabold text-purple-400 mt-1">₹0</p>
+      <div class="glass p-4 rounded-xl">
+        <div class="text-xs text-slate-400">Active Repairs / 2nd Hand</div>
+        <div id="kpiRepairs" class="text-2xl font-black text-purple-400 mt-1">0</div>
       </div>
-      <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-        <p class="text-xs text-slate-400 uppercase font-semibold">Pending Online Orders</p>
-        <p id="kpiOnline" class="text-2xl font-extrabold text-emerald-400 mt-1">0</p>
+      <div class="glass p-4 rounded-xl flex flex-col justify-between">
+        <div class="text-xs text-slate-400">Nightly Auto-Backup Status</div>
+        <button onclick="exportMasterExcel(false)" class="mt-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 px-3 rounded-lg">
+          ⬇ Download Today's Excel
+        </button>
       </div>
-    </section>
+    </div>
 
-    <!-- Navigation Tabs -->
-    <nav class="flex flex-wrap gap-2 px-6 py-3 border-b border-slate-800 no-print">
-      <button id="btn_tabScan" onclick="switchTab('tabScan')" class="tab-btn bg-blue-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl">1. 3-Barcode Rapid Stock-In</button>
-      <button id="btn_tabBilling" onclick="switchTab('tabBilling')" class="tab-btn bg-slate-900 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl">2. Live Editable POS Billing</button>
-      <button id="btn_tabOnline" onclick="switchTab('tabOnline')" class="tab-btn bg-slate-900 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl">3. Online Orders & Store Rates</button>
-      <button id="btn_tabRepairs" onclick="switchTab('tabRepairs')" class="tab-btn bg-slate-900 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl">4. Repair & Service Desk</button>
-      <button id="btn_tabSecondHand" onclick="switchTab('tabSecondHand')" class="tab-btn bg-slate-900 text-slate-300 text-xs font-bold px-4 py-2.5 rounded-xl">5. Second-Hand Exchange</button>
-    </nav>
+    <main class="p-6">
+      <!-- TAB 1: LIVE EDITABLE BILLING & POS -->
+      <section id="tab-pos" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="glass p-5 rounded-2xl">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-base text-blue-400">⚡ Instant IMEI Barcode Scan for Billing</h3>
+              <span class="text-xs text-slate-400">Scan IMEI with gun or type manually</span>
+            </div>
+            <div class="flex gap-3">
+              <input id="posScanInput" type="text" placeholder="Scan IMEI Barcode Here & Press Enter..." class="flex-1 bg-slate-900 border border-blue-500/50 rounded-xl px-4 py-3 text-white font-mono text-sm focus:outline-none" onkeydown="if(event.key==='Enter') scanImeiToBill()" />
+              <button onclick="scanImeiToBill()" class="bg-blue-600 hover:bg-blue-500 px-6 rounded-xl font-bold text-sm">Add to Bill</button>
+            </div>
+          </div>
 
-    <!-- TAB 1: 3-BARCODE RAPID STOCK-IN -->
-    <main id="tabScan" class="tab-panel p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white">🔫 3-Scan Box Intake</h2>
-          <span class="text-xs bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-lg">USB Scanner Ready</span>
+          <!-- FULL EDITABLE CUSTOMER & LAST-MINUTE DEAL CONTROLS -->
+          <div class="glass p-5 rounded-2xl space-y-4">
+            <h3 class="font-bold text-base text-white border-b border-slate-800 pb-2">Customer & Last-Minute Rate / GST Controls (Editable Till Final Print)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label class="text-xs text-slate-400">Customer Full Name</label>
+                <input id="custName" type="text" placeholder="Walk-in Customer" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Phone Number (WhatsApp)</label>
+                <input id="custPhone" type="text" placeholder="98XXXXXXXX" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Instagram ID (For Story Tag)</label>
+                <input id="custInsta" type="text" placeholder="@customer_insta" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div class="md:col-span-2">
+                <label class="text-xs text-slate-400">Customer Address / Village</label>
+                <input id="custAddress" type="text" placeholder="Khammam, Telangana" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Payment / Finance Mode</label>
+                <select id="payMode" onchange="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                  <option value="Cash">Cash Payment</option>
+                  <option value="UPI / PhonePe / GPay">UPI / PhonePe / GPay</option>
+                  <option value="Bajaj Finserv EMI">Bajaj Finserv EMI</option>
+                  <option value="IDFC First Finance">IDFC First Finance</option>
+                  <option value="TVS Credit / HDB">TVS Credit / HDB Finance</option>
+                  <option value="Card Swipe">Credit / Debit Card</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- LAST MINUTE RATE, OFFER & GST TOGGLE -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2 border-t border-slate-800">
+              <div class="flex items-center justify-between bg-slate-900/90 p-3 rounded-xl border border-slate-700">
+                <div>
+                  <div class="text-xs font-bold text-white">Apply GST (18%)</div>
+                  <div class="text-[10px] text-slate-400">Toggle On/Off anytime</div>
+                </div>
+                <input id="gstToggle" type="checkbox" checked onchange="renderDraftBill()" class="h-5 w-5 accent-blue-500 cursor-pointer" />
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">GST Mode</label>
+                <select id="gstMode" onchange="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                  <option value="inclusive">Tax Inclusive (In MRP)</option>
+                  <option value="exclusive">Tax Exclusive (+18% Extra)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Special Discount (₹)</label>
+                <input id="billDiscount" type="number" value="0" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="text-xs text-slate-400">Freebie / Gift Note</label>
+                <input id="billOfferNote" type="text" placeholder="e.g. Free Neckband + Glass" oninput="renderDraftBill()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              </div>
+            </div>
+          </div>
+
+          <!-- ADD MANUAL / ACCESSORY ITEM TO BILL -->
+          <div class="glass p-5 rounded-2xl">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">+ Add Manual Item / Accessory / Custom Override</h4>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
+              <input id="manModel" type="text" placeholder="Item / Mobile Name" class="md:col-span-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              <input id="manImei" type="text" placeholder="IMEI / Serial (Optional)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              <input id="manPrice" type="number" placeholder="Final Rate ₹" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+              <button onclick="addManualItemToBill()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg text-xs py-2">+ Add Item</button>
+            </div>
+          </div>
         </div>
-        <p class="text-xs text-slate-400">Scan Barcode 1 (EAN/Model) to auto-detect specs. Scan Barcode 2 & 3 to log IMEIs immediately.</p>
 
-        <div class="space-y-3">
+        <!-- LIVE INVOICE PREVIEW & FINAL CLEAR -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="glass p-5 rounded-2xl">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Live Editable Invoice Preview</span>
+              <button onclick="clearDraftBill()" class="text-xs text-red-400 hover:underline">Reset Draft</button>
+            </div>
+
+            <!-- EDITABLE LINE ITEMS -->
+            <div id="draftItemsContainer" class="space-y-2 mb-4 max-h-56 overflow-y-auto"></div>
+
+            <!-- PRINTABLE BILL AREA -->
+            <div id="printableBill" class="bg-white text-black p-5 rounded-xl shadow-inner text-xs space-y-3">
+              <div class="text-center border-b-2 border-black pb-2">
+                <h1 class="text-xl font-black tracking-tight">CELL PLANET</h1>
+                <p class="text-[11px] font-medium">Station Rd, Opp. Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001</p>
+                <p class="text-[11px] font-bold">Ph: 08899469999 | Instagram: @cellplanet_khammam</p>
+                <p id="printGstinLine" class="text-[11px] font-bold">GSTIN: 36ACVPK3564C1ZE</p>
+              </div>
+
+              <div class="flex justify-between text-[11px] border-b border-gray-300 pb-2">
+                <div>
+                  <div><strong>Customer:</strong> <span id="pCustName">Walk-in Customer</span></div>
+                  <div><strong>Phone:</strong> <span id="pCustPhone">-</span> | <strong>IG:</strong> <span id="pCustInsta">-</span></div>
+                  <div><strong>Address:</strong> <span id="pCustAddr">-</span></div>
+                </div>
+                <div class="text-right">
+                  <div><strong>Invoice #:</strong> <span id="pInvNo">CP-1001</span></div>
+                  <div><strong>Date:</strong> <span id="pDate"></span></div>
+                  <div><strong>Pay Mode:</strong> <span id="pPayMode">Cash</span></div>
+                </div>
+              </div>
+
+              <table class="w-full text-left border-collapse text-[11px]">
+                <thead>
+                  <tr class="border-b border-black">
+                    <th class="py-1">Item / Model & Color</th>
+                    <th class="py-1">IMEI / Serial</th>
+                    <th class="py-1 text-right">Rate (₹)</th>
+                  </tr>
+                </thead>
+                <tbody id="pItemsTable"></tbody>
+              </table>
+
+              <div class="border-t border-black pt-2 space-y-1 text-[11px]">
+                <div class="flex justify-between"><span>Taxable Value:</span><span id="pSubTotal">₹0.00</span></div>
+                <div id="pGstRow" class="flex justify-between"><span>GST (9% CGST + 9% SGST = 18%):</span><span id="pGstAmount">₹0.00</span></div>
+                <div class="flex justify-between"><span>Special Discount:</span><span id="pDiscount">-₹0.00</span></div>
+                <div class="flex justify-between text-sm font-black border-t border-black pt-1">
+                  <span>GRAND TOTAL:</span><span id="pGrandTotal">₹0.00</span>
+                </div>
+                <div id="pOfferRow" class="text-[11px] font-bold text-emerald-700 pt-1 hidden"></div>
+              </div>
+
+              <div class="border-t border-gray-300 pt-2 flex justify-between items-end text-[10px]">
+                <div>
+                  <p class="font-bold">Terms: Goods once sold will not be returned.</p>
+                  <p>Warranty as per manufacturer service center norms.</p>
+                  <p class="mt-1 font-bold">System Developed by @syedzeeshaanali07</p>
+                </div>
+                <div class="text-right font-bold">
+                  <div class="mt-6 border-t border-black pt-0.5">Authorized Signatory</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-2">
+              <button onclick="finalizeAndClearSale()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-xl text-sm shadow-lg shadow-emerald-600/30">
+                ✅ CLEAR BILL, MARK SOLD & PRINT INVOICE
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: 3-BARCODE RAPID STOCK-IN ENGINE -->
+      <section id="tab-stock" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-5 glass p-6 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-extrabold text-blue-400">📦 3-Barcode Box Scan Engine</h3>
+              <span class="text-xs bg-blue-500/20 text-blue-300 px-2.5 py-1 rounded-full font-bold">Zero Typing Mode</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Scan the <strong>1st Barcode (Model/EAN)</strong> behind the mobile box to auto-fill all specifications. Scan the <strong>2nd Barcode (Part/Color)</strong>, then continuously gun-scan <strong>IMEI Barcodes</strong> to load stock immediately.
+            </p>
+
+            <div class="space-y-3 pt-2">
+              <div>
+                <label class="text-xs font-bold text-blue-300">SCAN 1: Box Model / EAN Barcode</label>
+                <input id="scan1Ean" type="text" placeholder="Scan 1st Barcode (EAN / UPC)..." class="w-full mt-1 bg-slate-900 border-2 border-blue-500 rounded-xl px-4 py-2.5 font-mono text-sm" onkeydown="if(event.key==='Enter') handleScan1Ean()" />
+              </div>
+
+              <div>
+                <label class="text-xs font-bold text-purple-300">SCAN 2: Part Number / Color Barcode (Or Type Color)</label>
+                <input id="scan2Color" type="text" placeholder="Scan 2nd Barcode or enter Color (e.g. Titanium Gray)..." class="w-full mt-1 bg-slate-900 border border-purple-500/60 rounded-xl px-4 py-2.5 text-sm" onkeydown="if(event.key==='Enter') document.getElementById('scan3Imei').focus()" />
+              </div>
+
+              <!-- AUTO-DETECTED SPECS (SAVED TO MASTER CATALOG ONCE) -->
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+                <div class="text-[11px] font-bold text-slate-400 uppercase">Phone Details (Auto-Filled on Repeat Scans)</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <input id="specBrand" type="text" placeholder="Brand (Apple, Vivo, etc.)" class="bg-slate-800 rounded-lg px-3 py-2 text-xs" />
+                  <input id="specModel" type="text" placeholder="Model (iPhone 16 Pro 128GB)" class="bg-slate-800 rounded-lg px-3 py-2 text-xs" />
+                  <input id="specOfflineRate" type="number" placeholder="Store Price (₹)" class="bg-slate-800 rounded-lg px-3 py-2 text-xs" />
+                  <input id="specOnlineRate" type="number" placeholder="Online Store Price (₹)" class="bg-slate-800 rounded-lg px-3 py-2 text-xs" />
+                  <input id="specFinanceTag" type="text" placeholder="Offer/Finance (Zero Downpayment)" class="col-span-2 bg-slate-800 rounded-lg px-3 py-2 text-xs" />
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-400">Direct Product Photo Upload (For Online Store)</label>
+                  <input id="specPhotoInput" type="file" accept="image/*" onchange="encodeProductPhoto(this)" class="w-full text-xs text-slate-300 mt-1" />
+                </div>
+              </div>
+
+              <div>
+                <label class="text-xs font-bold text-emerald-400">SCAN 3+: Continuous IMEI Gun Scanner (Auto-Saves on Enter)</label>
+                <input id="scan3Imei" type="text" placeholder="Gun Scan IMEI 1 Barcode Here -> Auto Stocks In!" class="w-full mt-1 bg-emerald-950/40 border-2 border-emerald-500 rounded-xl px-4 py-3 font-mono text-sm text-emerald-200" onkeydown="if(event.key==='Enter') handleScan3Imei()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 glass p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-base">Live Available IMEI Inventory (Real-Time)</h3>
+              <input id="stockSearch" type="text" placeholder="Search Model, Color or IMEI..." oninput="renderInventoryTable()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs w-64" />
+            </div>
+            <div class="overflow-x-auto max-h-[500px]">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900 text-slate-400 sticky top-0">
+                  <tr>
+                    <th class="p-3">Brand & Model</th>
+                    <th class="p-3">Color</th>
+                    <th class="p-3">IMEI Number</th>
+                    <th class="p-3">Store ₹ / Online ₹</th>
+                    <th class="p-3">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody" class="divide-y divide-slate-800"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: REPAIRS & SECOND-HAND EXCHANGE -->
+      <section id="tab-repairs" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- REPAIR JOB SHEET -->
+        <div class="glass p-6 rounded-2xl space-y-4">
+          <h3 class="font-bold text-base text-purple-400">🛠️ Mobile Service & Repair Job Entry</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <input id="repCust" type="text" placeholder="Customer Name" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="repPhone" type="text" placeholder="Customer Mobile" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="repModel" type="text" placeholder="Device Model & Lock Code" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="repIssue" type="text" placeholder="Fault (e.g. Combo Display / IC)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="repCost" type="number" placeholder="Estimated Charge (₹)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <button onclick="addRepairJob()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs">Save Repair Ticket</button>
+          </div>
+          <div id="repairListContainer" class="space-y-2 max-h-80 overflow-y-auto pt-3"></div>
+        </div>
+
+        <!-- SECOND HAND BUY / SELL LOG -->
+        <div class="glass p-6 rounded-2xl space-y-4">
+          <h3 class="font-bold text-base text-amber-400">🔄 Second-Hand / Pre-Owned Mobile Vault</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <input id="shModel" type="text" placeholder="2nd Hand Model & Condition" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="shImei" type="text" placeholder="IMEI Number" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="shSeller" type="text" placeholder="Bought From (Seller Name & ID)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="shBuyPrice" type="number" placeholder="Buying Price (₹)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <input id="shSellPrice" type="number" placeholder="Selling Online/Store Price (₹)" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs" />
+            <button onclick="addSecondHandPhone()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs">Add Pre-Owned Stock</button>
+          </div>
+          <div id="secondHandListContainer" class="space-y-2 max-h-80 overflow-y-auto pt-3"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: ONLINE ORDERS & LIVE DISPATCH SYNCHRONIZATION -->
+      <section id="tab-orders" class="hidden glass p-6 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between">
           <div>
-            <label class="text-xs font-bold text-blue-400 uppercase">Scan 1: Box Model / EAN Barcode *</label>
-            <input type="text" id="scan1_ean" oninput="lookupModelBarcode(this.value)" onkeydown="jumpNextScan(event, 'scan2_imei1')" placeholder="Scan 1st Box Barcode..." class="w-full mt-1 bg-slate-950 border-2 border-blue-500/50 rounded-xl px-4 py-2.5 text-white font-mono">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-emerald-400 uppercase">Scan 2: Primary IMEI 1 *</label>
-            <input type="text" id="scan2_imei1" onkeydown="jumpNextScan(event, 'scan3_imei2')" placeholder="Scan IMEI 1 with gun..." class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-purple-400 uppercase">Scan 3: Secondary IMEI 2 / Serial</label>
-            <input type="text" id="scan3_imei2" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveStockItem();}" placeholder="Scan IMEI 2 (Auto-submits on Enter)..." class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono">
+            <h3 class="font-bold text-lg text-emerald-400">🌐 Online Store Orders (Live Status Control)</h3>
+            <p class="text-xs text-slate-400">Updating status here immediately updates the customer's live tracking screen.</p>
           </div>
         </div>
+        <div id="onlineOrdersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
 
-        <hr class="border-slate-800">
-        <p class="text-xs font-semibold text-slate-400 uppercase">Auto-Filled Details (Save once per model):</p>
-        <div class="grid grid-cols-2 gap-3">
-          <input type="text" id="st_brand" placeholder="Brand (e.g. Apple)" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="text" id="st_model" placeholder="Model (e.g. iPhone 16 128GB)" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="text" id="st_color" placeholder="Color (e.g. Ultramarine)" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="number" id="st_offlinePrice" placeholder="Offline Store Price ₹" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="number" id="st_onlinePrice" placeholder="Online Web Price ₹" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-          <input type="text" id="st_offer" placeholder="Offer Tag (e.g. ₹3000 Cashback)" class="bg-slate-800 rounded-xl px-3 py-2 text-sm text-white">
-        </div>
-        <div>
-          <label class="text-xs text-slate-400 block mb-1">Upload Direct Product Photo (For Online Store)</label>
-          <input type="file" id="st_photo" accept="image/*" onchange="encodeProductPhoto(this)" class="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-white">
-        </div>
-        <button onclick="saveStockItem()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">Add Unit & Sync to Online Store</button>
-      </div>
-
-      <!-- Live Inventory Table -->
-      <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
-          <h2 class="text-base font-bold text-white">📦 Live Unsold IMEI Inventory</h2>
-          <input type="text" id="stockSearch" oninput="renderInventory()" placeholder="Search IMEI, Model, Color..." class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white w-64">
-        </div>
-        <div class="overflow-x-auto max-h-[500px]">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-800/60 text-slate-400 uppercase">
-              <tr>
-                <th class="p-3">Model & Color</th>
-                <th class="p-3">IMEI 1 / IMEI 2</th>
-                <th class="p-3">Store Rate</th>
-                <th class="p-3">Online Rate</th>
-                <th class="p-3">Offer / Finance</th>
-                <th class="p-3">Action</th>
-              </tr>
-            </thead>
-            <tbody id="inventoryBody" class="divide-y divide-slate-800"></tbody>
-          </table>
-        </div>
-      </div>
-    </main>
-
-    <!-- TAB 2: LIVE EDITABLE POS BILLING -->
-    <main id="tabBilling" class="tab-panel hidden p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <!-- Left Editor (7 cols) -->
-      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 no-print">
-        <div class="flex justify-between items-center">
-          <h2 class="text-base font-bold text-white">🧾 Fully Editable Draft Invoice</h2>
-          <span class="text-xs bg-amber-500/10 text-amber-300 border border-amber-500/20 px-3 py-1 rounded-full">Editable Until Final Confirm</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input type="text" id="bill_scanImei" oninput="loadImeiToBill(this.value)" placeholder="🔫 Scan or Type IMEI to Auto-Fill Bill..." class="md:col-span-3 bg-slate-950 border-2 border-emerald-500/50 rounded-xl px-4 py-2.5 text-sm text-white font-mono">
-          <input type="text" id="bill_custName" oninput="updateLiveBillPreview()" placeholder="Customer Full Name (Editable)" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-          <input type="text" id="bill_custPhone" oninput="updateLiveBillPreview()" placeholder="Customer WhatsApp / Phone" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-          <input type="text" id="bill_custAddr" oninput="updateLiveBillPreview()" placeholder="Address / Village / City" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input type="text" id="bill_itemName" oninput="updateLiveBillPreview()" placeholder="Handset Model & Storage" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-          <input type="text" id="bill_itemColor" oninput="updateLiveBillPreview()" placeholder="Color" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-          <input type="text" id="bill_imei" oninput="updateLiveBillPreview()" placeholder="IMEI 1 / IMEI 2" class="bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white font-mono">
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center bg-slate-950 p-4 rounded-xl border border-slate-800">
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">Final Selling Rate (₹) - Editable</label>
-            <input type="number" id="bill_price" oninput="updateLiveBillPreview()" value="0" class="w-full bg-slate-800 border border-blue-500 rounded-xl px-3 py-2 text-base font-bold text-white">
-          </div>
-          <div>
-            <label class="text-xs text-slate-400 block mb-1">Payment / Finance Mode</label>
-            <select id="bill_finance" onchange="updateLiveBillPreview()" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-              <option value="Cash / UPI Direct">Cash / UPI Direct</option>
-              <option value="Bajaj Finserv EMI">Bajaj Finserv EMI</option>
-              <option value="IDFC First Bank EMI">IDFC First Bank EMI</option>
-              <option value="TVS Credit Finance">TVS Credit Finance</option>
-              <option value="HDFC / Credit Card EMI">HDFC / Credit Card EMI</option>
-            </select>
-          </div>
-          <div class="flex items-center gap-3 pt-4">
-            <input type="checkbox" id="bill_gstToggle" checked onchange="updateLiveBillPreview()" class="w-5 h-5 accent-blue-600">
-            <label for="bill_gstToggle" class="text-xs font-bold text-white cursor-pointer">Include 18% GST<br><span class="text-slate-400 font-normal">Uncheck for Non-GST Bill</span></label>
-          </div>
-        </div>
-
-        <div>
-          <input type="text" id="bill_notes" oninput="updateLiveBillPreview()" placeholder="Special Offer / Freebie / Downpayment Notes (Editable till last second)" class="w-full bg-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-
-        <div class="flex flex-wrap gap-3 pt-2">
-          <button onclick="finalizeAndClearBill()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition">
-            ✅ Confirm Cleared Payment, Deduct Stock & Print
-          </button>
-          <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-5 py-3 rounded-xl text-xs">
-            🖨️ Print Draft Preview
-          </button>
-        </div>
-      </div>
-
-      <!-- Right Printable GST Invoice (5 cols) -->
-      <div class="lg:col-span-5">
-        <div id="printableArea" class="bg-white text-slate-900 rounded-2xl p-6 shadow-xl border border-slate-200">
-          <div class="text-center border-b-2 border-slate-900 pb-3">
-            <h1 class="text-2xl font-black tracking-tight">CELL PLANET</h1>
-            <p class="text-xs font-medium text-slate-600">Station Rd, Opp. Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001</p>
-            <p class="text-xs font-bold mt-1">Phone: 08899469999 | Instagram: @cellplanet_khammam</p>
-            <p id="inv_gstHeader" class="text-xs font-extrabold text-slate-800 mt-0.5">GSTIN: 36ACVPK3564C1ZE (TAX INVOICE)</p>
-          </div>
-
-          <div class="flex justify-between text-xs my-3">
-            <div>
-              <p class="font-bold">Billed To:</p>
-              <p id="inv_custName" class="font-semibold">Walk-in Customer</p>
-              <p id="inv_custPhone"></p>
-              <p id="inv_custAddr"></p>
-            </div>
-            <div class="text-right">
-              <p><span class="font-bold">Invoice #:</span> <span id="inv_num">CP-1001</span></p>
-              <p><span class="font-bold">Date:</span> <span id="inv_date"></span></p>
-              <p><span class="font-bold">Mode:</span> <span id="inv_mode">Cash / UPI</span></p>
+      <!-- TAB 5: OWNER VAULT, RATE CONTROL & FIREBASE ZERO-LOAD CLEANER -->
+      <section id="tab-admin" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="glass p-6 rounded-2xl space-y-4 border border-amber-500/30">
+            <h3 class="font-bold text-base text-amber-400">📊 Nightly Excel Backup & Zero-Load Firebase Cleaner</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Every night at closing, click below to download the complete multi-sheet Excel ledger (Sales, GST Breakup, Repairs, Online Orders, and Stock) and clear daily logs so your Firebase database never hits storage limits.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="exportMasterExcel(false)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-3 rounded-xl text-xs">
+                📥 Download Full Multi-Sheet Excel (.xlsx)
+              </button>
+              <button onclick="exportMasterExcel(true)" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-3 rounded-xl text-xs">
+                🧹 Auto-Export Excel & Clear Today's Firebase Load
+              </button>
             </div>
           </div>
 
-          <table class="w-full text-xs border-t border-b border-slate-900 my-3">
-            <thead>
-              <tr class="border-b border-slate-300 text-left">
-                <th class="py-2">Description & IMEI</th>
-                <th class="py-2 text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="py-3">
-                  <p id="inv_item" class="font-bold text-sm">Select or Scan Handset</p>
-                  <p class="text-slate-600">Color: <span id="inv_color">-</span> | HSN: 8517</p>
-                  <p class="font-mono text-xs mt-1">IMEI: <span id="inv_imei">-</span></p>
-                  <p id="inv_notes" class="text-slate-500 italic mt-1"></p>
-                </td>
-                <td id="inv_baseAmt" class="py-3 text-right font-bold align-top">₹0.00</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="space-y-1 text-xs border-b border-slate-900 pb-3">
-            <div id="inv_gstRows">
-              <div class="flex justify-between"><span>Taxable Value:</span><span id="inv_taxable">₹0.00</span></div>
-              <div class="flex justify-between"><span>CGST (9%):</span><span id="inv_cgst">₹0.00</span></div>
-              <div class="flex justify-between"><span>SGST (9%):</span><span id="inv_sgst">₹0.00</span></div>
-            </div>
-            <div class="flex justify-between text-base font-black pt-1">
-              <span>GRAND TOTAL:</span>
-              <span id="inv_total">₹0.00</span>
-            </div>
-          </div>
-
-          <div class="mt-4 text-[10px] text-slate-600 flex justify-between items-end">
-            <div>
-              <p class="font-bold text-slate-800">Terms & Conditions:</p>
-              <p>1. Brand warranty via authorized service center only.</p>
-              <p>2. Goods once sold will not be returned or exchanged.</p>
-            </div>
-            <div class="text-right">
-              <p class="font-bold border-t border-slate-400 pt-1 mt-6">Authorized Signatory (Cell Planet)</p>
-            </div>
+          <div class="glass p-6 rounded-2xl space-y-4">
+            <h3 class="font-bold text-base text-blue-400">🏷️ Instant Online & Offline Price / Offer Controller</h3>
+            <p class="text-xs text-slate-400">Edit any model's selling rate or finance headline live across POS and Customer Storefront.</p>
+            <div id="catalogRateList" class="space-y-2 max-h-72 overflow-y-auto"></div>
           </div>
         </div>
-      </div>
-    </main>
-
-    <!-- TAB 3: ONLINE ORDERS & PRICE CONTROLLER -->
-    <main id="tabOnline" class="tab-panel hidden p-6 space-y-6 no-print">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h2 class="text-base font-bold text-white mb-4">🚚 Live Online Prepaid Orders & Delivery Status</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-800 text-slate-400 uppercase">
-              <tr>
-                <th class="p-3">Order ID</th>
-                <th class="p-3">Customer & Delivery Address</th>
-                <th class="p-3">Handset Ordered</th>
-                <th class="p-3">Online Payment Ref</th>
-                <th class="p-3">Current Status</th>
-                <th class="p-3">Update Tracking Stage</th>
-              </tr>
-            </thead>
-            <tbody id="onlineOrdersBody" class="divide-y divide-slate-800"></tbody>
-          </table>
-        </div>
-      </div>
-    </main>
-
-    <!-- TAB 4: REPAIR & SERVICE DESK -->
-    <main id="tabRepairs" class="tab-panel hidden p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
-        <h2 class="text-base font-bold text-white">🔧 New Mobile Repair Job Card</h2>
-        <input type="text" id="rep_cust" placeholder="Customer Name & Phone" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="text" id="rep_device" placeholder="Mobile Model & Pattern/PIN" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="text" id="rep_issue" placeholder="Fault (e.g. Combo Display / Charging IC)" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="number" id="rep_cost" placeholder="Estimated Repair Charge ₹" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <button onclick="addRepairJob()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl">Log Repair Job</button>
-      </div>
-      <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h2 class="text-base font-bold text-white mb-4">Active Repair Tickets</h2>
-        <div id="repairsList" class="space-y-2 text-xs"></div>
-      </div>
-    </main>
-
-    <!-- TAB 5: SECOND-HAND BUYBACK -->
-    <main id="tabSecondHand" class="tab-panel hidden p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
-        <h2 class="text-base font-bold text-white">♻️ Second-Hand / Exchange Intake</h2>
-        <input type="text" id="sh_model" placeholder="Pre-Owned Device & Storage" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="text" id="sh_imei" placeholder="Scan IMEI Number" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white font-mono">
-        <input type="text" id="sh_seller" placeholder="Seller Name, Phone & ID Proof Info" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="number" id="sh_buyPrice" placeholder="Buyback Cost Paid ₹" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <input type="number" id="sh_sellPrice" placeholder="Target Resale Price ₹" class="w-full bg-slate-800 rounded-xl px-3 py-2.5 text-sm text-white">
-        <button onclick="addSecondHand()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl">Save Pre-Owned Stock</button>
-      </div>
-      <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h2 class="text-base font-bold text-white mb-4">Pre-Owned Inventory Log</h2>
-        <div id="secondHandList" class="space-y-2 text-xs"></div>
-      </div>
+      </section>
     </main>
   </div>
 
-  <!-- Firebase SDK & Logic -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+    import { getDatabase, ref, set, push, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB8Nom_BQcJExfPWwQ3thT-snf9kMT3soA",
@@ -369,411 +417,506 @@
       measurementId: "G-SYD4FLW716"
     };
 
-    let app, auth, db;
-    let isCloudConnected = false;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    try {
-      app = initializeApp(firebaseConfig);
-      try { getAnalytics(app); } catch (_) {}
-      auth = getAuth(app);
-      db = getDatabase(app);
-      isCloudConnected = true;
-    } catch (e) {
-      console.warn("Firebase connection fallback:", e);
-    }
+    // State
+    let currentRole = "staff";
+    let catalogData = {};
+    let inventoryData = {};
+    let salesData = {};
+    let repairsData = {};
+    let secondHandData = {};
+    let ordersData = {};
+    let draftBillItems = [];
+    let currentPhotoBase64 = "";
 
-    const defaultState = {
-      masterCatalog: {
-        "8901234567890": { brand: "Apple", model: "iPhone 16 Pro 128GB", color: "Desert Titanium", offlinePrice: 115900, onlinePrice: 114900, offer: "₹4000 Instant Bank Cashback + No Cost EMI" },
-        "8909876543210": { brand: "Huawei", model: "Mate XT Ultimate Design", color: "Rui Red", offlinePrice: 239999, onlinePrice: 235000, offer: "Free Huawei Watch GT + VIP Care" }
-      },
-      inventory: [
-        { id: "inv1", ean: "8901234567890", brand: "Apple", model: "iPhone 16 Pro 128GB", color: "Desert Titanium", imei1: "356789112233445", imei2: "356789112233446", offlinePrice: 115900, onlinePrice: 114900, offer: "₹4000 Instant Cashback", photo: "" }
-      ],
-      sales: [],
-      repairs: [],
-      secondHand: [],
-      onlineOrders: [
-        { id: "ORD-9021", customer: "Ramesh Rao (9848011223)", address: "Wyra Road, Khammam", item: "iPhone 16 Pro 128GB", amount: 114900, utr: "UPI428910334912", status: "Order Accepted" }
-      ]
-    };
-
-    const normalizeArray = (val) => {
-      if (!val) return [];
-      return Array.isArray(val) ? val.filter(Boolean) : Object.values(val).filter(Boolean);
-    };
-
-    window.state = JSON.parse(localStorage.getItem('cellPlanetState')) || defaultState;
-    let currentUploadedPhoto = "";
-
-    function syncData() {
-      localStorage.setItem('cellPlanetState', JSON.stringify(window.state));
-      if (isCloudConnected) {
-        set(ref(db, '/'), window.state).catch(err => console.warn("Cloud write error:", err));
+    // Security Gate (Default PINs: Admin = 9999, Staff = 1111)
+    window.unlockTerminal = () => {
+      const role = document.getElementById("roleSelect").value;
+      const pin = document.getElementById("pinInput").value.trim();
+      if ((role === "admin" && pin === "9999") || (role === "staff" && pin === "1111")) {
+        currentRole = role;
+        document.getElementById("loginModal").classList.add("hidden");
+        document.getElementById("appContent").classList.remove("hidden");
+        document.getElementById("roleBadge").innerText = role.toUpperCase();
+        if (role === "staff") {
+          document.getElementById("adminOnlyTab").classList.add("hidden");
+          document.getElementById("adminKpiStrip").classList.add("hidden");
+        }
+        initRealtimeListeners();
+        renderDraftBill();
+      } else {
+        document.getElementById("loginError").classList.remove("hidden");
       }
-      renderAll();
-    }
+    };
 
-    if (isCloudConnected) {
-      onValue(ref(db, '/'), (snap) => {
-        const badge = document.getElementById('cloudStatus');
-        if (badge) {
-          badge.textContent = "🟢 Firebase Live Synced";
-          badge.className = "px-2.5 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-        }
-        if (snap.exists()) {
-          const val = snap.val();
-          window.state = {
-            masterCatalog: val.masterCatalog || defaultState.masterCatalog,
-            inventory: normalizeArray(val.inventory),
-            sales: normalizeArray(val.sales),
-            repairs: normalizeArray(val.repairs),
-            secondHand: normalizeArray(val.secondHand),
-            onlineOrders: normalizeArray(val.onlineOrders)
-          };
-          localStorage.setItem('cellPlanetState', JSON.stringify(window.state));
-          renderAll();
-        } else {
-          set(ref(db, '/'), window.state);
-        }
+    window.switchTab = (tabName) => {
+      ["pos", "stock", "repairs", "orders", "admin"].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add("hidden");
       });
-    }
-
-    // Role Authentication (Supports both Firebase Auth & Quick Default Keys admin123 / staff123)
-    window.authenticatePOS = async () => {
-      const email = document.getElementById('loginRole').value;
-      const pass = document.getElementById('loginPass').value.trim();
-      const isOwner = email.includes('admin');
-
-      if ((isOwner && pass === 'admin123') || (!isOwner && pass === 'staff123')) {
-        return launchTerminal(isOwner ? 'ADMIN' : 'STAFF');
-      }
-
-      if (isCloudConnected && pass) {
-        try {
-          await signInWithEmailAndPassword(auth, email, pass);
-          launchTerminal(isOwner ? 'ADMIN' : 'STAFF');
-        } catch (err) {
-          const errEl = document.getElementById('authError');
-          errEl.textContent = "Invalid Password. Use 'admin123', 'staff123', or your Firebase Auth user password.";
-          errEl.classList.remove('hidden');
-        }
-      } else {
-        launchTerminal(isOwner ? 'ADMIN' : 'STAFF');
-      }
+      document.getElementById(`tab-${tabName}`).classList.remove("hidden");
     };
 
-    window.demoUnlock = () => {
-      const email = document.getElementById('loginRole').value;
-      launchTerminal(email.includes('admin') ? 'ADMIN' : 'STAFF');
-    };
-
-    function launchTerminal(role) {
-      document.getElementById('authGate').classList.add('hidden');
-      document.getElementById('erpApp').classList.remove('hidden');
-      document.getElementById('roleBadge').textContent = role + " MODE";
-      if (role === 'STAFF') {
-        document.getElementById('adminMetrics').classList.add('hidden');
-        document.getElementById('purgeBtn').classList.add('hidden');
-      } else {
-        document.getElementById('adminMetrics').classList.remove('hidden');
-        document.getElementById('purgeBtn').classList.remove('hidden');
-      }
-      document.getElementById('inv_date').textContent = new Date().toLocaleDateString('en-IN');
-      renderAll();
-      scheduleNightlyAutoBackup();
-    }
-
-    // 3-Barcode Rapid Scanner Logic
-    window.jumpNextScan = (e, nextId) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById(nextId).focus();
-      }
-    };
-
-    window.lookupModelBarcode = (ean) => {
-      const cleanEan = ean.trim();
-      const match = (window.state.masterCatalog || {})[cleanEan];
-      if (match) {
-        document.getElementById('st_brand').value = match.brand || "";
-        document.getElementById('st_model').value = match.model || "";
-        document.getElementById('st_color').value = match.color || "";
-        document.getElementById('st_offlinePrice').value = match.offlinePrice || "";
-        document.getElementById('st_onlinePrice').value = match.onlinePrice || "";
-        document.getElementById('st_offer').value = match.offer || "";
-      }
-    };
-
-    window.encodeProductPhoto = (input) => {
-      const file = input.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => { currentUploadedPhoto = e.target.result; };
-      reader.readAsDataURL(file);
-    };
-
-    window.saveStockItem = () => {
-      const ean = document.getElementById('scan1_ean').value.trim() || "MANUAL";
-      const imei1 = document.getElementById('scan2_imei1').value.trim();
-      const imei2 = document.getElementById('scan3_imei2').value.trim();
-      const brand = document.getElementById('st_brand').value.trim();
-      const model = document.getElementById('st_model').value.trim();
-      const color = document.getElementById('st_color').value.trim() || "Standard";
-      const offlinePrice = Number(document.getElementById('st_offlinePrice').value || 0);
-      const onlinePrice = Number(document.getElementById('st_onlinePrice').value || offlinePrice);
-      const offer = document.getElementById('st_offer').value.trim();
-
-      if (!imei1 || !model) return alert("Please scan IMEI 1 and enter Model Name.");
-
-      if (!window.state.masterCatalog) window.state.masterCatalog = {};
-      window.state.masterCatalog[ean] = { brand, model, color, offlinePrice, onlinePrice, offer };
-
-      window.state.inventory.unshift({
-        id: 'IMEI-' + Date.now(),
-        ean, brand, model, color, imei1, imei2, offlinePrice, onlinePrice, offer,
-        photo: currentUploadedPhoto
+    function initRealtimeListeners() {
+      onValue(ref(db, "catalog"), snap => {
+        catalogData = snap.val() || {};
+        renderCatalogRates();
+      });
+      onValue(ref(db, "inventory"), snap => {
+        inventoryData = snap.val() || {};
+        renderInventoryTable();
+        updateKpis();
+      });
+      onValue(ref(db, "sales"), snap => {
+        salesData = snap.val() || {};
+        updateKpis();
+      });
+      onValue(ref(db, "repairs"), snap => {
+        repairsData = snap.val() || {};
+        renderRepairs();
+        updateKpis();
+      });
+      onValue(ref(db, "secondhand"), snap => {
+        secondHandData = snap.val() || {};
+        renderSecondHand();
+        updateKpis();
+      });
+      onValue(ref(db, "orders"), snap => {
+        ordersData = snap.val() || {};
+        renderOnlineOrders();
       });
 
-      document.getElementById('scan2_imei1').value = "";
-      document.getElementById('scan3_imei2').value = "";
-      document.getElementById('scan2_imei1').focus();
-      syncData();
-    };
-
-    window.updateUnitRate = (id, field, val) => {
-      const unit = window.state.inventory.find(u => u.id === id);
-      if (unit) {
-        unit[field] = field.includes('Price') ? Number(val) : val;
-        syncData();
-      }
-    };
-
-    // Billing Engine
-    window.loadImeiToBill = (scannedImei) => {
-      const q = scannedImei.trim();
-      const unit = (window.state.inventory || []).find(i => i.imei1 === q || i.imei2 === q);
-      if (unit) {
-        document.getElementById('bill_itemName').value = `${unit.brand} ${unit.model}`;
-        document.getElementById('bill_itemColor').value = unit.color;
-        document.getElementById('bill_imei').value = `${unit.imei1}${unit.imei2 ? ' / ' + unit.imei2 : ''}`;
-        document.getElementById('bill_price').value = unit.offlinePrice;
-        document.getElementById('bill_notes').value = unit.offer || "";
-        updateLiveBillPreview();
-      }
-    };
-
-    window.updateLiveBillPreview = () => {
-      const custName = document.getElementById('bill_custName').value || "Walk-in Customer";
-      const custPhone = document.getElementById('bill_custPhone').value;
-      const custAddr = document.getElementById('bill_custAddr').value;
-      const item = document.getElementById('bill_itemName').value || "Handset";
-      const color = document.getElementById('bill_itemColor').value || "-";
-      const imei = document.getElementById('bill_imei').value || "-";
-      const total = Number(document.getElementById('bill_price').value || 0);
-      const mode = document.getElementById('bill_finance').value;
-      const gstOn = document.getElementById('bill_gstToggle').checked;
-      const notes = document.getElementById('bill_notes').value;
-
-      document.getElementById('inv_custName').textContent = custName;
-      document.getElementById('inv_custPhone').textContent = custPhone ? `Ph: ${custPhone}` : "";
-      document.getElementById('inv_custAddr').textContent = custAddr;
-      document.getElementById('inv_item').textContent = item;
-      document.getElementById('inv_color').textContent = color;
-      document.getElementById('inv_imei').textContent = imei;
-      document.getElementById('inv_mode').textContent = mode;
-      document.getElementById('inv_notes').textContent = notes;
-
-      if (gstOn) {
-        const taxable = total / 1.18;
-        const halfGst = (total - taxable) / 2;
-        document.getElementById('inv_gstHeader').textContent = "GSTIN: 36ACVPK3564C1ZE (TAX INVOICE)";
-        document.getElementById('inv_gstRows').classList.remove('hidden');
-        document.getElementById('inv_baseAmt').textContent = `₹${taxable.toFixed(2)}`;
-        document.getElementById('inv_taxable').textContent = `₹${taxable.toFixed(2)}`;
-        document.getElementById('inv_cgst').textContent = `₹${halfGst.toFixed(2)}`;
-        document.getElementById('inv_sgst').textContent = `₹${halfGst.toFixed(2)}`;
-      } else {
-        document.getElementById('inv_gstHeader').textContent = "ESTIMATE / RETAIL CASH MEMO";
-        document.getElementById('inv_gstRows').classList.add('hidden');
-        document.getElementById('inv_baseAmt').textContent = `₹${total.toFixed(2)}`;
-      }
-      document.getElementById('inv_total').textContent = `₹${total.toLocaleString('en-IN')}`;
-    };
-
-    window.finalizeAndClearBill = () => {
-      const item = document.getElementById('bill_itemName').value.trim();
-      const imeiRaw = document.getElementById('bill_imei').value.trim();
-      const price = Number(document.getElementById('bill_price').value || 0);
-      if (!item || price <= 0) return alert("Enter valid item and final selling rate before clearing bill.");
-
-      const invNum = 'CP-' + Math.floor(1000 + Math.random() * 9000);
-      document.getElementById('inv_num').textContent = invNum;
-
-      window.state.sales.push({
-        invoice: invNum,
-        date: new Date().toLocaleString('en-IN'),
-        customer: document.getElementById('bill_custName').value || "Walk-in",
-        phone: document.getElementById('bill_custPhone').value || "-",
-        item,
-        imei: imeiRaw,
-        amount: price,
-        gstIncluded: document.getElementById('bill_gstToggle').checked ? "YES" : "NO",
-        financeMode: document.getElementById('bill_finance').value
-      });
-
-      const firstImei = imeiRaw.split('/')[0].trim();
-      window.state.inventory = (window.state.inventory || []).filter(u => u.imei1 !== firstImei);
-
-      syncData();
-      window.print();
-    };
-
-    window.updateOrderStatus = (idx, newStatus) => {
-      if (window.state.onlineOrders[idx]) {
-        window.state.onlineOrders[idx].status = newStatus;
-        syncData();
-      }
-    };
-
-    window.addRepairJob = () => {
-      const cust = document.getElementById('rep_cust').value.trim();
-      const device = document.getElementById('rep_device').value.trim();
-      const issue = document.getElementById('rep_issue').value.trim();
-      const cost = Number(document.getElementById('rep_cost').value || 0);
-      if (!cust || !device) return alert("Enter Customer Name and Mobile Model.");
-      window.state.repairs.unshift({ date: new Date().toLocaleDateString('en-IN'), cust, device, issue, cost, status: "Completed" });
-      document.getElementById('rep_cust').value = "";
-      document.getElementById('rep_device').value = "";
-      document.getElementById('rep_issue').value = "";
-      document.getElementById('rep_cost').value = "";
-      syncData();
-    };
-
-    window.addSecondHand = () => {
-      const model = document.getElementById('sh_model').value.trim();
-      const imei = document.getElementById('sh_imei').value.trim();
-      const seller = document.getElementById('sh_seller').value.trim();
-      const buyPrice = Number(document.getElementById('sh_buyPrice').value || 0);
-      const sellPrice = Number(document.getElementById('sh_sellPrice').value || 0);
-      if (!model || !imei) return alert("Enter Model and IMEI.");
-      window.state.secondHand.unshift({ date: new Date().toLocaleDateString('en-IN'), model, imei, seller, buyPrice, sellPrice });
-      document.getElementById('sh_model').value = "";
-      document.getElementById('sh_imei').value = "";
-      document.getElementById('sh_seller').value = "";
-      document.getElementById('sh_buyPrice').value = "";
-      document.getElementById('sh_sellPrice').value = "";
-      syncData();
-    };
-
-    window.exportMasterExcel = (clearAfterDownload) => {
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window.state.sales.length ? window.state.sales : [{Note: "No Sales Today"}]), "Daily_Sales");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window.state.inventory.length ? window.state.inventory : [{Note: "No Unsold Stock"}]), "Unsold_IMEI_Stock");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window.state.onlineOrders.length ? window.state.onlineOrders : [{Note: "No Online Orders"}]), "Online_Orders");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window.state.repairs.length ? window.state.repairs : [{Note: "No Repairs"}]), "Repairs_Log");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window.state.secondHand.length ? window.state.secondHand : [{Note: "No Second Hand Stock"}]), "SecondHand_Stock");
-
-      const fileName = `CellPlanet_Khammam_${new Date().toISOString().slice(0,10)}.xlsx`;
-      XLSX.writeFile(wb, fileName);
-
-      if (clearAfterDownload) {
-        if (confirm("Excel Backup Downloaded! Clear today's completed Sales & Repair logs from Firebase so your cloud storage stays at 0% load? (Unsold IMEI stock and Master Catalog will remain safe)")) {
-          window.state.sales = [];
-          window.state.repairs = [];
-          syncData();
-          alert("Daily logs cleared from Firebase! Unsold inventory is untouched.");
-        }
-      }
-    };
-
-    function scheduleNightlyAutoBackup() {
+      // Check Nightly 10:30 PM Auto-Backup Trigger
       setInterval(() => {
         const now = new Date();
-        const todayKey = now.toISOString().slice(0, 10);
-        if (now.getHours() === 22 && now.getMinutes() >= 30 && localStorage.getItem('lastAutoBackup') !== todayKey) {
-          localStorage.setItem('lastAutoBackup', todayKey);
-          window.exportMasterExcel(false);
+        const key = `autoBackup_${now.toDateString()}`;
+        if (now.getHours() === 22 && now.getMinutes() >= 30 && !localStorage.getItem(key) && Object.keys(salesData).length > 0) {
+          localStorage.setItem(key, "done");
+          exportMasterExcel(false);
         }
       }, 60000);
     }
 
-    function renderAll() {
-      const salesSum = (window.state.sales || []).reduce((a, b) => a + Number(b.amount || 0), 0);
-      const repSum = (window.state.repairs || []).reduce((a, b) => a + Number(b.cost || 0), 0);
-      const shSum = (window.state.secondHand || []).reduce((a, b) => a + Number(b.buyPrice || 0), 0);
-      document.getElementById('kpiSales').textContent = `₹${salesSum.toLocaleString('en-IN')}`;
-      document.getElementById('kpiStock').textContent = (window.state.inventory || []).length;
-      document.getElementById('kpiRepairs').textContent = `₹${repSum.toLocaleString('en-IN')}`;
-      document.getElementById('kpiSecondHand').textContent = `₹${shSum.toLocaleString('en-IN')}`;
-      document.getElementById('kpiOnline').textContent = (window.state.onlineOrders || []).length;
-
-      renderInventory();
-
-      const ordBody = document.getElementById('onlineOrdersBody');
-      ordBody.innerHTML = (window.state.onlineOrders || []).map((o, idx) => `
-        <tr>
-          <td class="p-3 font-mono font-bold text-blue-400">${o.id}</td>
-          <td class="p-3"><b>${o.customer}</b><br><span class="text-slate-400">${o.address}</span></td>
-          <td class="p-3 font-semibold">${o.item}<br><span class="text-emerald-400">₹${Number(o.amount || 0).toLocaleString('en-IN')}</span></td>
-          <td class="p-3 font-mono text-amber-300">${o.utr}</td>
-          <td class="p-3"><span class="px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-bold">${o.status}</span></td>
-          <td class="p-3">
-            <select onchange="updateOrderStatus(${idx}, this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white">
-              <option ${o.status==='Order Accepted'?'selected':''}>Order Accepted</option>
-              <option ${o.status==='Packing at Khammam Store'?'selected':''}>Packing at Khammam Store</option>
-              <option ${o.status==='Out for Delivery'?'selected':''}>Out for Delivery</option>
-              <option ${o.status==='Delivered'?'selected':''}>Delivered</option>
-            </select>
-          </td>
-        </tr>
-      `).join('');
-
-      document.getElementById('repairsList').innerHTML = (window.state.repairs || []).map(r => `
-        <div class="flex justify-between bg-slate-800/60 p-3 rounded-xl">
-          <div><b>${r.device}</b> (${r.issue}) - <span class="text-slate-400">${r.cust}</span></div>
-          <div class="font-bold text-amber-400">₹${r.cost}</div>
-        </div>
-      `).join('');
-
-      document.getElementById('secondHandList').innerHTML = (window.state.secondHand || []).map(s => `
-        <div class="flex justify-between bg-slate-800/60 p-3 rounded-xl">
-          <div><b>${s.model}</b> | IMEI: <span class="font-mono">${s.imei}</span> | Seller: ${s.seller}</div>
-          <div class="font-bold text-purple-400">Buy: ₹${s.buyPrice} → Target: ₹${s.sellPrice}</div>
-        </div>
-      `).join('');
-    }
-
-    window.renderInventory = () => {
-      const q = (document.getElementById('stockSearch')?.value || "").toLowerCase();
-      const body = document.getElementById('inventoryBody');
-      body.innerHTML = (window.state.inventory || []).filter(u =>
-        `${u.brand} ${u.model} ${u.color} ${u.imei1}`.toLowerCase().includes(q)
-      ).map(u => `
-        <tr>
-          <td class="p-3 font-bold text-white">${u.brand} ${u.model}<br><span class="text-slate-400 font-normal">${u.color}</span></td>
-          <td class="p-3 font-mono text-emerald-400">${u.imei1}<br><span class="text-slate-500">${u.imei2 || ''}</span></td>
-          <td class="p-3"><input type="number" value="${u.offlinePrice}" onchange="updateUnitRate('${u.id}', 'offlinePrice', this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 w-24 text-white font-bold"></td>
-          <td class="p-3"><input type="number" value="${u.onlinePrice}" onchange="updateUnitRate('${u.id}', 'onlinePrice', this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 w-24 text-blue-400 font-bold"></td>
-          <td class="p-3"><input type="text" value="${u.offer || ''}" onchange="updateUnitRate('${u.id}', 'offer', this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 w-40 text-xs text-amber-300"></td>
-          <td class="p-3">
-            <button onclick="switchTab('tabBilling'); loadImeiToBill('${u.imei1}')" class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg font-bold">Bill Unit</button>
-          </td>
-        </tr>
-      `).join('');
+    // 3-BARCODE RAPID STOCK-IN LOGIC
+    window.encodeProductPhoto = (input) => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => { currentPhotoBase64 = e.target.result; };
+      reader.readAsDataURL(file);
     };
 
-    window.switchTab = (tabId) => {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-      document.getElementById(tabId).classList.remove('hidden');
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('bg-blue-600', 'text-white');
-        b.classList.add('bg-slate-900', 'text-slate-300');
+    window.handleScan1Ean = () => {
+      const ean = document.getElementById("scan1Ean").value.trim();
+      if (!ean) return;
+      if (catalogData[ean]) {
+        const item = catalogData[ean];
+        document.getElementById("specBrand").value = item.brand || "";
+        document.getElementById("specModel").value = item.model || "";
+        document.getElementById("specOfflineRate").value = item.offlineRate || "";
+        document.getElementById("specOnlineRate").value = item.onlineRate || "";
+        document.getElementById("specFinanceTag").value = item.financeTag || "";
+        currentPhotoBase64 = item.photo || "";
+      }
+      document.getElementById("scan2Color").focus();
+    };
+
+    window.handleScan3Imei = async () => {
+      const ean = document.getElementById("scan1Ean").value.trim() || "MANUAL-EAN";
+      const color = document.getElementById("scan2Color").value.trim() || "Standard";
+      const imei = document.getElementById("scan3Imei").value.trim();
+      const brand = document.getElementById("specBrand").value.trim();
+      const model = document.getElementById("specModel").value.trim();
+      const offlineRate = Number(document.getElementById("specOfflineRate").value || 0);
+      const onlineRate = Number(document.getElementById("specOnlineRate").value || offlineRate);
+      const financeTag = document.getElementById("specFinanceTag").value.trim() || "0% Downpayment Available";
+
+      if (!imei || !model) {
+        alert("Please ensure Model Name and IMEI are scanned/filled.");
+        return;
+      }
+
+      // Save/Update Master Catalog so future box scans require zero typing
+      await set(ref(db, `catalog/${ean}`), {
+        ean, brand, model, offlineRate, onlineRate, financeTag,
+        photo: currentPhotoBase64 || (catalogData[ean]?.photo || "")
       });
-      const activeBtn = document.getElementById('btn_' + tabId);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-slate-900', 'text-slate-300');
-        activeBtn.classList.add('bg-blue-600', 'text-white');
+
+      // Save Individual IMEI into Stock
+      await set(ref(db, `inventory/${imei}`), {
+        imei, ean, brand, model, color, offlineRate, onlineRate, financeTag,
+        status: "available",
+        addedAt: new Date().toISOString()
+      });
+
+      document.getElementById("scan3Imei").value = "";
+      document.getElementById("scan3Imei").focus();
+    };
+
+    window.renderInventoryTable = () => {
+      const q = (document.getElementById("stockSearch")?.value || "").toLowerCase();
+      const tbody = document.getElementById("inventoryTableBody");
+      tbody.innerHTML = "";
+      Object.values(inventoryData).forEach(item => {
+        if (item.status !== "available") return;
+        const match = `${item.brand} ${item.model} ${item.color} ${item.imei}`.toLowerCase();
+        if (q && !match.includes(q)) return;
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-800/60">
+            <td class="p-3 font-bold text-white">${item.brand} ${item.model}</td>
+            <td class="p-3 text-slate-300">${item.color}</td>
+            <td class="p-3 font-mono text-emerald-400">${item.imei}</td>
+            <td class="p-3">₹${item.offlineRate} / <span class="text-blue-400">₹${item.onlineRate}</span></td>
+            <td class="p-3">
+              <button onclick="quickAddImeiToBill('${item.imei}')" class="bg-blue-600 px-2.5 py-1 rounded text-[11px] font-bold mr-1">Bill This</button>
+              <button onclick="deleteStockImei('${item.imei}')" class="text-red-400 hover:underline text-[11px]">Remove</button>
+            </td>
+          </tr>
+        `;
+      });
+    };
+
+    window.deleteStockImei = (imei) => remove(ref(db, `inventory/${imei}`));
+
+    // POS BILLING ENGINE (EDITABLE TILL FINAL CLEAR)
+    window.scanImeiToBill = () => {
+      const imei = document.getElementById("posScanInput").value.trim();
+      if (!imei) return;
+      quickAddImeiToBill(imei);
+      document.getElementById("posScanInput").value = "";
+    };
+
+    window.quickAddImeiToBill = (imei) => {
+      const stockItem = inventoryData[imei];
+      if (!stockItem || stockItem.status !== "available") {
+        alert("IMEI not found in available stock! You can add it via Manual Override below.");
+        return;
+      }
+      if (draftBillItems.some(i => i.imei === imei)) return;
+      draftBillItems.push({
+        imei: stockItem.imei,
+        title: `${stockItem.brand} ${stockItem.model} (${stockItem.color})`,
+        price: Number(stockItem.offlineRate)
+      });
+      renderDraftBill();
+    };
+
+    window.addManualItemToBill = () => {
+      const title = document.getElementById("manModel").value.trim();
+      const imei = document.getElementById("manImei").value.trim() || "ACCESSORY";
+      const price = Number(document.getElementById("manPrice").value || 0);
+      if (!title || price <= 0) return;
+      draftBillItems.push({ imei, title, price });
+      document.getElementById("manModel").value = "";
+      document.getElementById("manImei").value = "";
+      document.getElementById("manPrice").value = "";
+      renderDraftBill();
+    };
+
+    window.updateDraftItemPrice = (idx, newPrice) => {
+      draftBillItems[idx].price = Number(newPrice || 0);
+      renderDraftBill();
+    };
+
+    window.updateDraftItemTitle = (idx, newTitle) => {
+      draftBillItems[idx].title = newTitle;
+      renderDraftBill();
+    };
+
+    window.removeDraftItem = (idx) => {
+      draftBillItems.splice(idx, 1);
+      renderDraftBill();
+    };
+
+    window.clearDraftBill = () => {
+      draftBillItems = [];
+      document.getElementById("custName").value = "";
+      document.getElementById("custPhone").value = "";
+      document.getElementById("custInsta").value = "";
+      document.getElementById("custAddress").value = "";
+      document.getElementById("billDiscount").value = 0;
+      document.getElementById("billOfferNote").value = "";
+      renderDraftBill();
+    };
+
+    window.renderDraftBill = () => {
+      const editContainer = document.getElementById("draftItemsContainer");
+      const printTable = document.getElementById("pItemsTable");
+      editContainer.innerHTML = "";
+      printTable.innerHTML = "";
+
+      let rawSum = 0;
+      draftBillItems.forEach((item, idx) => {
+        rawSum += Number(item.price || 0);
+        editContainer.innerHTML += `
+          <div class="flex items-center gap-2 bg-slate-900 p-2 rounded-lg border border-slate-700 text-xs">
+            <input type="text" value="${item.title}" oninput="updateDraftItemTitle(${idx}, this.value)" class="flex-1 bg-slate-800 px-2 py-1 rounded text-white" />
+            <span class="font-mono text-slate-400 text-[10px]">${item.imei}</span>
+            <input type="number" value="${item.price}" oninput="updateDraftItemPrice(${idx}, this.value)" class="w-24 bg-slate-800 px-2 py-1 rounded text-emerald-400 font-bold text-right" />
+            <button onclick="removeDraftItem(${idx})" class="text-red-400 font-bold px-1">✕</button>
+          </div>
+        `;
+        printTable.innerHTML += `
+          <tr class="border-b border-gray-200">
+            <td class="py-1.5 font-semibold">${item.title}</td>
+            <td class="py-1.5 font-mono">${item.imei}</td>
+            <td class="py-1.5 text-right font-bold">₹${Number(item.price).toLocaleString('en-IN')}</td>
+          </tr>
+        `;
+      });
+
+      const gstOn = document.getElementById("gstToggle").checked;
+      const gstMode = document.getElementById("gstMode").value;
+      const discount = Number(document.getElementById("billDiscount").value || 0);
+      const offerNote = document.getElementById("billOfferNote").value.trim();
+
+      let taxable = rawSum;
+      let gstAmt = 0;
+      let grandTotal = rawSum - discount;
+
+      if (gstOn) {
+        if (gstMode === "inclusive") {
+          taxable = rawSum / 1.18;
+          gstAmt = rawSum - taxable;
+          grandTotal = rawSum - discount;
+        } else {
+          taxable = rawSum;
+          gstAmt = rawSum * 0.18;
+          grandTotal = rawSum + gstAmt - discount;
+        }
+      }
+
+      document.getElementById("printGstinLine").style.display = gstOn ? "block" : "none";
+      document.getElementById("pGstRow").style.display = gstOn ? "flex" : "none";
+      document.getElementById("pCustName").innerText = document.getElementById("custName").value || "Walk-in Customer";
+      document.getElementById("pCustPhone").innerText = document.getElementById("custPhone").value || "-";
+      document.getElementById("pCustInsta").innerText = document.getElementById("custInsta").value || "-";
+      document.getElementById("pCustAddr").innerText = document.getElementById("custAddress").value || "Khammam";
+      document.getElementById("pPayMode").innerText = document.getElementById("payMode").value;
+      document.getElementById("pDate").innerText = new Date().toLocaleString("en-IN");
+      document.getElementById("pSubTotal").innerText = `₹${taxable.toFixed(2)}`;
+      document.getElementById("pGstAmount").innerText = `₹${gstAmt.toFixed(2)}`;
+      document.getElementById("pDiscount").innerText = `-₹${discount.toFixed(2)}`;
+      document.getElementById("pGrandTotal").innerText = `₹${Math.max(0, grandTotal).toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+
+      const offerRow = document.getElementById("pOfferRow");
+      if (offerNote) {
+        offerRow.classList.remove("hidden");
+        offerRow.innerText = `🎁 Special Store Offer Applied: ${offerNote}`;
+      } else {
+        offerRow.classList.add("hidden");
+      }
+    };
+
+    // FINALIZE BILL -> ONLY NOW MARK SOLD IN FIREBASE & PRINT
+    window.finalizeAndClearSale = async () => {
+      if (draftBillItems.length === 0) {
+        alert("Add at least one mobile or accessory to finalize the bill.");
+        return;
+      }
+      const invId = "CP-" + Date.now().toString().slice(-6);
+      document.getElementById("pInvNo").innerText = invId;
+
+      const gstOn = document.getElementById("gstToggle").checked;
+      const discount = Number(document.getElementById("billDiscount").value || 0);
+      const rawSum = draftBillItems.reduce((a, b) => a + Number(b.price || 0), 0);
+      const gstMode = document.getElementById("gstMode").value;
+      const totalAmount = gstOn && gstMode === "exclusive" ? (rawSum * 1.18 - discount) : (rawSum - discount);
+
+      const salePayload = {
+        invoiceNo: invId,
+        customerName: document.getElementById("custName").value || "Walk-in Customer",
+        customerPhone: document.getElementById("custPhone").value || "",
+        customerInsta: document.getElementById("custInsta").value || "",
+        customerAddress: document.getElementById("custAddress").value || "Khammam",
+        payMode: document.getElementById("payMode").value,
+        gstApplied: gstOn ? "YES (18%)" : "NO (Non-GST)",
+        discount,
+        offerNote: document.getElementById("billOfferNote").value || "",
+        totalAmount: Math.round(totalAmount),
+        items: draftBillItems,
+        timestamp: new Date().toISOString()
+      };
+
+      // Save to Sales & remove sold IMEIs from active stock
+      await set(ref(db, `sales/${invId}`), salePayload);
+      for (const item of draftBillItems) {
+        if (inventoryData[item.imei]) {
+          await remove(ref(db, `inventory/${item.imei}`));
+        }
+      }
+
+      window.print();
+      clearDraftBill();
+    };
+
+    // REPAIRS & SECOND-HAND FUNCTIONS
+    window.addRepairJob = async () => {
+      const cust = document.getElementById("repCust").value.trim();
+      const phone = document.getElementById("repPhone").value.trim();
+      const model = document.getElementById("repModel").value.trim();
+      const issue = document.getElementById("repIssue").value.trim();
+      const cost = Number(document.getElementById("repCost").value || 0);
+      if (!cust || !model) return;
+      await push(ref(db, "repairs"), { cust, phone, model, issue, cost, status: "In Service", date: new Date().toLocaleString("en-IN") });
+      ["repCust", "repPhone", "repModel", "repIssue", "repCost"].forEach(id => document.getElementById(id).value = "");
+    };
+
+    function renderRepairs() {
+      const box = document.getElementById("repairListContainer");
+      box.innerHTML = "";
+      Object.entries(repairsData).forEach(([id, r]) => {
+        box.innerHTML += `
+          <div class="flex items-center justify-between bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
+            <div>
+              <div class="font-bold text-white">${r.model} — <span class="text-purple-400">${r.issue}</span></div>
+              <div class="text-slate-400">${r.cust} (${r.phone}) | Charge: ₹${r.cost}</div>
+            </div>
+            <button onclick="removeRepair('${id}')" class="bg-emerald-600/20 text-emerald-300 px-2.5 py-1 rounded font-bold">Delivered ✓</button>
+          </div>
+        `;
+      });
+    }
+    window.removeRepair = (id) => remove(ref(db, `repairs/${id}`));
+
+    window.addSecondHandPhone = async () => {
+      const model = document.getElementById("shModel").value.trim();
+      const imei = document.getElementById("shImei").value.trim();
+      const seller = document.getElementById("shSeller").value.trim();
+      const buyPrice = Number(document.getElementById("shBuyPrice").value || 0);
+      const sellPrice = Number(document.getElementById("shSellPrice").value || 0);
+      if (!model || !imei) return;
+      await set(ref(db, `secondhand/${imei}`), { model, imei, seller, buyPrice, sellPrice, date: new Date().toLocaleString("en-IN") });
+      ["shModel", "shImei", "shSeller", "shBuyPrice", "shSellPrice"].forEach(id => document.getElementById(id).value = "");
+    };
+
+    function renderSecondHand() {
+      const box = document.getElementById("secondHandListContainer");
+      box.innerHTML = "";
+      Object.entries(secondHandData).forEach(([imei, s]) => {
+        box.innerHTML += `
+          <div class="flex items-center justify-between bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
+            <div>
+              <div class="font-bold text-amber-300">${s.model} (IMEI: ${s.imei})</div>
+              <div class="text-slate-400">Seller: ${s.seller} | Buy: ₹${s.buyPrice} → Sell: ₹${s.sellPrice}</div>
+            </div>
+            <button onclick="billSecondHand('${imei}')" class="bg-blue-600 text-white px-2.5 py-1 rounded font-bold">Move to Bill</button>
+          </div>
+        `;
+      });
+    }
+    window.billSecondHand = (imei) => {
+      const s = secondHandData[imei];
+      if (!s) return;
+      draftBillItems.push({ imei: s.imei, title: `[Pre-Owned] ${s.model}`, price: Number(s.sellPrice) });
+      remove(ref(db, `secondhand/${imei}`));
+      switchTab("pos");
+      renderDraftBill();
+    };
+
+    // ONLINE ORDERS MANAGEMENT
+    function renderOnlineOrders() {
+      const box = document.getElementById("onlineOrdersContainer");
+      const list = Object.entries(ordersData);
+      document.getElementById("orderCountBadge").innerText = list.length;
+      box.innerHTML = "";
+      list.forEach(([id, o]) => {
+        box.innerHTML += `
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="font-mono text-emerald-400 font-bold">#${id}</span>
+                <h4 class="font-bold text-sm text-white">${o.itemTitle} — ₹${o.price}</h4>
+              </div>
+              <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-300 font-bold">${o.status}</span>
+            </div>
+            <p class="text-slate-300"><strong>Customer:</strong> ${o.customerName} | <strong>Ph:</strong> ${o.customerPhone}</p>
+            <p class="text-slate-400"><strong>Delivery Address:</strong> ${o.address}</p>
+            <p class="text-amber-300"><strong>Online Payment Ref / UTR:</strong> ${o.paymentRef}</p>
+            ${o.customerPhoto ? `<img src="${o.customerPhoto}" class="h-20 rounded border border-slate-700 object-cover" />` : ""}
+            <div class="flex flex-wrap gap-2 pt-2">
+              <button onclick="updateOrderStatus('${id}','Order Accepted')" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded">1. Accept</button>
+              <button onclick="updateOrderStatus('${id}','Packing at Cell Planet')" class="bg-blue-600/30 text-blue-300 px-2.5 py-1 rounded">2. Packing</button>
+              <button onclick="updateOrderStatus('${id}','Out for Delivery')" class="bg-amber-600/30 text-amber-300 px-2.5 py-1 rounded">3. Out for Delivery</button>
+              <button onclick="updateOrderStatus('${id}','Delivered')" class="bg-emerald-600 text-white px-2.5 py-1 rounded font-bold">4. Mark Delivered</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+    window.updateOrderStatus = (id, status) => update(ref(db, `orders/${id}`), { status });
+
+    // OWNER CATALOG RATE CONTROLLER
+    function renderCatalogRates() {
+      const box = document.getElementById("catalogRateList");
+      if (!box) return;
+      box.innerHTML = "";
+      Object.values(catalogData).forEach(c => {
+        box.innerHTML += `
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-2 items-center bg-slate-900 p-2.5 rounded-xl border border-slate-800 text-xs">
+            <div class="font-bold text-white md:col-span-2">${c.brand} ${c.model}</div>
+            <input id="off_${c.ean}" type="number" value="${c.offlineRate}" class="bg-slate-800 px-2 py-1.5 rounded text-white" title="Offline Rate" />
+            <input id="onl_${c.ean}" type="number" value="${c.onlineRate}" class="bg-slate-800 px-2 py-1.5 rounded text-blue-300" title="Online Rate" />
+            <button onclick="saveNewCatalogRate('${c.ean}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded">Save Rate</button>
+          </div>
+        `;
+      });
+    }
+
+    window.saveNewCatalogRate = async (ean) => {
+      const offlineRate = Number(document.getElementById(`off_${ean}`).value || 0);
+      const onlineRate = Number(document.getElementById(`onl_${ean}`).value || 0);
+      await update(ref(db, `catalog/${ean}`), { offlineRate, onlineRate });
+      alert("Live Online & Offline rates updated!");
+    };
+
+    // KPI & MULTI-SHEET EXCEL EXPORT + FIREBASE ZERO-LOAD CLEANER
+    function updateKpis() {
+      const salesArr = Object.values(salesData);
+      const rev = salesArr.reduce((acc, s) => acc + Number(s.totalAmount || 0), 0);
+      document.getElementById("kpiRevenue").innerText = `₹${rev.toLocaleString("en-IN")}`;
+      document.getElementById("kpiUnitsSold").innerText = salesArr.length;
+      document.getElementById("kpiStockCount").innerText = Object.values(inventoryData).filter(i => i.status === "available").length;
+      document.getElementById("kpiRepairs").innerText = Object.keys(repairsData).length + Object.keys(secondHandData).length;
+    }
+
+    window.exportMasterExcel = async (clearAfterExport) => {
+      const wb = XLSX.utils.book_new();
+
+      const salesRows = Object.values(salesData).map(s => ({
+        Invoice: s.invoiceNo,
+        Date: s.timestamp,
+        Customer: s.customerName,
+        Phone: s.customerPhone,
+        Instagram: s.customerInsta,
+        PaymentMode: s.payMode,
+        GST: s.gstApplied,
+        Discount: s.discount,
+        TotalAmount: s.totalAmount,
+        ItemsSold: (s.items || []).map(i => `${i.title} [${i.imei}]`).join(", ")
+      }));
+
+      const stockRows = Object.values(inventoryData).map(i => ({
+        Brand: i.brand, Model: i.model, Color: i.color, IMEI: i.imei, StorePrice: i.offlineRate, OnlinePrice: i.onlineRate
+      }));
+
+      const repairRows = Object.values(repairsData);
+      const orderRows = Object.values(ordersData);
+
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salesRows.length ? salesRows : [{Info: "No Sales Recorded"}]), "Daily_Sales");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(stockRows.length ? stockRows : [{Info: "No Stock"}]), "Active_IMEI_Stock");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(repairRows.length ? repairRows : [{Info: "No Repairs"}]), "Repairs_Service");
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(orderRows.length ? orderRows : [{Info: "No Online Orders"}]), "Online_Orders");
+
+      const fileName = `CellPlanet_Report_${new Date().toISOString().slice(0,10)}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+
+      if (clearAfterExport) {
+        if (confirm("Excel downloaded! Clear today's completed sales & delivered orders from Firebase to keep zero database load?")) {
+          await remove(ref(db, "sales"));
+          alert("Daily Sales cleared from Firebase! Master Catalog and Active IMEIs remain safe.");
+        }
       }
     };
   </script>
