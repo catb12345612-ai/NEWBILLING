@@ -10,7 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
-    tailwind.config = {
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
@@ -33,8 +34,10 @@
         }
       }
     };
+    }
   </script>
   <style>
+    .hidden { display: none !important; }
     body {
       font-family: 'Inter', sans-serif;
       background: radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.10), transparent 35%),
@@ -1527,17 +1530,78 @@
         }
       }
 
+      const cpChannel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("cellplanet_live_sync_v4") : null;
+      if (cpChannel) {
+        cpChannel.onmessage = function (ev) {
+          if (ev.data && ev.data.type === "STORE_ORDER_UPDATE" && ev.data.onlineOrders) {
+            appState.onlineOrders = ev.data.onlineOrders;
+            renderAllViews();
+            showToast("🛍️ Live Online Order synced from Customer Storefront!", "success");
+          }
+        };
+      }
+
+      function normalizeList(val, fallback) {
+        if (Array.isArray(val)) return val.filter(Boolean);
+        if (val && typeof val === "object") {
+          const v = Object.values(val).filter(Boolean);
+          return v.length > 0 ? v : fallback;
+        }
+        return fallback;
+      }
+
       function saveStateAndSyncFirebase(actionNote) {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-        } catch (err) {
-          console.warn("Local storage write skipped:", err);
+        } catch (err) {}
+        if (cpChannel) {
+          try {
+            cpChannel.postMessage({
+              type: "POS_STATE_UPDATE",
+              inventory: appState.inventory,
+              onlineOrders: appState.onlineOrders
+            });
+          } catch (e) {}
         }
         syncWithFirebaseCloud(actionNote);
         renderAllViews();
       }
 
-      // Firebase Realtime Database Cloud Synchronization (REST + SDK Hybrid for cellplanet-536a6)
+      async function pullFromFirebaseCloud(isSilentPoll) {
+        const badge = document.getElementById("firebaseSyncBadge");
+        try {
+          const res = await fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json");
+          if (!res.ok) return;
+          const cloud = await res.json();
+          if (!cloud) {
+            // Seed cloud for the first time without overwriting anything
+            syncWithFirebaseCloud("Initial Seed");
+            return;
+          }
+          const prevOrderCount = appState.onlineOrders.length;
+          if (cloud.inventory) appState.inventory = normalizeList(cloud.inventory, appState.inventory);
+          if (cloud.onlineOrders) appState.onlineOrders = normalizeList(cloud.onlineOrders, appState.onlineOrders);
+          if (cloud.salesBills) appState.salesBills = normalizeList(cloud.salesBills, appState.salesBills);
+          if (cloud.repairs) appState.repairs = normalizeList(cloud.repairs, appState.repairs);
+          if (cloud.secondHand) appState.secondHand = normalizeList(cloud.secondHand, appState.secondHand);
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+          } catch (e) {}
+          renderAllViews();
+          if (isSilentPoll && appState.onlineOrders.length > prevOrderCount) {
+            showToast("🛍️ New Customer Online Order arrived from Storefront!", "success");
+          }
+          if (badge) {
+            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> FB Live: cellplanet-536a6';
+          }
+        } catch (err) {
+          if (badge && !isSilentPoll) {
+            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Local+Cloud Ready (cellplanet-536a6)';
+          }
+        }
+      }
+
+      // Firebase Realtime Database Cloud Synchronization (PATCH so we never wipe concurrent data)
       async function syncWithFirebaseCloud(actionNote) {
         const badge = document.getElementById("firebaseSyncBadge");
         try {
@@ -1545,7 +1609,7 @@
             badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> Syncing cellplanet-536a6...';
           }
           const res = await fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json", {
-            method: "PUT",
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               updatedAt: new Date().toISOString(),
@@ -3144,14 +3208,23 @@
       }
 
       // Initialize App on Load
-      window.addEventListener("DOMContentLoaded", function () {
+      function bootAdminPos() {
+        if (window.__cellPlanetPosBooted) return;
+        window.__cellPlanetPosBooted = true;
         loadLocalState();
         setupEventListeners();
         generateUnlimitedReviewsBatch();
         renderAllViews();
         startClockAndNightlyScheduler();
-        syncWithFirebaseCloud("Initial Boot");
-      });
+        pullFromFirebaseCloud(false);
+        setInterval(function () { pullFromFirebaseCloud(true); }, 4000);
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bootAdminPos);
+      } else {
+        bootAdminPos();
+      }
+      window.addEventListener("load", bootAdminPos);
     })();
   </script>
 </body>
