@@ -6,6 +6,8 @@
   <title>Cell Planet — Enterprise POS, 3-Barcode Stock & Cloud Command Center</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.2/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1089,71 +1091,105 @@
 
   </main>
 
-  <!-- GOOGLE LENS / 3-BARCODE AI DETECTION CONFIRMATION MODAL ("JUST TAP OKAY") -->
-  <div id="googleLensConfirmModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 no-print">
-    <div class="glass-panel rounded-3xl max-w-2xl w-full p-6 border-2 border-cyan-500/50 space-y-4 shadow-2xl">
+  <!-- GOOGLE LENS / 3-BARCODE REAL OCR & BARCODE DETECTION MODAL ("JUST TAP OKAY") -->
+  <div id="googleLensConfirmModal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto no-print">
+    <div class="glass-panel rounded-3xl max-w-3xl w-full p-5 sm:p-6 border-2 border-cyan-500/50 space-y-4 shadow-2xl my-auto">
       <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
         <div>
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-[10px] font-mono font-bold">
-            <span>🔍 GOOGLE LENS & 3-BARCODE VISION AI ENGINE</span>
+            <span id="lensEngineStatusBadge">🔍 REAL OCR (TESSERACT.JS) + BARCODE DETECTOR + WEB SPEC ENGINE</span>
           </div>
-          <h3 class="text-lg font-extrabold text-white mt-1">Phone Box Back 3 Barcodes Decoded — Just Tap OKAY!</h3>
-          <p class="text-xs text-slate-400">We detected the exact smartphone model, all official RAM/Storage variants, and all box colors. Tap <strong class="text-emerald-300">OKAY</strong> to load them and scan unlimited IMEIs.</p>
+          <h3 class="text-lg font-extrabold text-white mt-1">Real Box Label & 3-Barcode Scanner — Verify & Tap OKAY</h3>
+          <p class="text-xs text-slate-400">Reads actual text & barcodes printed on your uploaded box photo. You can also edit or type any model below and click <strong class="text-cyan-300">Fetch Variants & Colors</strong> before tapping <strong class="text-emerald-300">OKAY</strong>.</p>
         </div>
         <button id="btnCloseLensModal" type="button" class="text-slate-400 hover:text-white text-sm font-bold px-2.5 py-1 rounded-lg bg-slate-800">✕</button>
       </div>
 
-      <!-- Decoded 3 Barcodes & Model Summary -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-          <div class="text-[10px] font-mono text-cyan-400">BARCODE 1 (EAN / MODEL SKU)</div>
-          <div id="lensModalEan" class="font-mono font-bold text-white mt-0.5">195949042744</div>
-        </div>
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-          <div class="text-[10px] font-mono text-rose-400">BARCODE 2 (PRIMARY IMEI 1)</div>
-          <div id="lensModalImei1" class="font-mono font-bold text-white mt-0.5">354891208471923</div>
-        </div>
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-          <div class="text-[10px] font-mono text-amber-400">BARCODE 3 (IMEI 2 / SERIAL)</div>
-          <div id="lensModalImei2" class="font-mono font-bold text-white mt-0.5">354891208471931</div>
+      <!-- Real-Time OCR & Barcode Progress Bar + Photo Thumbnail + Raw OCR Readout -->
+      <div id="lensOcrProgressContainer" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2.5">
+        <div class="flex items-center gap-3">
+          <img id="lensScannedPhotoThumb" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%2712%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E" alt="Box Scan" class="w-16 h-16 rounded-xl object-cover border border-cyan-500/40 shrink-0" />
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span id="lensOcrStatusText" class="font-bold text-cyan-300 truncate">Ready to scan box image...</span>
+              <span id="lensOcrPercentLabel" class="font-mono text-[11px] text-emerald-400">100%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="lensOcrProgressBar" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-300" style="width: 100%"></div>
+            </div>
+            <div id="lensRawOcrPreview" class="text-[10px] font-mono text-slate-400 truncate">Raw Box Text: Waiting for photo or barcode scan...</div>
+          </div>
         </div>
       </div>
 
-      <!-- Detected Model & Google Search Verification Link -->
+      <!-- Decoded 3 Barcodes (Editable so Staff/Admin can verify or scan missing barcode) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+          <label for="lensModalEan" class="block text-[10px] font-mono text-cyan-400 mb-1">BARCODE 1 (EAN / MODEL CODE)</label>
+          <input id="lensModalEan" type="text" value="" placeholder="EAN / Model Code (e.g. SM-S928B)" class="w-full px-2.5 py-1.5 rounded bg-slate-950 border border-slate-700 font-mono font-bold text-white" />
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+          <label for="lensModalImei1" class="block text-[10px] font-mono text-rose-400 mb-1">BARCODE 2 (PRIMARY IMEI 1)</label>
+          <input id="lensModalImei1" type="text" value="" placeholder="15-Digit IMEI 1 from Box" class="w-full px-2.5 py-1.5 rounded bg-slate-950 border border-slate-700 font-mono font-bold text-white" />
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+          <label for="lensModalImei2" class="block text-[10px] font-mono text-amber-400 mb-1">BARCODE 3 (IMEI 2 / SERIAL)</label>
+          <input id="lensModalImei2" type="text" value="" placeholder="IMEI 2 or Serial Number" class="w-full px-2.5 py-1.5 rounded bg-slate-950 border border-slate-700 font-mono font-bold text-white" />
+        </div>
+      </div>
+
+      <!-- Detected Model & Live Web Spec Lookup Bar -->
       <div class="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/30 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <span id="lensModalBrandBadge" class="text-xs font-mono font-bold text-rose-400 uppercase">APPLE</span>
-            <h4 id="lensModalModelName" class="text-xl font-black text-white">iPhone 16 Pro Max 5G</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+          <div class="sm:col-span-3">
+            <label for="lensModalBrandBadge" class="block text-[10px] font-mono uppercase text-rose-400 mb-1">Detected Brand</label>
+            <input id="lensModalBrandBadge" type="text" value="" placeholder="e.g. Samsung / Vivo" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-bold text-white" />
           </div>
-          <a id="lensModalGoogleLink" href="https://www.google.com/search?q=iPhone+16+Pro+Max+5G+specifications+colors+variants" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-cyan-300 flex items-center gap-1">
-            <span>🌐 View Live on Google Search</span>
-          </a>
+          <div class="sm:col-span-5">
+            <label for="lensModalModelName" class="block text-[10px] font-mono uppercase text-cyan-300 mb-1">Detected Smartphone Model (Or Type to Search)</label>
+            <input id="lensModalModelName" type="text" value="" placeholder="e.g. Galaxy A55 5G / Vivo V40 / iPhone 15" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-cyan-500/50 text-sm font-black text-white" />
+          </div>
+          <div class="sm:col-span-4 flex gap-1.5">
+            <button id="btnLensFetchWebSpecs" type="button" class="flex-1 py-2 px-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-[11px] font-extrabold text-white shadow">
+              🔄 Fetch Variants & Colors
+            </button>
+            <a id="lensModalGoogleLink" href="https://www.google.com/search?q=smartphone+specifications" target="_blank" rel="noopener noreferrer" class="py-2 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-amber-300 whitespace-nowrap">
+              🌐 Google
+            </a>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800">
-          <div>
-            <div id="lensModalVariantsCount" class="text-xs font-bold text-cyan-300 mb-1.5">✓ 3 Official RAM/Storage Variants Found:</div>
+          <div class="space-y-1.5">
+            <div id="lensModalVariantsCount" class="text-xs font-bold text-cyan-300">✓ Official RAM/Storage Variants:</div>
             <div id="lensModalVariantsList" class="flex flex-wrap gap-1.5"></div>
+            <div class="flex gap-1 pt-1">
+              <input id="lensAddCustomVariantInput" type="text" placeholder="Add variant (e.g. 8GB / 128GB)" class="flex-1 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-[11px] font-mono text-white" />
+              <button id="btnLensAddVariant" type="button" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold">+ Add</button>
+            </div>
           </div>
-          <div>
-            <div id="lensModalColorsCount" class="text-xs font-bold text-rose-300 mb-1.5">✓ 4 Official Box Colors Found:</div>
+          <div class="space-y-1.5">
+            <div id="lensModalColorsCount" class="text-xs font-bold text-rose-300">✓ Official Box Colors:</div>
             <div id="lensModalColorsList" class="flex flex-wrap gap-1.5"></div>
+            <div class="flex gap-1 pt-1">
+              <input id="lensAddCustomColorInput" type="text" placeholder="Add color (e.g. Awesome Navy)" class="flex-1 px-2 py-1 rounded bg-slate-950 border border-slate-700 text-[11px] text-white" />
+              <button id="btnLensAddColor" type="button" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] font-bold">+ Add</button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Optional Instant Unlimited IMEI Entry Inside the Modal -->
-      <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+      <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
         <div class="flex items-center justify-between">
-          <label for="lensModalQuickImeis" class="text-xs font-bold text-emerald-300">Optional: Scan or Paste Remaining Box IMEIs Right Here (Unlimited):</label>
-          <span class="text-[10px] font-mono text-slate-400">Auto-links to detected model</span>
+          <label for="lensModalQuickImeis" class="text-xs font-bold text-emerald-300">Optional: Scan or Paste Unlimited Remaining Box IMEIs Here:</label>
+          <span class="text-[10px] font-mono text-slate-400">Or scan after tapping OKAY</span>
         </div>
-        <textarea id="lensModalQuickImeis" rows="2" placeholder="Pull scan gun trigger on remaining boxes or leave blank to use the main queue after tapping OKAY..." class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-white focus:border-emerald-400 focus:outline-none"></textarea>
+        <textarea id="lensModalQuickImeis" rows="2" placeholder="Scan remaining boxes' IMEIs with scan gun here, or tap OKAY below to load all variants/colors first..." class="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 font-mono text-xs text-white focus:border-emerald-400 focus:outline-none"></textarea>
       </div>
 
       <!-- Modal Footer: JUST TAP OKAY -->
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
         <button id="btnCancelLensModal" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">
           Edit Manually Instead
         </button>
@@ -2381,21 +2417,17 @@
           });
         });
 
-        // Smart Model Search Engine Button & Input
-        document.getElementById("btnTriggerSmartLookup").addEventListener("click", function () {
-          const q = document.getElementById("globalPhoneSearchInput").value;
-          const ok = detectPhoneFromBarcodesOrQuery(
-            document.getElementById("scanBarcode1Ean").value,
-            document.getElementById("scanBarcode2Imei1").value,
-            document.getElementById("scanBarcode3Imei2").value,
-            q
-          );
-          if (ok) {
-            showToast("Specs & colors auto-populated from catalog!", "success");
-          } else if (q.trim()) {
-            document.getElementById("stockModelInput").value = q.trim();
-            showToast("Custom model set: " + q.trim() + ". Select color & scan IMEIs!", "success");
+        // Smart Model Search Engine Button & Input (Searches 65+ Phone Spec DB + Live Web API & Opens "Just Tap OKAY" Modal!)
+        document.getElementById("btnTriggerSmartLookup").addEventListener("click", async function () {
+          const q = document.getElementById("globalPhoneSearchInput").value.trim() ||
+                    document.getElementById("scanBarcode1Ean").value.trim() ||
+                    document.getElementById("scanBarcode2Imei1").value.trim();
+          if (!q) {
+            showToast("Type any phone model, barcode, or IMEI to search specs & colors!", "warning");
+            return;
           }
+          openGoogleLensDetectionModal(pendingLensSpec, document.getElementById("scanBarcode2Imei1").value.trim(), document.getElementById("scanBarcode3Imei2").value.trim());
+          await fetchSpecsForModelQuery(q);
         });
 
         // Variant & Color Quick Pill Selection
@@ -2450,40 +2482,444 @@
           renderQueuedImeis();
         });
 
-        // Live Camera 3-Barcode Scanner & Google Lens Confirmation Modal Logic
+        // =========================================================================
+        // REAL IN-BROWSER OCR (TESSERACT.JS) + MULTI-BARCODE DECODER + WEB SPEC DB
+        // =========================================================================
         let activeCameraStream = null;
-        let pendingLensSpec = SMARTPHONE_BARCODE_CATALOG[0];
-        let pendingLensImei1 = "";
-        let pendingLensImei2 = "";
+        let pendingLensSpec = {
+          ean: "",
+          tacPrefix: "",
+          brand: "",
+          model: "",
+          defaultVariant: "8GB / 256GB",
+          variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB", "12GB / 512GB"],
+          colors: ["Obsidian Black", "Titanium Gray", "Glacier Blue", "Emerald Green"],
+          purchaseCost: 0,
+          offlinePrice: 0,
+          onlinePrice: 0,
+          offerBadge: "Official Brand Warranty + Easy EMI"
+        };
 
-        function openGoogleLensDetectionModal(spec, imei1Val, imei2Val) {
-          pendingLensSpec = spec || SMARTPHONE_BARCODE_CATALOG[0];
-          const rand7 = Math.floor(1000000 + Math.random() * 8999999);
-          pendingLensImei1 = imei1Val || (pendingLensSpec.tacPrefix + String(rand7));
-          pendingLensImei2 = imei2Val || (pendingLensSpec.tacPrefix + String(rand7 + 1));
+        // Comprehensive Smartphone Database (Covers Apple, Samsung, Vivo, Oppo, OnePlus, Redmi/Xiaomi, Poco, Realme, Motorola, iQOO, Nothing, Google Pixel, Huawei, Honor, Infinix, Tecno)
+        const EXTENDED_PHONE_SPEC_DB = [
+          // Apple iPhone Series
+          { keywords: ["iphone 16 pro max", "a3296", "a3295", "mywx3", "myw"], brand: "Apple", model: "iPhone 16 Pro Max 5G", variants: ["8GB / 256GB", "8GB / 512GB", "8GB / 1TB"], colors: ["Natural Titanium", "Desert Titanium", "Black Titanium", "White Titanium"], mrp: 144900 },
+          { keywords: ["iphone 16 pro", "a3293", "a3292"], brand: "Apple", model: "iPhone 16 Pro 5G", variants: ["8GB / 128GB", "8GB / 256GB", "8GB / 512GB", "8GB / 1TB"], colors: ["Natural Titanium", "Desert Titanium", "Black Titanium", "White Titanium"], mrp: 119900 },
+          { keywords: ["iphone 16 plus", "a3290"], brand: "Apple", model: "iPhone 16 Plus 5G", variants: ["8GB / 128GB", "8GB / 256GB", "8GB / 512GB"], colors: ["Ultramarine", "Teal", "Pink", "White", "Black"], mrp: 89900 },
+          { keywords: ["iphone 16", "a3287"], brand: "Apple", model: "iPhone 16 5G", variants: ["8GB / 128GB", "8GB / 256GB", "8GB / 512GB"], colors: ["Ultramarine", "Teal", "Pink", "White", "Black"], mrp: 79900 },
+          { keywords: ["iphone 15 pro max", "a3106", "mu793"], brand: "Apple", model: "iPhone 15 Pro Max 5G", variants: ["8GB / 256GB", "8GB / 512GB", "8GB / 1TB"], colors: ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"], mrp: 139900 },
+          { keywords: ["iphone 15 pro", "a3102"], brand: "Apple", model: "iPhone 15 Pro 5G", variants: ["8GB / 128GB", "8GB / 256GB", "8GB / 512GB", "8GB / 1TB"], colors: ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"], mrp: 109900 },
+          { keywords: ["iphone 15 plus", "a3094"], brand: "Apple", model: "iPhone 15 Plus 5G", variants: ["6GB / 128GB", "6GB / 256GB", "6GB / 512GB"], colors: ["Black", "Blue", "Green", "Yellow", "Pink"], mrp: 79900 },
+          { keywords: ["iphone 15", "a3090", "mtp03"], brand: "Apple", model: "iPhone 15 5G", variants: ["6GB / 128GB", "6GB / 256GB", "6GB / 512GB"], colors: ["Black", "Blue", "Green", "Yellow", "Pink"], mrp: 69900 },
+          { keywords: ["iphone 14", "a2882", "mpuf3"], brand: "Apple", model: "iPhone 14 5G", variants: ["6GB / 128GB", "6GB / 256GB", "6GB / 512GB"], colors: ["Midnight", "Starlight", "Blue", "Purple", "Red", "Yellow"], mrp: 59900 },
+          { keywords: ["iphone 13", "a2633", "mlpf3"], brand: "Apple", model: "iPhone 13 5G", variants: ["4GB / 128GB", "4GB / 256GB", "4GB / 512GB"], colors: ["Midnight", "Starlight", "Green", "Pink", "Blue", "Red"], mrp: 52900 },
 
-          document.getElementById("lensModalEan").textContent = pendingLensSpec.ean;
-          document.getElementById("lensModalImei1").textContent = pendingLensImei1;
-          document.getElementById("lensModalImei2").textContent = pendingLensImei2;
-          document.getElementById("lensModalBrandBadge").textContent = pendingLensSpec.brand;
-          document.getElementById("lensModalModelName").textContent = pendingLensSpec.model;
-          document.getElementById("lensModalGoogleLink").href =
-            "https://www.google.com/search?q=" + encodeURIComponent(pendingLensSpec.brand + " " + pendingLensSpec.model + " " + pendingLensSpec.ean + " specifications colors variants");
+          // Samsung Galaxy Series
+          { keywords: ["s24 ultra", "sm-s928", "s928b"], brand: "Samsung", model: "Galaxy S24 Ultra 5G", variants: ["12GB / 256GB", "12GB / 512GB", "12GB / 1TB"], colors: ["Titanium Gray", "Titanium Black", "Titanium Violet", "Titanium Yellow"], mrp: 129999 },
+          { keywords: ["s24 plus", "s24+", "sm-s926", "s926b"], brand: "Samsung", model: "Galaxy S24+ 5G", variants: ["12GB / 256GB", "12GB / 512GB"], colors: ["Cobalt Violet", "Onyx Black", "Marble Gray", "Amber Yellow"], mrp: 99999 },
+          { keywords: ["s24 fe", "sm-s721"], brand: "Samsung", model: "Galaxy S24 FE 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Blue", "Graphite", "Mint"], mrp: 59999 },
+          { keywords: ["galaxy s24", "sm-s921", "s921b"], brand: "Samsung", model: "Galaxy S24 5G", variants: ["8GB / 128GB", "8GB / 256GB", "8GB / 512GB"], colors: ["Onyx Black", "Marble Gray", "Cobalt Violet", "Amber Yellow"], mrp: 74999 },
+          { keywords: ["s23 ultra", "sm-s918", "s918b"], brand: "Samsung", model: "Galaxy S23 Ultra 5G", variants: ["12GB / 256GB", "12GB / 512GB", "12GB / 1TB"], colors: ["Green", "Phantom Black", "Cream", "Red"], mrp: 109999 },
+          { keywords: ["s23 fe", "sm-s711"], brand: "Samsung", model: "Galaxy S23 FE 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Mint", "Graphite", "Purple"], mrp: 39999 },
+          { keywords: ["galaxy s23", "sm-s911"], brand: "Samsung", model: "Galaxy S23 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Phantom Black", "Cream", "Green", "Lavender"], mrp: 64999 },
+          { keywords: ["z fold6", "z fold 6", "sm-f956"], brand: "Samsung", model: "Galaxy Z Fold6 5G", variants: ["12GB / 256GB", "12GB / 512GB", "12GB / 1TB"], colors: ["Silver Shadow", "Pink", "Navy", "Crafted Black"], mrp: 164999 },
+          { keywords: ["z flip6", "z flip 6", "sm-f741"], brand: "Samsung", model: "Galaxy Z Flip6 5G", variants: ["12GB / 256GB", "12GB / 512GB"], colors: ["Blue", "Mint", "Silver Shadow", "Yellow"], mrp: 109999 },
+          { keywords: ["a55", "sm-a556"], brand: "Samsung", model: "Galaxy A55 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Awesome Iceblue", "Awesome Navy", "Awesome Lilac"], mrp: 39999 },
+          { keywords: ["a35", "sm-a356"], brand: "Samsung", model: "Galaxy A35 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Awesome Iceblue", "Awesome Navy", "Awesome Lilac"], mrp: 30999 },
+          { keywords: ["a15", "sm-a156"], brand: "Samsung", model: "Galaxy A15 5G", variants: ["6GB / 128GB", "8GB / 128GB", "8GB / 256GB"], colors: ["Blue Black", "Blue", "Light Blue"], mrp: 19499 },
+          { keywords: ["m35", "sm-m356"], brand: "Samsung", model: "Galaxy M35 5G", variants: ["6GB / 128GB", "8GB / 128GB", "8GB / 256GB"], colors: ["Moonlight Blue", "Daybreak Blue", "Thunder Grey"], mrp: 19999 },
+          { keywords: ["f55", "sm-e556"], brand: "Samsung", model: "Galaxy F55 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Apricot Crush", "Raisin Black"], mrp: 26999 },
 
+          // Vivo & iQOO Series
+          { keywords: ["x100 pro", "v2309", "v2324"], brand: "Vivo", model: "Vivo X100 Pro 5G", variants: ["16GB / 512GB"], colors: ["Asteroid Black", "Sunset Orange"], mrp: 89999 },
+          { keywords: ["x100", "v2308"], brand: "Vivo", model: "Vivo X100 5G", variants: ["12GB / 256GB", "16GB / 512GB"], colors: ["Asteroid Black", "Stargaze Blue"], mrp: 63999 },
+          { keywords: ["v40 pro", "v2347"], brand: "Vivo", model: "Vivo V40 Pro 5G", variants: ["8GB / 256GB", "12GB / 512GB"], colors: ["Ganges Blue", "Titanium Grey"], mrp: 49999 },
+          { keywords: ["v40", "v2348"], brand: "Vivo", model: "Vivo V40 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 512GB"], colors: ["Ganges Blue", "Lotus Purple", "Titanium Grey"], mrp: 34999 },
+          { keywords: ["v30 pro", "v2319"], brand: "Vivo", model: "Vivo V30 Pro 5G", variants: ["8GB / 256GB", "12GB / 512GB"], colors: ["Andaman Blue", "Classic Black"], mrp: 41999 },
+          { keywords: ["v30", "v2318"], brand: "Vivo", model: "Vivo V30 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Andaman Blue", "Peacock Green", "Classic Black"], mrp: 33999 },
+          { keywords: ["vivo t3", "v2334"], brand: "Vivo", model: "Vivo T3 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Cosmic Blue", "Crystal Flake"], mrp: 19999 },
+          { keywords: ["vivo y200", "v2307"], brand: "Vivo", model: "Vivo Y200 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Desert Gold", "Jungle Green"], mrp: 21999 },
+          { keywords: ["iqoo 12", "i2302"], brand: "iQOO", model: "iQOO 12 5G", variants: ["12GB / 256GB", "16GB / 512GB"], colors: ["Legend White", "Alpha Black", "Desert Red"], mrp: 52999 },
+          { keywords: ["iqoo neo 9", "i2304"], brand: "iQOO", model: "iQOO Neo 9 Pro 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Fiery Red", "Conqueror Black"], mrp: 35999 },
+          { keywords: ["iqoo z9", "i2306"], brand: "iQOO", model: "iQOO Z9 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Brushed Green", "Graphene Blue"], mrp: 19999 },
+
+          // OnePlus & Oppo Series
+          { keywords: ["oneplus 12r", "cph2585"], brand: "OnePlus", model: "OnePlus 12R 5G", variants: ["8GB / 128GB", "8GB / 256GB", "16GB / 256GB"], colors: ["Cool Blue", "Iron Gray", "Sunset Dune"], mrp: 39999 },
+          { keywords: ["oneplus 12", "cph2573", "cph2581"], brand: "OnePlus", model: "OnePlus 12 5G", variants: ["12GB / 256GB", "16GB / 512GB"], colors: ["Flowy Emerald", "Silky Black", "Glacial White"], mrp: 64999 },
+          { keywords: ["nord 4", "cph2661"], brand: "OnePlus", model: "OnePlus Nord 4 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Mercurial Silver", "Oasis Green", "Obsidian Midnight"], mrp: 29999 },
+          { keywords: ["nord ce4", "nord ce 4", "cph2613"], brand: "OnePlus", model: "OnePlus Nord CE4 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Celadon Marble", "Dark Chrome"], mrp: 24999 },
+          { keywords: ["reno 12 pro", "reno12 pro", "cph2629"], brand: "Oppo", model: "Oppo Reno 12 Pro 5G", variants: ["12GB / 256GB", "12GB / 512GB"], colors: ["Sunset Gold", "Space Brown"], mrp: 36999 },
+          { keywords: ["reno 12", "reno12", "cph2625"], brand: "Oppo", model: "Oppo Reno 12 5G", variants: ["8GB / 256GB"], colors: ["Sunset Peach", "Matte Brown", "Astro Silver"], mrp: 32999 },
+          { keywords: ["reno 11", "reno11", "cph2599"], brand: "Oppo", model: "Oppo Reno 11 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Wave Green", "Rock Grey"], mrp: 27999 },
+          { keywords: ["f27 pro", "cph2643"], brand: "Oppo", model: "Oppo F27 Pro+ 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Dusk Pink", "Midnight Navy"], mrp: 27999 },
+
+          // Xiaomi, Redmi & Poco Series
+          { keywords: ["xiaomi 14 ultra", "24030pn60g"], brand: "Xiaomi", model: "Xiaomi 14 Ultra 5G", variants: ["16GB / 512GB"], colors: ["Black", "White"], mrp: 99999 },
+          { keywords: ["xiaomi 14 civi", "24053py09i"], brand: "Xiaomi", model: "Xiaomi 14 CIVI 5G", variants: ["8GB / 256GB", "12GB / 512GB"], colors: ["Cruise Blue", "Matcha Green", "Shadow Black"], mrp: 42999 },
+          { keywords: ["xiaomi 14", "23127pn0cg"], brand: "Xiaomi", model: "Xiaomi 14 5G", variants: ["12GB / 512GB"], colors: ["Jade Green", "Matte Black", "Classic White"], mrp: 69999 },
+          { keywords: ["note 13 pro+", "note 13 pro plus", "23090ra98i"], brand: "Xiaomi", model: "Redmi Note 13 Pro+ 5G", variants: ["8GB / 256GB", "12GB / 256GB", "12GB / 512GB"], colors: ["Fusion Purple", "Fusion Black", "Fusion White"], mrp: 31999 },
+          { keywords: ["note 13 pro", "2312dra50i"], brand: "Xiaomi", model: "Redmi Note 13 Pro 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Coral Purple", "Arctic White", "Midnight Black"], mrp: 24999 },
+          { keywords: ["note 13", "2312draabi"], brand: "Xiaomi", model: "Redmi Note 13 5G", variants: ["6GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Arctic White", "Stealth Black", "Prism Gold"], mrp: 17999 },
+          { keywords: ["redmi 13c", "23108rn04y"], brand: "Xiaomi", model: "Redmi 13C 5G", variants: ["4GB / 128GB", "6GB / 128GB", "8GB / 256GB"], colors: ["Starlight Black", "Startrail Green", "Startrail Silver"], mrp: 11999 },
+          { keywords: ["poco f6", "24069pc21i"], brand: "Poco", model: "Poco F6 5G", variants: ["8GB / 256GB", "12GB / 256GB", "12GB / 512GB"], colors: ["Titanium", "Black"], mrp: 29999 },
+          { keywords: ["poco x6 pro", "2311drk48i"], brand: "Poco", model: "Poco X6 Pro 5G", variants: ["8GB / 256GB", "12GB / 512GB"], colors: ["Poco Yellow", "Racing Grey", "Spectre Black"], mrp: 25999 },
+          { keywords: ["poco m6", "23128pc33i"], brand: "Poco", model: "Poco M6 Pro 5G", variants: ["6GB / 128GB", "8GB / 256GB"], colors: ["Power Black", "Forest Green"], mrp: 11999 },
+
+          // Realme, Motorola, Nothing, Google Pixel, Huawei
+          { keywords: ["realme 13 pro+", "realme 13 pro plus", "rmx3920"], brand: "Realme", model: "Realme 13 Pro+ 5G", variants: ["8GB / 256GB", "12GB / 256GB", "12GB / 512GB"], colors: ["Monet Gold", "Emerald Green"], mrp: 32999 },
+          { keywords: ["realme 12 pro+", "realme 12 pro plus", "rmx3840"], brand: "Realme", model: "Realme 12 Pro+ 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Submarine Blue", "Navigator Beige", "Explorer Red"], mrp: 29999 },
+          { keywords: ["realme gt 6", "rmx3851", "rmx3800"], brand: "Realme", model: "Realme GT 6 5G", variants: ["8GB / 256GB", "12GB / 256GB", "16GB / 512GB"], colors: ["Fluid Silver", "Razor Green"], mrp: 39999 },
+          { keywords: ["edge 50 pro", "xt2403"], brand: "Motorola", model: "Motorola Edge 50 Pro 5G", variants: ["8GB / 256GB", "12GB / 256GB"], colors: ["Luxe Lavender", "Black Beauty", "Moonlight Pearl"], mrp: 31999 },
+          { keywords: ["edge 50 fusion", "xt2429"], brand: "Motorola", model: "Motorola Edge 50 Fusion 5G", variants: ["8GB / 128GB", "12GB / 256GB"], colors: ["Marshmallow Blue", "Hot Pink", "Forest Blue"], mrp: 22999 },
+          { keywords: ["moto g85", "xt2427"], brand: "Motorola", model: "Moto G85 5G", variants: ["8GB / 128GB", "12GB / 256GB"], colors: ["Olive Green", "Cobalt Blue", "Urban Grey"], mrp: 17999 },
+          { keywords: ["nothing phone (2a)", "phone 2a", "a142"], brand: "Nothing", model: "Nothing Phone (2a) 5G", variants: ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB"], colors: ["Black", "White", "Blue"], mrp: 23999 },
+          { keywords: ["nothing phone (2)", "a065"], brand: "Nothing", model: "Nothing Phone (2) 5G", variants: ["8GB / 128GB", "12GB / 256GB", "12GB / 512GB"], colors: ["Dark Grey", "White"], mrp: 44999 },
+          { keywords: ["cmf phone 1", "a015"], brand: "Nothing", model: "CMF Phone 1 5G", variants: ["6GB / 128GB", "8GB / 128GB"], colors: ["Black", "Orange", "Light Green", "Blue"], mrp: 15999 },
+          { keywords: ["pixel 9 pro", "gr83y"], brand: "Google", model: "Google Pixel 9 Pro XL 5G", variants: ["16GB / 256GB", "16GB / 512GB"], colors: ["Porcelain", "Obsidian", "Hazel", "Rose Quartz"], mrp: 124999 },
+          { keywords: ["pixel 9", "g1b60"], brand: "Google", model: "Google Pixel 9 5G", variants: ["12GB / 256GB"], colors: ["Obsidian", "Porcelain", "Wintergreen", "Peony"], mrp: 79999 },
+          { keywords: ["pixel 8a", "g6gpr"], brand: "Google", model: "Google Pixel 8a 5G", variants: ["8GB / 128GB", "8GB / 256GB"], colors: ["Bay", "Aloe", "Obsidian", "Porcelain"], mrp: 52999 },
+          { keywords: ["pura 70 ultra", "hbp-lx9"], brand: "Huawei", model: "Huawei Pura 70 Ultra XMAGE Edition", variants: ["16GB / 512GB", "16GB / 1TB"], colors: ["Chanson Green", "Starburst Black", "Espresso Brown", "Crystal White"], mrp: 116999 }
+        ];
+
+        function renderLensModalLists() {
           document.getElementById("lensModalVariantsCount").textContent =
-            "✓ " + pendingLensSpec.variants.length + " Official RAM/Storage Variants Found:";
-          document.getElementById("lensModalVariantsList").innerHTML = pendingLensSpec.variants.map(function (v) {
-            return '<span class="px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold">' + v + '</span>';
+            "✓ " + pendingLensSpec.variants.length + " Official RAM/Storage Variants:";
+          document.getElementById("lensModalVariantsList").innerHTML = pendingLensSpec.variants.map(function (v, idx) {
+            return '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold">' +
+              v + '<button type="button" data-lens-rm-var="' + idx + '" class="ml-1 text-slate-400 hover:text-white">×</button></span>';
           }).join("");
 
           document.getElementById("lensModalColorsCount").textContent =
-            "✓ " + pendingLensSpec.colors.length + " Official Box Colors Found:";
-          document.getElementById("lensModalColorsList").innerHTML = pendingLensSpec.colors.map(function (c) {
-            return '<span class="px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-bold">' + c + '</span>';
+            "✓ " + pendingLensSpec.colors.length + " Official Box Colors:";
+          document.getElementById("lensModalColorsList").innerHTML = pendingLensSpec.colors.map(function (c, idx) {
+            return '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-bold">' +
+              c + '<button type="button" data-lens-rm-col="' + idx + '" class="ml-1 text-slate-400 hover:text-white">×</button></span>';
           }).join("");
+        }
 
+        function openGoogleLensDetectionModal(spec, imei1Val, imei2Val) {
+          if (spec) {
+            pendingLensSpec = JSON.parse(JSON.stringify(spec));
+          }
+          document.getElementById("lensModalEan").value = pendingLensSpec.ean || "";
+          document.getElementById("lensModalImei1").value = imei1Val || "";
+          document.getElementById("lensModalImei2").value = imei2Val || "";
+          document.getElementById("lensModalBrandBadge").value = pendingLensSpec.brand || "";
+          document.getElementById("lensModalModelName").value = pendingLensSpec.model || "";
+          const searchQ = (pendingLensSpec.brand + " " + pendingLensSpec.model + " " + (pendingLensSpec.ean || "")).trim() || "smartphone specifications";
+          document.getElementById("lensModalGoogleLink").href =
+            "https://www.google.com/search?q=" + encodeURIComponent(searchQ + " specifications colors variants");
+          renderLensModalLists();
           document.getElementById("lensModalQuickImeis").value = "";
           document.getElementById("googleLensConfirmModal").classList.remove("hidden");
+        }
+
+        // Decode real 1D/2D barcodes from an image data URL using Browser BarcodeDetector + ZXing multi-crop pass
+        async function decodeAllBarcodesFromImage(dataUrl) {
+          const foundCodes = [];
+          function addCode(raw) {
+            const c = String(raw || "").trim();
+            if (c && foundCodes.indexOf(c) === -1) foundCodes.push(c);
+          }
+
+          const img = new Image();
+          await new Promise(function (resolve) {
+            img.onload = resolve;
+            img.onerror = resolve;
+            img.src = dataUrl;
+          });
+          if (!img.width || !img.height) return foundCodes;
+
+          // 1. Native Browser BarcodeDetector (reads multiple barcodes in a single photo!)
+          if (typeof window.BarcodeDetector !== "undefined") {
+            try {
+              const detector = new window.BarcodeDetector({
+                formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39", "itf", "qr_code", "data_matrix"]
+              });
+              const barcodes = await detector.detect(img);
+              barcodes.forEach(function (b) { addCode(b.rawValue); });
+            } catch (e) {}
+          }
+
+          // 2. ZXing Multi-Format Reader across horizontal bands ( catches 3 stacked barcodes on mobile boxes )
+          if (typeof ZXing !== "undefined" && ZXing.BrowserMultiFormatReader) {
+            const bands = [
+              { yStart: 0.0, yEnd: 1.0 },
+              { yStart: 0.0, yEnd: 0.45 },
+              { yStart: 0.25, yEnd: 0.75 },
+              { yStart: 0.55, yEnd: 1.0 }
+            ];
+            for (let i = 0; i < bands.length; i++) {
+              try {
+                const canvas = document.createElement("canvas");
+                const b = bands[i];
+                const sy = Math.floor(img.height * b.yStart);
+                const sh = Math.max(10, Math.floor(img.height * (b.yEnd - b.yStart)));
+                canvas.width = img.width;
+                canvas.height = sh;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, sy, img.width, sh, 0, 0, img.width, sh);
+                const reader = new ZXing.BrowserMultiFormatReader();
+                const res = await reader.decodeFromImageUrl(canvas.toDataURL("image/png"));
+                if (res && res.text) addCode(res.text);
+              } catch (e) {}
+            }
+          }
+          return foundCodes;
+        }
+
+        // Parse real OCR text + decoded barcodes from mobile box back label
+        async function parseBoxLabelAndLookupSpecs(ocrText, decodedBarcodes, fileNameHint) {
+          const combinedRaw = (decodedBarcodes.join(" ") + "\n" + (ocrText || "") + "\n" + (fileNameHint || "")).trim();
+          const lower = combinedRaw.toLowerCase();
+
+          // 1. Extract all 15-digit IMEI numbers (starting with 35, 86, 99, 01, 45, 91)
+          const normalizedDigits = combinedRaw.replace(/[Oo]/g, "0").replace(/(?<=\d)[Il|](?=\d)/g, "1");
+          const imeiMatches = normalizedDigits.match(/\b(?:35|86|99|01|45|91)\d{13}\b/g) || [];
+          const uniqueImeis = [];
+          imeiMatches.forEach(function (im) {
+            if (uniqueImeis.indexOf(im) === -1) uniqueImeis.push(im);
+          });
+
+          // 2. Extract 12-13 digit EAN/UPC or Apple/Samsung/Oppo/Vivo/Xiaomi Model SKU codes
+          const eanMatches = normalizedDigits.match(/\b\d{12,13}\b/g) || [];
+          const skuMatch = combinedRaw.match(/\b(?:SM-[A-Z]\d{3,4}[A-Z0-9\/]*|CPH\d{4}|RMX\d{4}|XT\d{4}-\d|M[A-Z0-9]{3,4}(?:HN|LL|ZM|B)\/A|A\d{4}|2\d{5}[A-Z0-9]{4,5})\b/i);
+          const detectedEan = eanMatches[0] || (skuMatch ? skuMatch[0].toUpperCase() : "") || (decodedBarcodes[0] || "");
+
+          // 3. Extract explicit RAM/Storage printed on the box label (e.g., 8GB/256GB, 12GB + 256GB, 128GB, 256GB, 512GB)
+          const ramRomRegex = /\b(\d{1,2})\s*GB\s*[\/|\+\-\s,]{1,4}\s*(\d{2,4}\s*GB|1\s*TB)\b/gi;
+          const detectedVariants = [];
+          let rrMatch;
+          while ((rrMatch = ramRomRegex.exec(combinedRaw)) !== null) {
+            const vFormatted = rrMatch[1].trim() + "GB / " + rrMatch[2].replace(/\s+/g, "").toUpperCase();
+            if (detectedVariants.indexOf(vFormatted) === -1) detectedVariants.push(vFormatted);
+          }
+          if (detectedVariants.length === 0) {
+            const storageOnly = combinedRaw.match(/\b(64|128|256|512)\s*GB\b/gi) || [];
+            storageOnly.forEach(function (st) {
+              const sClean = "8GB / " + st.replace(/\s+/g, "").toUpperCase();
+              if (detectedVariants.indexOf(sClean) === -1) detectedVariants.push(sClean);
+            });
+          }
+
+          // 4. Extract explicit Color printed on box label
+          const colorLineMatch = combinedRaw.match(/(?:Colou?r\s*[:\-]\s*)([A-Za-z]+(?:\s+[A-Za-z]+){0,2})/i);
+          const colorKeywords = [
+            "Natural Titanium", "Desert Titanium", "Black Titanium", "White Titanium", "Blue Titanium",
+            "Titanium Gray", "Titanium Black", "Titanium Violet", "Titanium Yellow", "Awesome Iceblue",
+            "Awesome Navy", "Awesome Lilac", "Flowy Emerald", "Silky Black", "Sunset Orange", "Asteroid Black",
+            "Chanson Green", "Fusion Purple", "Midnight Black", "Starlight", "Ultramarine", "Teal",
+            "Obsidian", "Porcelain", "Emerald Green", "Glacier Blue", " Arctic White", "Coral Purple",
+            "Celadon Marble", "Dark Chrome", "Ganges Blue", "Andaman Blue"
+          ];
+          const detectedColors = [];
+          if (colorLineMatch && colorLineMatch[1]) {
+            detectedColors.push(colorLineMatch[1].trim());
+          }
+          colorKeywords.forEach(function (ck) {
+            if (lower.indexOf(ck.toLowerCase()) !== -1 && detectedColors.indexOf(ck) === -1) {
+              detectedColors.push(ck);
+            }
+          });
+
+          // 5. Extract MRP price if printed on Indian retail box
+          const mrpMatch = combinedRaw.match(/(?:MRP|Rs\.?|₹)\s*([\d,]{4,8})/i);
+          const extractedMrp = mrpMatch ? Number(mrpMatch[1].replace(/,/g, "")) : 0;
+
+          // 6. Match against SMARTPHONE_BARCODE_CATALOG (by EAN or 8-digit IMEI TAC prefix) or EXTENDED_PHONE_SPEC_DB
+          const tac8 = uniqueImeis[0] ? uniqueImeis[0].slice(0, 8) : "";
+          let matchedCatalog = SMARTPHONE_BARCODE_CATALOG.find(function (c) {
+            return (detectedEan && c.ean === detectedEan) || (tac8 && c.tacPrefix === tac8);
+          });
+
+          let matchedExtended = null;
+          if (!matchedCatalog) {
+            for (let i = 0; i < EXTENDED_PHONE_SPEC_DB.length; i++) {
+              const entry = EXTENDED_PHONE_SPEC_DB[i];
+              const hit = entry.keywords.some(function (kw) { return lower.indexOf(kw) !== -1; });
+              if (hit) {
+                matchedExtended = entry;
+                break;
+              }
+            }
+          }
+
+          if (matchedCatalog) {
+            return {
+              spec: {
+                ean: detectedEan || matchedCatalog.ean,
+                tacPrefix: tac8 || matchedCatalog.tacPrefix,
+                brand: matchedCatalog.brand,
+                model: matchedCatalog.model,
+                defaultVariant: detectedVariants[0] || matchedCatalog.defaultVariant,
+                variants: detectedVariants.length ? detectedVariants.concat(matchedCatalog.variants.filter(function (v) { return detectedVariants.indexOf(v) === -1; })) : matchedCatalog.variants,
+                colors: detectedColors.length ? detectedColors.concat(matchedCatalog.colors.filter(function (c) { return detectedColors.indexOf(c) === -1; })) : matchedCatalog.colors,
+                purchaseCost: matchedCatalog.purchaseCost,
+                offlinePrice: extractedMrp || matchedCatalog.offlinePrice,
+                onlinePrice: extractedMrp ? Math.max(0, extractedMrp - 2000) : matchedCatalog.onlinePrice,
+                offerBadge: matchedCatalog.offerBadge
+              },
+              imei1: uniqueImeis[0] || "",
+              imei2: uniqueImeis[1] || ""
+            };
+          }
+
+          if (matchedExtended) {
+            const basePrice = extractedMrp || matchedExtended.mrp || 29999;
+            return {
+              spec: {
+                ean: detectedEan || (skuMatch ? skuMatch[0].toUpperCase() : "BOX-SCAN"),
+                tacPrefix: tac8 || "35000000",
+                brand: matchedExtended.brand,
+                model: matchedExtended.model,
+                defaultVariant: detectedVariants[0] || matchedExtended.variants[0],
+                variants: detectedVariants.length ? detectedVariants.concat(matchedExtended.variants.filter(function (v) { return detectedVariants.indexOf(v) === -1; })) : matchedExtended.variants,
+                colors: detectedColors.length ? detectedColors.concat(matchedExtended.colors.filter(function (c) { return detectedColors.indexOf(c) === -1; })) : matchedExtended.colors,
+                purchaseCost: Math.round(basePrice * 0.88),
+                offlinePrice: basePrice,
+                onlinePrice: Math.max(0, basePrice - 1500),
+                offerBadge: "Official Brand Warranty + 0% Bajaj/IDFC EMI"
+              },
+              imei1: uniqueImeis[0] || "",
+              imei2: uniqueImeis[1] || ""
+            };
+          }
+
+          // 7. Generic Brand + Model Regex Extraction from raw OCR text + Live Wikipedia Open Search API
+          const brandRegex = /\b(Apple|iPhone|Samsung|Galaxy|Vivo|iQOO|Oppo|OnePlus|Xiaomi|Redmi|Poco|Realme|Motorola|Moto|Nothing|Pixel|Google|Huawei|Honor|Infinix|Tecno|Nokia|Lava)\b/i;
+          const brandHit = combinedRaw.match(brandRegex);
+          let rawBrand = brandHit ? brandHit[1] : "";
+          if (rawBrand.toLowerCase() === "iphone") rawBrand = "Apple";
+          if (rawBrand.toLowerCase() === "galaxy") rawBrand = "Samsung";
+          if (rawBrand.toLowerCase() === "redmi") rawBrand = "Xiaomi";
+          if (rawBrand.toLowerCase() === "moto") rawBrand = "Motorola";
+
+          // Look for "Model: ..." line in OCR text
+          const modelLine = combinedRaw.match(/(?:Model(?:\s*Name)?|Product|Device)\s*[:\-]\s*([A-Za-z0-9\+\-\s]{3,32})/i);
+          let extractedModel = modelLine ? modelLine[1].split("\n")[0].trim() : (skuMatch ? skuMatch[0].toUpperCase() : "");
+
+          if (!extractedModel && rawBrand) {
+            const afterBrand = combinedRaw.match(new RegExp(rawBrand + "\\s+([A-Za-z0-9\\+\\-\\(\\)]{2,25}(?:\\s+[A-Za-z0-9\\+\\-]{1,12})?)", "i"));
+            if (afterBrand) extractedModel = rawBrand + " " + afterBrand[1].trim();
+          }
+
+          const finalPrice = extractedMrp || 24999;
+          return {
+            spec: {
+              ean: detectedEan || "",
+              tacPrefix: tac8 || "",
+              brand: rawBrand || "Detected Box",
+              model: extractedModel || (detectedEan ? ("Barcode SKU " + detectedEan) : ""),
+              defaultVariant: detectedVariants[0] || "8GB / 256GB",
+              variants: detectedVariants.length ? detectedVariants : ["8GB / 128GB", "8GB / 256GB", "12GB / 256GB", "12GB / 512GB"],
+              colors: detectedColors.length ? detectedColors : ["Obsidian Black", "Titanium Gray", "Glacier Blue", "Emerald Green"],
+              purchaseCost: Math.round(finalPrice * 0.88),
+              offlinePrice: finalPrice,
+              onlinePrice: Math.max(0, finalPrice - 1000),
+              offerBadge: "Official Warranty + Easy Finance"
+            },
+            imei1: uniqueImeis[0] || "",
+            imei2: uniqueImeis[1] || ""
+          };
+        }
+
+        // Full Real Image Pipeline: Decodes Barcodes + Runs Tesseract.js OCR + Populates Modal
+        async function processBoxImageWithRealOcrAndBarcodes(imageDataUrl, fileNameHint) {
+          document.getElementById("lensScannedPhotoThumb").src = imageDataUrl;
+          document.getElementById("lensOcrStatusText").textContent = "Step 1/2: Decoding 3 Barcodes from image (BarcodeDetector + ZXing)...";
+          document.getElementById("lensOcrPercentLabel").textContent = "15%";
+          document.getElementById("lensOcrProgressBar").style.width = "15%";
+          document.getElementById("lensRawOcrPreview").textContent = "Scanning image pixels for EAN, IMEI 1, IMEI 2 & Model text...";
+          document.getElementById("googleLensConfirmModal").classList.remove("hidden");
+
+          const barcodes = await decodeAllBarcodesFromImage(imageDataUrl);
+          let ocrText = "";
+
+          if (typeof Tesseract !== "undefined" && Tesseract.recognize) {
+            try {
+              document.getElementById("lensOcrStatusText").textContent = "Step 2/2: Running Real Optical Character Recognition (Tesseract.js)...";
+              const res = await Tesseract.recognize(imageDataUrl, "eng", {
+                logger: function (m) {
+                  if (m && m.status === "recognizing text" && typeof m.progress === "number") {
+                    const pct = Math.min(99, Math.max(20, Math.round(m.progress * 100)));
+                    document.getElementById("lensOcrPercentLabel").textContent = pct + "%";
+                    document.getElementById("lensOcrProgressBar").style.width = pct + "%";
+                  }
+                }
+              });
+              if (res && res.data && res.data.text) {
+                ocrText = res.data.text;
+              }
+            } catch (err) {
+              console.warn("Tesseract OCR fallback:", err);
+            }
+          }
+
+          document.getElementById("lensOcrPercentLabel").textContent = "100%";
+          document.getElementById("lensOcrProgressBar").style.width = "100%";
+
+          const parsed = await parseBoxLabelAndLookupSpecs(ocrText, barcodes, fileNameHint);
+          const cleanPreview = ((barcodes.length ? "[Barcodes: " + barcodes.join(", ") + "] " : "") + (ocrText || "").replace(/\s+/g, " ").trim()).slice(0, 180);
+          document.getElementById("lensRawOcrPreview").textContent = cleanPreview
+            ? ("Read from Photo: " + cleanPreview)
+            : "No clear text/barcode detected in image — type or verify model name below and click 'Fetch Variants & Colors'!";
+
+          if (parsed.spec.model) {
+            document.getElementById("lensOcrStatusText").textContent = "✓ Extracted: " + parsed.spec.brand + " " + parsed.spec.model;
+          } else {
+            document.getElementById("lensOcrStatusText").textContent = "Photo scanned — verify or type model name below & click Fetch Variants/Colors";
+          }
+
+          openGoogleLensDetectionModal(parsed.spec, parsed.imei1, parsed.imei2);
+        }
+
+        // Live Web / Database Spec Lookup when user types/edits Model in Modal and clicks "Fetch Variants & Colors"
+        async function fetchSpecsForModelQuery(queryStr) {
+          const q = (queryStr || "").trim();
+          if (!q) {
+            showToast("Enter a phone model name or barcode first.", "warning");
+            return;
+          }
+          document.getElementById("lensOcrStatusText").textContent = "Searching specs, variants & colors for: " + q + "...";
+          const parsed = await parseBoxLabelAndLookupSpecs(q, [document.getElementById("lensModalEan").value], q);
+
+          // Also query Wikipedia Open Search API for live web confirmation if not in local DB
+          if (parsed.spec.brand === "Detected Box" || !parsed.spec.model || parsed.spec.model === q) {
+            try {
+              const wikiUrl = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + encodeURIComponent(q + " smartphone") + "&utf8=&format=json&origin=*";
+              const r = await fetch(wikiUrl);
+              if (r.ok) {
+                const d = await r.json();
+                if (d && d.query && d.query.search && d.query.search.length > 0) {
+                  const topHit = d.query.search[0];
+                  const snippet = (topHit.title + " " + topHit.snippet.replace(/<[^>]+>/g, "")).trim();
+                  const reParsed = await parseBoxLabelAndLookupSpecs(snippet, [], topHit.title);
+                  parsed.spec.brand = reParsed.spec.brand !== "Detected Box" ? reParsed.spec.brand : (q.split(" ")[0] || "Smartphone");
+                  parsed.spec.model = topHit.title;
+                  if (reParsed.spec.variants.length) parsed.spec.variants = reParsed.spec.variants;
+                  if (reParsed.spec.colors.length) parsed.spec.colors = reParsed.spec.colors;
+                }
+              }
+            } catch (e) {}
+          }
+
+          pendingLensSpec.brand = parsed.spec.brand !== "Detected Box" ? parsed.spec.brand : (document.getElementById("lensModalBrandBadge").value || q.split(" ")[0]);
+          pendingLensSpec.model = parsed.spec.model || q;
+          pendingLensSpec.variants = parsed.spec.variants;
+          pendingLensSpec.colors = parsed.spec.colors;
+          if (parsed.spec.offlinePrice) {
+            pendingLensSpec.purchaseCost = parsed.spec.purchaseCost;
+            pendingLensSpec.offlinePrice = parsed.spec.offlinePrice;
+            pendingLensSpec.onlinePrice = parsed.spec.onlinePrice;
+          }
+
+          document.getElementById("lensModalBrandBadge").value = pendingLensSpec.brand;
+          document.getElementById("lensModalModelName").value = pendingLensSpec.model;
+          document.getElementById("lensModalGoogleLink").href =
+            "https://www.google.com/search?q=" + encodeURIComponent(pendingLensSpec.brand + " " + pendingLensSpec.model + " specifications colors variants");
+          renderLensModalLists();
+          document.getElementById("lensOcrStatusText").textContent = "✓ Loaded variants & colors for " + pendingLensSpec.brand + " " + pendingLensSpec.model;
+          showToast("✓ Loaded official variants & colors for " + pendingLensSpec.model, "success");
         }
 
         function stopLiveCameraStream() {
@@ -2499,25 +2935,37 @@
           panel.classList.remove("hidden");
           const video = document.getElementById("liveBarcodeVideo");
           if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } } })
               .then(function (stream) {
                 activeCameraStream = stream;
                 video.srcObject = stream;
               })
               .catch(function () {
-                showToast("Camera preview active in simulation mode — click 'Snap 3 Barcodes' below!", "success");
+                showToast("Camera permission unavailable — upload a box photo or enter model in the scanner modal.", "warning");
               });
-          } else {
-            showToast("Camera simulation ready — click 'Snap 3 Barcodes' to test detection!", "success");
           }
         });
 
         document.getElementById("btnCloseLiveCamera").addEventListener("click", stopLiveCameraStream);
 
+        // Capture real video frame from camera and run Real OCR + BarcodeDetector
         document.getElementById("btnCaptureCameraFrameToLens").addEventListener("click", function () {
-          stopLiveCameraStream();
-          const randomSpec = SMARTPHONE_BARCODE_CATALOG[Math.floor(Math.random() * SMARTPHONE_BARCODE_CATALOG.length)];
-          openGoogleLensDetectionModal(randomSpec, "", "");
+          const video = document.getElementById("liveBarcodeVideo");
+          if (video && video.videoWidth > 0 && video.videoHeight > 0) {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+            const frameDataUrl = canvas.toDataURL("image/jpeg", 0.92);
+            currentUploadedPhotoDataUrl = frameDataUrl;
+            document.getElementById("stockProductPhotoPreview").src = frameDataUrl;
+            stopLiveCameraStream();
+            processBoxImageWithRealOcrAndBarcodes(frameDataUrl, "");
+          } else {
+            stopLiveCameraStream();
+            document.getElementById("lensOcrStatusText").textContent = "No live camera frame — type model or upload box photo!";
+            openGoogleLensDetectionModal(pendingLensSpec, "", "");
+          }
         });
 
         document.getElementById("btnCloseLensModal").addEventListener("click", function () {
@@ -2527,11 +2975,66 @@
           document.getElementById("googleLensConfirmModal").classList.add("hidden");
         });
 
+        // Add/Remove Custom Variants & Colors inside the Modal
+        document.getElementById("btnLensFetchWebSpecs").addEventListener("click", function () {
+          const mQuery = document.getElementById("lensModalModelName").value.trim() || document.getElementById("lensModalEan").value.trim();
+          fetchSpecsForModelQuery(mQuery);
+        });
+
+        document.getElementById("btnLensAddVariant").addEventListener("click", function () {
+          const inp = document.getElementById("lensAddCustomVariantInput");
+          const val = inp.value.trim();
+          if (val && pendingLensSpec.variants.indexOf(val) === -1) {
+            pendingLensSpec.variants.push(val);
+            inp.value = "";
+            renderLensModalLists();
+          }
+        });
+
+        document.getElementById("btnLensAddColor").addEventListener("click", function () {
+          const inp = document.getElementById("lensAddCustomColorInput");
+          const val = inp.value.trim();
+          if (val && pendingLensSpec.colors.indexOf(val) === -1) {
+            pendingLensSpec.colors.push(val);
+            inp.value = "";
+            renderLensModalLists();
+          }
+        });
+
+        document.getElementById("lensModalVariantsList").addEventListener("click", function (e) {
+          const btn = e.target.closest("[data-lens-rm-var]");
+          if (!btn) return;
+          const idx = Number(btn.getAttribute("data-lens-rm-var"));
+          if (pendingLensSpec.variants.length > 1) {
+            pendingLensSpec.variants.splice(idx, 1);
+            renderLensModalLists();
+          }
+        });
+
+        document.getElementById("lensModalColorsList").addEventListener("click", function (e) {
+          const btn = e.target.closest("[data-lens-rm-col]");
+          if (!btn) return;
+          const idx = Number(btn.getAttribute("data-lens-rm-col"));
+          if (pendingLensSpec.colors.length > 1) {
+            pendingLensSpec.colors.splice(idx, 1);
+            renderLensModalLists();
+          }
+        });
+
         // When Admin or Staff taps "✅ TAP OKAY" in the Google Lens Detection Modal
         document.getElementById("btnTapOkayConfirmLens").addEventListener("click", function () {
-          document.getElementById("scanBarcode2Imei1").value = pendingLensImei1;
-          document.getElementById("scanBarcode3Imei2").value = pendingLensImei2;
-          applyCatalogMatchToScannerForm(pendingLensSpec, pendingLensImei1, pendingLensImei2);
+          pendingLensSpec.ean = document.getElementById("lensModalEan").value.trim() || pendingLensSpec.ean;
+          pendingLensSpec.brand = document.getElementById("lensModalBrandBadge").value.trim() || pendingLensSpec.brand || "Brand";
+          pendingLensSpec.model = document.getElementById("lensModalModelName").value.trim() || pendingLensSpec.model || "Smartphone 5G";
+          pendingLensSpec.defaultVariant = pendingLensSpec.variants[0] || "8GB / 256GB";
+
+          const imei1 = document.getElementById("lensModalImei1").value.trim();
+          const imei2 = document.getElementById("lensModalImei2").value.trim();
+          document.getElementById("scanBarcode1Ean").value = pendingLensSpec.ean;
+          document.getElementById("scanBarcode2Imei1").value = imei1;
+          document.getElementById("scanBarcode3Imei2").value = imei2;
+
+          applyCatalogMatchToScannerForm(pendingLensSpec, imei1, imei2);
 
           // Also parse any extra unlimited IMEIs scanned/pasted into the modal's quick box
           const extraRaw = document.getElementById("lensModalQuickImeis").value || "";
@@ -2542,7 +3045,7 @@
 
           document.getElementById("googleLensConfirmModal").classList.add("hidden");
           document.getElementById("rapidGunImeiInput").focus();
-          showToast("✅ Loaded " + pendingLensSpec.model + " (" + pendingLensSpec.variants.length + " variants, " + pendingLensSpec.colors.length + " colors). Scan unlimited IMEIs now!", "success");
+          showToast("✅ Loaded " + pendingLensSpec.brand + " " + pendingLensSpec.model + " (" + pendingLensSpec.variants.length + " variants, " + pendingLensSpec.colors.length + " colors). Scan unlimited IMEIs!", "success");
         });
 
         // Live Google Search Engine Lookup Button
@@ -2579,7 +3082,7 @@
           showToast("Generated 5 box IMEIs in bulk box — click '+ Queue All IMEIs'!", "success");
         });
 
-        // Box Photo OCR Upload & Online Store Product Photo Upload
+        // REAL Box Photo OCR Upload + BarcodeDetector + ZXing Scanner
         document.getElementById("boxPhotoOcrInput").addEventListener("change", function (e) {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
@@ -2587,22 +3090,7 @@
           reader.onload = function (ev) {
             currentUploadedPhotoDataUrl = ev.target.result;
             document.getElementById("stockProductPhotoPreview").src = currentUploadedPhotoDataUrl;
-            // Smart filename / OCR heuristic match
-            const fname = file.name.toLowerCase();
-            let matchedSpec = SMARTPHONE_BARCODE_CATALOG[0];
-            if (fname.indexOf("samsung") !== -1 || fname.indexOf("s24") !== -1) {
-              matchedSpec = SMARTPHONE_BARCODE_CATALOG[1];
-            } else if (fname.indexOf("huawei") !== -1 || fname.indexOf("pura") !== -1) {
-              matchedSpec = SMARTPHONE_BARCODE_CATALOG[2];
-            } else if (fname.indexOf("vivo") !== -1 || fname.indexOf("x100") !== -1) {
-              matchedSpec = SMARTPHONE_BARCODE_CATALOG[3];
-            } else if (fname.indexOf("oneplus") !== -1) {
-              matchedSpec = SMARTPHONE_BARCODE_CATALOG[4];
-            } else if (fname.indexOf("redmi") !== -1 || fname.indexOf("xiaomi") !== -1) {
-              matchedSpec = SMARTPHONE_BARCODE_CATALOG[5];
-            }
-            openGoogleLensDetectionModal(matchedSpec, "", "");
-            showToast("🔍 Google Lens Vision decoded 3 barcodes from photo — Just Tap OKAY!", "success");
+            processBoxImageWithRealOcrAndBarcodes(currentUploadedPhotoDataUrl, file.name || "");
           };
           reader.readAsDataURL(file);
         });
