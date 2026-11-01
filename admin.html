@@ -263,7 +263,7 @@
   </section>
 
   <!-- MAIN WORKSPACE CONTENT -->
-  <main class="max-w-[1600px] w-full mx-auto px-4 py-4 flex-1 no-print">
+  <main class="max-w-[1600px] w-full mx-auto px-4 py-4 flex-1">
 
     <!-- =================================================================== -->
     <!-- TAB 1: 3-BARCODE BOX SCANNER, PHOTO OCR & RAPID BULK IMEI STOCK-IN  -->
@@ -952,7 +952,7 @@
 
           <!-- Active Single-Click Review Box -->
           <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-            <textarea id="activeGeneratedReviewText" rows="2" class="flex-1 bg-transparent text-xs text-slate-100 focus:outline-none resize-none">Bought my brand new smartphone from Cell Planet on Station Road, Khammam! Hands down the best mobile store in town — got an unbeatable discount, genuine sealed box, and super friendly guidance. Highly recommended!</textarea>
+            <textarea id="activeGeneratedReviewText" rows="2" class="flex-1 bg-transparent text-xs text-slate-100 focus:outline-none resize-none"></textarea>
             <button id="btnOneClickCopyAndRedirect" type="button" class="px-5 py-3 rounded-xl huawei-gradient text-white font-extrabold text-xs whitespace-nowrap shadow-lg hover:opacity-95">
               ⚡ 1-Click Copy & Go to Google Review
             </button>
@@ -976,7 +976,7 @@
         <div class="space-y-1">
           <span class="text-[11px] font-mono uppercase text-rose-400">RESTRICTED SECURITY ZONE</span>
           <h2 class="text-lg font-extrabold text-white">Admin Command Center is Locked (Currently in Staff Mode)</h2>
-          <p class="text-xs text-slate-400">Enter the Hidden Admin Password (default: <code class="text-amber-300 font-mono">CP@Admin9999</code> or PIN <code class="text-amber-300 font-mono">9999</code>) to unlock Net Profit margins, Nightly Excel Auto-Export settings, Firebase Daily Data Purge, and Security PIN configuration.</p>
+          <p class="text-xs text-slate-400">Enter the Hidden Admin Password (sign in with your Firebase staff login) to unlock Net Profit margins, Nightly Excel Auto-Export settings, Firebase Daily Data Purge, and Security PIN configuration.</p>
         </div>
         <button id="btnUnlockAdminFromTab" type="button" class="px-5 py-3 rounded-xl huawei-gradient text-xs font-extrabold text-white whitespace-nowrap shadow-lg">
           🔐 Enter Hidden Admin Password
@@ -1027,11 +1027,11 @@
             <div class="space-y-2.5 text-xs">
               <div>
                 <label for="adminNewPasswordInput" class="block text-slate-400 mb-1">New Hidden Admin Password / PIN</label>
-                <input id="adminNewPasswordInput" type="password" placeholder="Default: CP@Admin9999" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 font-mono text-white" />
+                <input id="adminNewPasswordInput" type="password" placeholder="Set in Firebase Console" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 font-mono text-white" />
               </div>
               <div>
                 <label for="staffNewPinInput" class="block text-slate-400 mb-1">New Staff Counter PIN</label>
-                <input id="staffNewPinInput" type="password" placeholder="Default: 2255" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 font-mono text-white" />
+                <input id="staffNewPinInput" type="password" placeholder="Set in Firebase Console" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 font-mono text-white" />
               </div>
               <button id="btnUpdateSecurityCredentials" type="button" class="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-xs font-bold text-white">
                 🔒 Update Encrypted Role Credentials
@@ -1211,9 +1211,9 @@
         <button id="btnCloseSecurityModal" type="button" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-1">✕</button>
       </div>
       <p class="text-xs text-slate-300">
-        Enter <strong class="text-rose-400">Admin Password</strong> (Default: <code class="font-mono text-amber-300">CP@Admin9999</code> or <code class="font-mono text-amber-300">9999</code>) for full owner controls, or <strong class="text-cyan-400">Staff PIN</strong> (Default: <code class="font-mono text-cyan-300">2255</code>) for counter mode.
+        Sign in with your <strong class="text-rose-400">Firebase staff login</strong>. Admin tools unlock after sign-in.
       </p>
-      <input id="securityPasscodeInput" type="password" placeholder="Enter Admin Password or Staff PIN..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-mono text-white focus:border-rose-500 focus:outline-none" />
+      <input id="securityPasscodeInput" type="password" placeholder="Staff password" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm font-mono text-white focus:border-rose-500 focus:outline-none" />
       <div class="flex justify-end gap-2">
         <button id="btnSwitchToStaffRole" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Switch to Staff Mode</button>
         <button id="btnVerifySecurityPasscode" type="button" class="px-5 py-2 rounded-xl huawei-gradient text-xs font-extrabold text-white">Verify & Unlock</button>
@@ -1263,6 +1263,8 @@
 
       const GOOGLE_REVIEW_URL = "https://search.google.com/local/reviews?placeid=ChIJFxR6ddJZNDoR3SZrd7hOq0c&q=Cell+Planet,+Station+Road,+Urdu+Ghar+Shadi+Khana,+Lenin+Nagar,+Braman+Bazar,+Balaji+Nagar,+Khammam,+Telangana&authuser=0&hl=en&gl=IN";
       const STORAGE_KEY = "CELL_PLANET_ENTERPRISE_STATE_V4";
+      // Firebase Authentication staff login (create this user in Firebase Console -> Authentication).
+      const STAFF_EMAIL = "staff@cellplanet-replace-me.invalid";
 
       // Master Smartphone Barcode (EAN-13) & 8-Digit IMEI TAC Prefix Knowledge Base
       const SMARTPHONE_BARCODE_CATALOG = [
@@ -1356,9 +1358,6 @@
       function getDefaultState() {
         return {
           security: {
-            adminPassword: "CP@Admin9999",
-            adminAltPin: "9999",
-            staffPin: "2255",
             autoExcelTime: "22:00",
             autoExcelEnabled: true,
             lastAutoBackupDate: ""
@@ -1586,91 +1585,215 @@
         return fallback;
       }
 
+      // ===================== CLOUD SYNC (Firebase Realtime Database) =====================
+      // The POS works fully offline. Cloud sync starts only when the Firebase SDK loads AND
+      // a staff member signs in. Public data -> /store (storefront). Private data -> /pos (staff only).
+      const FB_SDK = "https://www.gstatic.com/firebasejs/13.1.0/";
+      const cloud = { ok: false, db: null, auth: null, dbm: null, am: null, subscribed: false, pushed: {} };
+      // Sample demo records are never uploaded to the store or to /pos.
+      const DEMO_KEYS = {
+        inventory: ["STK-1001", "STK-1002", "STK-1003", "STK-1004", "STK-1005"],
+        orders: ["ORD-CP-8821", "ORD-CP-8822"],
+        salesBills: ["CP-2026-100"],
+        repairs: ["REP-501"],
+        secondHand: ["SH-301"]
+      };
+      const CLOUD_BADGES = {
+        ok:        { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", text: "FB Live: cellplanet-536a6" },
+        syncing:   { cls: "bg-amber-500/15 text-amber-300 border-amber-500/30",       text: "Syncing to cloud..." },
+        signedout: { cls: "bg-amber-500/15 text-amber-300 border-amber-500/30",       text: "Local only: staff sign-in needed to sync" },
+        offline:   { cls: "bg-slate-800 text-slate-300 border-slate-600",             text: "Offline: saved on this device" },
+        error:     { cls: "bg-rose-500/15 text-rose-300 border-rose-500/30",          text: "Sync error: retrying on next change" },
+        denied:    { cls: "bg-rose-500/15 text-rose-300 border-rose-500/30",          text: "Access denied: check Firebase rules" }
+      };
+
+      function setCloudBadge(state) {
+        const badge = document.getElementById("firebaseSyncBadge");
+        if (!badge) return;
+        const c = CLOUD_BADGES[state] || CLOUD_BADGES.offline;
+        badge.className = "inline-flex items-center gap-1.5 text-[11px] font-mono px-2 py-0.5 rounded-full border " + c.cls;
+        badge.textContent = c.text;
+      }
+
+      function persistLocal() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); } catch (err) {}
+      }
+
+      function cleanRecord(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      }
+
       function saveStateAndSyncFirebase(actionNote) {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-        } catch (err) {}
+        persistLocal();
         if (cpChannel) {
           try {
-            cpChannel.postMessage({
-              type: "POS_STATE_UPDATE",
-              inventory: appState.inventory,
-              onlineOrders: appState.onlineOrders
-            });
+            cpChannel.postMessage({ type: "POS_STATE_UPDATE", inventory: appState.inventory, onlineOrders: appState.onlineOrders });
           } catch (e) {}
         }
-        syncWithFirebaseCloud(actionNote);
+        pushToCloud(actionNote);
         renderAllViews();
       }
 
-      async function pullFromFirebaseCloud(isSilentPoll) {
-        const badge = document.getElementById("firebaseSyncBadge");
+      async function initCloud() {
         try {
-          const res = await fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json");
-          if (!res.ok) return;
-          const cloud = await res.json();
-          if (!cloud) {
-            // Seed cloud for the first time without overwriting anything
-            syncWithFirebaseCloud("Initial Seed");
-            return;
-          }
-          const prevOrderCount = appState.onlineOrders.length;
-          if (cloud.inventory) appState.inventory = normalizeList(cloud.inventory, appState.inventory);
-          if (cloud.onlineOrders) appState.onlineOrders = normalizeList(cloud.onlineOrders, appState.onlineOrders);
-          if (cloud.salesBills) appState.salesBills = normalizeList(cloud.salesBills, appState.salesBills);
-          if (cloud.repairs) appState.repairs = normalizeList(cloud.repairs, appState.repairs);
-          if (cloud.secondHand) appState.secondHand = normalizeList(cloud.secondHand, appState.secondHand);
-          try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-          } catch (e) {}
-          renderAllViews();
-          if (isSilentPoll && appState.onlineOrders.length > prevOrderCount) {
-            showToast("🛍️ New Customer Online Order arrived from Storefront!", "success");
-          }
-          if (badge) {
-            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> FB Live: cellplanet-536a6';
-          }
+          const appMod = await import(FB_SDK + "firebase-app.js");
+          const dbm = await import(FB_SDK + "firebase-database.js");
+          const am = await import(FB_SDK + "firebase-auth.js");
+          const fbApp = appMod.initializeApp(firebaseConfig);
+          cloud.dbm = dbm;
+          cloud.am = am;
+          cloud.db = dbm.getDatabase(fbApp, firebaseConfig.databaseURL);
+          cloud.auth = am.getAuth(fbApp);
+          cloud.ok = true;
+          am.onAuthStateChanged(cloud.auth, function (user) {
+            isAdminUnlocked = !!user;
+            if (user) {
+              subscribeCloud();
+              pushToCloud("staff signed in");
+            } else {
+              setCloudBadge("signedout");
+            }
+            renderAllViews();
+          });
         } catch (err) {
-          if (badge && !isSilentPoll) {
-            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Local+Cloud Ready (cellplanet-536a6)';
-          }
+          console.warn("Cloud sync unavailable, running locally:", err);
+          setCloudBadge("offline");
         }
       }
 
-      // Firebase Realtime Database Cloud Synchronization (PATCH so we never wipe concurrent data)
-      async function syncWithFirebaseCloud(actionNote) {
-        const badge = document.getElementById("firebaseSyncBadge");
-        try {
-          if (badge) {
-            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span> Syncing cellplanet-536a6...';
-          }
-          const res = await fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json", {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              updatedAt: new Date().toISOString(),
-              store: "Cell Planet Khammam",
-              gstin: "36ACVPK3564C1ZE",
-              developer: "@syedzeeshaanali07",
-              inventory: appState.inventory,
-              onlineOrders: appState.onlineOrders,
-              salesBills: appState.salesBills,
-              repairs: appState.repairs,
-              secondHand: appState.secondHand
-            })
+      // Builds the exact records that should exist in the cloud right now.
+      function publicInventoryItem(item) {
+        const photo = typeof item.photoDataUrl === "string" && item.photoDataUrl.length < 250000 ? item.photoDataUrl : "";
+        return cleanRecord({
+          id: item.id,
+          brand: item.brand || "",
+          model: item.model || "",
+          variant: item.variant || "",
+          color: item.color || "",
+          onlinePrice: Number(item.onlinePrice) || 0,
+          offlinePrice: Number(item.offlinePrice) || 0,
+          offerBadge: item.offerBadge || "",
+          photoDataUrl: photo,
+          status: "IN_STOCK"
+        });
+      }
+
+      function isDemoRecord(rec, key, demoList) {
+        return !!(rec && rec.demo) || demoList.indexOf(key) !== -1;
+      }
+
+      function buildCloudDesired() {
+        const d = { "store/inventory": {}, "store/orders": {}, "pos/inventory": {}, "pos/salesBills": {}, "pos/repairs": {}, "pos/secondHand": {} };
+        appState.inventory.forEach(function (item) {
+          if (!item || !item.id || isDemoRecord(item, item.id, DEMO_KEYS.inventory)) return;
+          d["pos/inventory"][item.id] = cleanRecord(item);
+          if (item.status === "IN_STOCK") d["store/inventory"][item.id] = publicInventoryItem(item);
+        });
+        appState.onlineOrders.forEach(function (o) {
+          if (!o || !o.orderId || isDemoRecord(o, o.orderId, DEMO_KEYS.orders)) return;
+          d["store/orders"][o.orderId] = cleanRecord(o);
+        });
+        [["salesBills", "invoiceNo", "pos/salesBills"], ["repairs", "jobId", "pos/repairs"], ["secondHand", "shId", "pos/secondHand"]].forEach(function (k) {
+          (appState[k[0]] || []).forEach(function (rec) {
+            if (!rec || !rec[k[1]] || isDemoRecord(rec, rec[k[1]], DEMO_KEYS[k[0]])) return;
+            d[k[2]][rec[k[1]]] = cleanRecord(rec);
           });
-          if (badge) {
-            if (res.ok) {
-              badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> FB Live: cellplanet-536a6';
-            } else {
-              badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> FB Hybrid: cellplanet-536a6';
+        });
+        return d;
+      }
+
+      // Writes only what changed since the last successful write (multi-path update, no array overwrites).
+      function pushToCloud(note) {
+        if (!cloud.ok) { setCloudBadge("offline"); return; }
+        if (!cloud.auth || !cloud.auth.currentUser) { setCloudBadge("signedout"); return; }
+        const desired = buildCloudDesired();
+        const updates = {};
+        Object.keys(desired).forEach(function (path) {
+          Object.keys(desired[path]).forEach(function (key) {
+            const full = path + "/" + key;
+            const json = JSON.stringify(desired[path][key]);
+            if (cloud.pushed[full] !== json) {
+              updates[full] = desired[path][key];
+              cloud.pushed[full] = json;
+            }
+          });
+        });
+        Object.keys(cloud.pushed).forEach(function (full) {
+          const slash = full.lastIndexOf("/");
+          const path = full.slice(0, slash);
+          const key = full.slice(slash + 1);
+          if (!desired[path] || !Object.prototype.hasOwnProperty.call(desired[path], key)) {
+            updates[full] = null;
+            delete cloud.pushed[full];
+          }
+        });
+        if (Object.keys(updates).length === 0) { setCloudBadge("ok"); return; }
+        setCloudBadge("syncing");
+        cloud.dbm.update(cloud.dbm.ref(cloud.db), updates).then(function () {
+          setCloudBadge("ok");
+        }).catch(function (err) {
+          Object.keys(updates).forEach(function (full) {
+            if (updates[full] !== null) delete cloud.pushed[full];
+          });
+          const msg = String((err && err.message) || err);
+          setCloudBadge(/permission/i.test(msg) ? "denied" : "error");
+          showToast("Cloud sync failed" + (note ? " (" + note + ")" : "") + ": " + msg, "error");
+        });
+      }
+
+      // Merges remote records into a local list. Remote wins only when someone else changed it.
+      function mergeRemote(list, keyField, remote, basePath) {
+        let changed = false;
+        Object.keys(remote).forEach(function (key) {
+          const r = remote[key];
+          if (!r || typeof r !== "object") return;
+          const full = basePath + "/" + key;
+          const remoteJson = JSON.stringify(r);
+          const idx = list.findIndex(function (x) { return x && x[keyField] === key; });
+          if (idx === -1) {
+            const rec = Object.assign({}, r);
+            rec[keyField] = key;
+            list.unshift(rec);
+            cloud.pushed[full] = remoteJson;
+            changed = true;
+          } else {
+            const localJson = JSON.stringify(list[idx]);
+            if (remoteJson !== cloud.pushed[full] && remoteJson !== localJson) {
+              const rec = Object.assign({}, r);
+              rec[keyField] = key;
+              list[idx] = rec;
+              cloud.pushed[full] = remoteJson;
+              changed = true;
             }
           }
-        } catch (err) {
-          if (badge) {
-            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Local+Cloud Ready (cellplanet-536a6)';
+        });
+        return changed;
+      }
+
+      function subscribeCloud() {
+        if (cloud.subscribed || !cloud.ok) return;
+        cloud.subscribed = true;
+        const ref = cloud.dbm.ref;
+        const onValue = cloud.dbm.onValue;
+        // Online orders placed on the storefront arrive here.
+        onValue(ref(cloud.db, "store/orders"), function (snap) {
+          const remote = snap.val() || {};
+          if (mergeRemote(appState.onlineOrders, "orderId", remote, "store/orders")) {
+            persistLocal();
+            renderAllViews();
+            showToast("🛍️ Online orders updated from the storefront", "success");
           }
-        }
+        }, function () { setCloudBadge("denied"); });
+        // Other staff devices' sales, repairs and stock.
+        onValue(ref(cloud.db, "pos"), function (snap) {
+          const remote = snap.val() || {};
+          let changed = false;
+          changed = mergeRemote(appState.inventory, "id", remote.inventory || {}, "pos/inventory") || changed;
+          changed = mergeRemote(appState.salesBills, "invoiceNo", remote.salesBills || {}, "pos/salesBills") || changed;
+          changed = mergeRemote(appState.repairs, "jobId", remote.repairs || {}, "pos/repairs") || changed;
+          changed = mergeRemote(appState.secondHand, "shId", remote.secondHand || {}, "pos/secondHand") || changed;
+          if (changed) { persistLocal(); renderAllViews(); }
+        }, function () { setCloudBadge("denied"); });
       }
 
       // Toast Notification Helper (Replaces alert())
@@ -2091,78 +2214,10 @@
 
       // 5. UNLIMITED 1-CLICK GOOGLE REVIEW GENERATOR ENGINE
       function generateUnlimitedReviewsBatch() {
-        const category = document.getElementById("reviewCategorySelect").value;
-        const customPhone = (document.getElementById("reviewCustomPhoneTag").value || "").trim() || "my new 5G smartphone";
-
-        const openers = [
-          "Just purchased " + customPhone + " from Cell Planet on Station Road, Khammam!",
-          "Visited Cell Planet (opp. Urdu Ghar Shadi Khana, Khammam) today for " + customPhone + ".",
-          "Hands down the #1 mobile showroom in Khammam! Bought " + customPhone + " at Cell Planet.",
-          "Super happy with my experience at Cell Planet, Balaji Nagar / Station Rd, Khammam!",
-          "Five stars to Cell Planet Khammam! Picked up " + customPhone + " today.",
-          "Best mobile store in Telangana! Got " + customPhone + " from Cell Planet Khammam."
-        ];
-
-        const categoryHighlights = {
-          flagship: [
-            "They gave me a way better price than online stores and 100% genuine sealed box.",
-            "Unbeatable flagship discount, instant GST billing, and free premium accessories included!",
-            "They had all colors in ready stock and matched the best online offer on the spot.",
-            "Super transparent pricing and genuine brand warranty. Every variant was ready to unbox!"
-          ],
-          finance: [
-            "Got instant Zero-Down-Payment paper finance approved in just 10 minutes with no hidden charges!",
-            "Their Bajaj Finserv and IDFC 0% EMI scheme made buying my dream phone completely effortless.",
-            "Best finance offers in Khammam — lowest EMI and instant approval right at the counter.",
-            "They explained all bank cashback and EMI options clearly so I saved thousands!"
-          ],
-          exchange: [
-            "Got the highest exchange value in Khammam for my old phone when upgrading!",
-            "Very fair second-hand evaluation and instant deduction on my new phone bill.",
-            "Upgraded my old device smoothly — data transfer and exchange bonus were top-notch!",
-            "Best place in Khammam to exchange old phones for brand new sealed flagships."
-          ],
-          repair: [
-            "Got my phone screen and battery serviced here — genuine original parts and 1-hour express delivery!",
-            "Their technician fixed my phone perfectly at half the authorized center cost.",
-            "Super reliable mobile repair service in Khammam with complete warranty on parts.",
-            "Fastest repair desk on Station Road! My phone looks and works like brand new again."
-          ],
-          online: [
-            "Ordered directly from Cell Planet's online store and got express same-day delivery in Khammam!",
-            "Loved the live order tracking from Packing to Delivered — genuine sealed box delivered home.",
-            "Online rate and instant WhatsApp support from 08899469999 made ordering from home a breeze!",
-            "Apple-level online shopping experience right here in Khammam with super fast delivery."
-          ]
-        };
-
-        const closers = [
-          "Highly recommend Cell Planet to everyone in Khammam!",
-          "Big thanks to the friendly staff for the amazing service!",
-          "Will definitely bring my family and friends here for their next upgrade.",
-          "Don't buy anywhere else in Khammam before checking Cell Planet's price!"
-        ];
-
-        const mids = categoryHighlights[category] || categoryHighlights.flagship;
-        const reviews = [];
-        for (let i = 0; i < 12; i++) {
-          const o = openers[(i + Math.floor(Math.random() * openers.length)) % openers.length];
-          const m = mids[(i + Math.floor(Math.random() * mids.length)) % mids.length];
-          const c = closers[(i + Math.floor(Math.random() * closers.length)) % closers.length];
-          reviews.push(o + " " + m + " " + c);
-        }
-
-        document.getElementById("activeGeneratedReviewText").value = reviews[0];
-        const grid = document.getElementById("unlimitedReviewsGrid");
-        grid.innerHTML = reviews.map(function (rev, idx) {
-          return '<div data-tap-review="' + encodeURIComponent(rev) + '" class="glass-card cursor-pointer rounded-xl p-3.5 space-y-2 border border-slate-800 hover:border-yellow-400/60 transition-all">' +
-            '<div class="flex items-center justify-between text-[11px]">' +
-              '<span class="text-yellow-400 font-bold">★★★★★ Verified Review #' + (idx + 1) + '</span>' +
-              '<span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 font-mono text-[10px]">Tap to Copy & Open</span>' +
-            '</div>' +
-            '<p class="text-xs text-slate-200 leading-relaxed">"' + rev + '"</p>' +
-          '</div>';
-        }).join("");
+        // No pre-written reviews. Customers write their own words; staff only shares the link.
+        document.getElementById("activeGeneratedReviewText").value = "";
+        document.getElementById("unlimitedReviewsGrid").innerHTML =
+          '<div class="col-span-full p-4 rounded-xl bg-slate-900/70 border border-slate-800 text-xs text-slate-300">Ask the customer to write their own review in their own words. Do not write reviews for customers.</div>';
       }
 
       function copyTextAndRedirectToGoogleReview(textToCopy) {
@@ -3130,7 +3185,7 @@
           const countAdded = queuedBulkImeis.length;
           queuedBulkImeis.forEach(function (q, idx) {
             appState.inventory.unshift({
-              id: "STK-" + (Date.now() + idx).toString().slice(-5),
+              id: "STK-" + Date.now().toString(36).toUpperCase() + "-" + idx,
               brand: brand,
               model: model,
               variant: q.variant,
@@ -3442,12 +3497,13 @@
             variant: "12GB / 256GB",
             color: "Titanium Gray",
             amountPaid: 119999,
-            paymentMethod: "Online Paid (PhonePe UPI Verified • Ref #884920194)",
+            paymentMethod: "SIMULATED: demo only, not paid",
+            demo: true,
             assignedImei: "Pending Box Scan",
             deliveryStatus: "Order Accepted"
           });
           saveStateAndSyncFirebase("New online order " + newOrdId);
-          showToast("🛍️ New Online Store Order " + newOrdId + " received (Online Paid)!", "success");
+          showToast("🛍️ New Online Store Order " + newOrdId + " received (demo, not synced)!", "success");
         });
 
         // Repairs & Second-Hand Handlers
@@ -3518,7 +3574,7 @@
           });
           // Also push into main POS stock so it can be billed or sold online
           appState.inventory.unshift({
-            id: "STK-SH-" + Date.now().toString().slice(-4),
+            id: "STK-SH-" + Date.now().toString(36).toUpperCase(),
             brand: "Pre-Owned",
             model: model,
             variant: grade,
@@ -3595,46 +3651,39 @@
           }
         });
 
-        document.getElementById("btnVerifySecurityPasscode").addEventListener("click", function () {
-          const code = document.getElementById("securityPasscodeInput").value.trim();
-          if (code === appState.security.adminPassword || code === appState.security.adminAltPin) {
-            isAdminUnlocked = true;
+        document.getElementById("btnVerifySecurityPasscode").addEventListener("click", async function () {
+          const pass = document.getElementById("securityPasscodeInput").value;
+          if (STAFF_EMAIL.indexOf("replace-me") !== -1) {
+            showToast("Set STAFF_EMAIL in the script to your Firebase staff login first.", "warning");
+            return;
+          }
+          if (!cloud.ok) {
+            showToast("Firebase did not load (check internet). Admin sign-in needs it.", "error");
+            return;
+          }
+          try {
+            await cloud.am.signInWithEmailAndPassword(cloud.auth, STAFF_EMAIL, pass);
             document.getElementById("securityGateModal").classList.add("hidden");
-            renderAllViews();
-            showToast("🔓 Hidden Admin Command Center Unlocked!", "success");
-          } else if (code === appState.security.staffPin) {
-            isAdminUnlocked = false;
-            document.getElementById("securityGateModal").classList.add("hidden");
-            renderAllViews();
-            showToast("Switched to Staff Counter Mode.", "success");
-          } else {
-            showToast("Invalid password/PIN. Default Admin: CP@Admin9999 (or 9999)", "error");
+            showToast("🔓 Signed in. Admin tools unlocked and cloud sync active.", "success");
+          } catch (err) {
+            showToast("Sign-in failed (" + (err.code || "error") + "). Check the password.", "error");
           }
         });
 
         document.getElementById("btnSwitchToStaffRole").addEventListener("click", function () {
-          isAdminUnlocked = false;
           document.getElementById("securityGateModal").classList.add("hidden");
-          renderAllViews();
-          showToast("Locked Admin controls. Active in Staff Counter Mode.", "success");
+          showToast("Staff counter mode: admin tools stay locked.", "success");
         });
 
         document.getElementById("btnLockAdminSession").addEventListener("click", function () {
+          if (cloud.ok && cloud.auth) cloud.am.signOut(cloud.auth);
           isAdminUnlocked = false;
           renderAllViews();
-          showToast("Admin session locked.", "success");
+          showToast("Admin session locked and signed out.", "success");
         });
 
-        // Update Passwords in Admin Tab
         document.getElementById("btnUpdateSecurityCredentials").addEventListener("click", function () {
-          const newAdm = document.getElementById("adminNewPasswordInput").value.trim();
-          const newStf = document.getElementById("staffNewPinInput").value.trim();
-          if (newAdm) appState.security.adminPassword = newAdm;
-          if (newStf) appState.security.staffPin = newStf;
-          document.getElementById("adminNewPasswordInput").value = "";
-          document.getElementById("staffNewPinInput").value = "";
-          saveStateAndSyncFirebase("Updated role security credentials");
-          showToast("🔒 Updated Admin & Staff security credentials!", "success");
+          showToast("Change staff passwords in Firebase Console → Authentication → Users.", "warning");
         });
 
         // Excel Export & Daily Purge Buttons
@@ -3663,8 +3712,11 @@
         });
 
         document.getElementById("btnForceFirebaseCloudPush").addEventListener("click", function () {
-          syncWithFirebaseCloud("Manual Force Sync");
-          showToast("☁️ Synced state with Firebase project cellplanet-536a6!", "success");
+          if (!cloud.ok) { showToast("Firebase did not load (check internet). Saved locally only.", "error"); return; }
+          if (!cloud.auth || !cloud.auth.currentUser) { showToast("Sign in as staff first (Admin unlock). Saved locally only.", "warning"); return; }
+          cloud.pushed = {};            // force a full re-send of every record
+          pushToCloud("manual force sync");
+          showToast("☁️ Full re-sync to Firebase project cellplanet-536a6 started.", "success");
         });
 
         document.getElementById("adminAutoExcelTime").addEventListener("change", function (e) {
@@ -3704,8 +3756,7 @@
         generateUnlimitedReviewsBatch();
         renderAllViews();
         startClockAndNightlyScheduler();
-        pullFromFirebaseCloud(false);
-        setInterval(function () { pullFromFirebaseCloud(true); }, 4000);
+        initCloud();
       }
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", bootAdminPos);
