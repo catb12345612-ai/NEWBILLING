@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
-    tailwind.config = {
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
@@ -20,8 +21,10 @@
         }
       }
     };
+    }
   </script>
   <style>
+    .hidden { display: none !important; }
     body {
       font-family: 'Inter', sans-serif;
       background: radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.14), transparent 45%),
@@ -261,6 +264,27 @@
       </div>
 
       <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-2xl bg-slate-900/90 border border-slate-800">
+          <div>
+            <label for="chkSelectVariant" class="block text-[11px] text-cyan-300 font-bold mb-1">Select RAM / Storage Variant</label>
+            <select id="chkSelectVariant" class="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 font-mono text-white">
+              <option value="8GB / 256GB">8GB / 256GB</option>
+              <option value="12GB / 256GB">12GB / 256GB</option>
+              <option value="16GB / 512GB">16GB / 512GB</option>
+              <option value="16GB / 1TB">16GB / 1TB</option>
+            </select>
+          </div>
+          <div>
+            <label for="chkSelectColor" class="block text-[11px] text-rose-300 font-bold mb-1">Select Official Box Color</label>
+            <select id="chkSelectColor" class="w-full px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white">
+              <option value="Natural Titanium">Natural Titanium</option>
+              <option value="Desert Titanium">Desert Titanium</option>
+              <option value="Obsidian Black">Obsidian Black</option>
+              <option value="Chanson Green">Chanson Green</option>
+              <option value="Sunset Orange">Sunset Orange</option>
+            </select>
+          </div>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label for="chkCustName" class="block text-slate-400 mb-1">Your Full Name *</label>
@@ -450,29 +474,60 @@
         }, 3500);
       }
 
+      function normalizeArray(val, fallback) {
+        if (Array.isArray(val)) return val.filter(Boolean);
+        if (val && typeof val === "object") {
+          const arr = Object.values(val).filter(Boolean);
+          return arr.length > 0 ? arr : fallback;
+        }
+        return fallback;
+      }
+
       function loadStoreState() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (raw) {
             const parsed = JSON.parse(raw);
-            if (parsed.inventory) storeState.inventory = parsed.inventory;
-            if (parsed.onlineOrders) storeState.onlineOrders = parsed.onlineOrders;
+            if (parsed && parsed.inventory) {
+              storeState.inventory = normalizeArray(parsed.inventory, DEFAULT_CATALOG);
+            }
+            if (parsed && parsed.onlineOrders) {
+              storeState.onlineOrders = normalizeArray(parsed.onlineOrders, DEFAULT_ORDERS);
+            }
           }
         } catch (err) {
           console.warn("Using default storefront catalog:", err);
         }
         // Also pull latest live state from Firebase cellplanet-536a6 if available
-        fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json")
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (cloudData) {
-            if (cloudData && cloudData.inventory) {
-              storeState.inventory = cloudData.inventory;
-              if (cloudData.onlineOrders) storeState.onlineOrders = cloudData.onlineOrders;
-              renderProductCatalog();
-              renderOrderTracker();
-            }
-          })
-          .catch(function () {});
+        try {
+          fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json")
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (cloudData) {
+              if (cloudData && cloudData.inventory) {
+                const cloudInv = normalizeArray(cloudData.inventory, []);
+                if (cloudInv.length > 0) storeState.inventory = cloudInv;
+                if (cloudData.onlineOrders) {
+                  storeState.onlineOrders = normalizeArray(cloudData.onlineOrders, storeState.onlineOrders);
+                }
+                renderProductCatalog();
+                renderOrderTracker();
+              }
+            })
+            .catch(function () {});
+        } catch (e) {}
+      }
+
+      const cpStoreChannel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("cellplanet_live_sync_v4") : null;
+      if (cpStoreChannel) {
+        cpStoreChannel.onmessage = function (ev) {
+          if (ev.data && ev.data.type === "POS_STATE_UPDATE") {
+            if (ev.data.inventory) storeState.inventory = normalizeArray(ev.data.inventory, storeState.inventory);
+            if (ev.data.onlineOrders) storeState.onlineOrders = normalizeArray(ev.data.onlineOrders, storeState.onlineOrders);
+            renderProductCatalog();
+            renderOrderTracker();
+            showStoreToast("⚡ Live prices, stock & delivery status synced from Cell Planet POS!");
+          }
+        };
       }
 
       function saveStoreStateAndSync() {
@@ -484,15 +539,30 @@
           localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
         } catch (err) {}
 
-        fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state/onlineOrders.json", {
-          method: "PUT",
+        if (cpStoreChannel) {
+          try {
+            cpStoreChannel.postMessage({
+              type: "STORE_ORDER_UPDATE",
+              onlineOrders: storeState.onlineOrders
+            });
+          } catch (e) {}
+        }
+
+        fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json", {
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(storeState.onlineOrders)
+          body: JSON.stringify({
+            updatedAt: new Date().toISOString(),
+            onlineOrders: storeState.onlineOrders,
+            inventory: storeState.inventory
+          })
         }).catch(function () {});
       }
 
       // Generate sleek SVG phone illustration when no custom photo is uploaded
-      function getPhoneVisualSvg(brand, colorName) {
+      function getPhoneVisualSvg(brandRaw, colorNameRaw) {
+        const brand = String(brandRaw || "Flagship");
+        const colorName = String(colorNameRaw || "Official Edition");
         const accent = brand === "Apple" ? "#F59E0B" : brand === "Samsung" ? "#06B6D4" : brand === "Huawei" ? "#E11D48" : "#10B981";
         const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='320' height='220' viewBox='0 0 320 220'>" +
           "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#0F172A'/><stop offset='100%' stop-color='#1E293B'/></linearGradient></defs>" +
@@ -513,11 +583,12 @@
         const searchVal = (document.getElementById("storeSearchInput").value || "").toLowerCase();
         const grid = document.getElementById("storeProductGrid");
 
-        const available = storeState.inventory.filter(function (item) {
-          if (item.status === "SOLD") return false;
-          if (selectedBrand !== "ALL" && item.brand.toLowerCase() !== selectedBrand.toLowerCase()) return false;
+        const available = normalizeArray(storeState.inventory, DEFAULT_CATALOG).filter(function (item) {
+          if (!item || item.status === "SOLD") return false;
+          const bName = String(item.brand || "");
+          if (selectedBrand !== "ALL" && bName.toLowerCase() !== selectedBrand.toLowerCase()) return false;
           if (!searchVal) return true;
-          return (item.brand + " " + item.model + " " + item.color + " " + item.variant).toLowerCase().indexOf(searchVal) !== -1;
+          return (bName + " " + (item.model || "") + " " + (item.color || "") + " " + (item.variant || "")).toLowerCase().indexOf(searchVal) !== -1;
         });
 
         if (available.length === 0) {
@@ -737,8 +808,22 @@
           const prod = storeState.inventory.find(function (p) { return p.id === id; });
           if (!prod) return;
           selectedCheckoutProduct = prod;
-          document.getElementById("checkoutModalModelTitle").textContent = prod.brand + " " + prod.model + " (" + prod.variant + " • " + prod.color + ")";
+          document.getElementById("checkoutModalModelTitle").textContent = prod.brand + " " + prod.model;
           document.getElementById("checkoutModalPriceSubtitle").textContent = "Online Exclusive Rate: " + formatINR(prod.onlinePrice) + " • " + (prod.offerBadge || "");
+          const varSel = document.getElementById("chkSelectVariant");
+          const colSel = document.getElementById("chkSelectColor");
+          if (varSel && prod.variant) {
+            varSel.innerHTML = '<option value="' + prod.variant + '">' + prod.variant + ' (In Stock)</option>' +
+              '<option value="8GB / 256GB">8GB / 256GB</option>' +
+              '<option value="12GB / 256GB">12GB / 256GB</option>' +
+              '<option value="16GB / 512GB">16GB / 512GB</option>';
+          }
+          if (colSel && prod.color) {
+            colSel.innerHTML = '<option value="' + prod.color + '">' + prod.color + ' (In Stock)</option>' +
+              '<option value="Natural Titanium">Natural Titanium</option>' +
+              '<option value="Obsidian Black">Obsidian Black</option>' +
+              '<option value="Emerald Green">Emerald Green</option>';
+          }
           document.getElementById("onlineCheckoutModal").classList.remove("hidden");
         });
 
@@ -771,8 +856,8 @@
             customerPhone: phone,
             deliveryAddress: addr,
             model: selectedCheckoutProduct.brand + " " + selectedCheckoutProduct.model,
-            variant: selectedCheckoutProduct.variant,
-            color: selectedCheckoutProduct.color,
+            variant: document.getElementById("chkSelectVariant").value || selectedCheckoutProduct.variant,
+            color: document.getElementById("chkSelectColor").value || selectedCheckoutProduct.color,
             amountPaid: selectedCheckoutProduct.onlinePrice,
             paymentMethod: payMethod + " • Ref #" + utr,
             assignedImei: selectedCheckoutProduct.imei1 || "Assigned at Packing",
@@ -817,13 +902,22 @@
         });
       }
 
-      window.addEventListener("DOMContentLoaded", function () {
+      function bootCustomerStore() {
+        if (window.__cellPlanetStoreBooted) return;
+        window.__cellPlanetStoreBooted = true;
         loadStoreState();
         setupStoreEvents();
         renderProductCatalog();
         renderOrderTracker();
         renderStoreReviews();
-      });
+        setInterval(loadStoreState, 4000);
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", bootCustomerStore);
+      } else {
+        bootCustomerStore();
+      }
+      window.addEventListener("load", bootCustomerStore);
     })();
   </script>
 </body>
