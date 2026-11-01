@@ -43,61 +43,112 @@ emerald: '#10B981'
 <style>
 .hidden { display: none !important; }
 body {
-font-family: 'Inter', sans-serif;
-background: radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.10), transparent 35%),
-radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.10), transparent 35%),
-#060911;
-color: #F8FAFC;
-overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDFBF7 50%, #F9F5EB 100%) !important;
+  color: #78350F !important;
+  overflow-x: hidden;
+}
+/* Luxury White & Royal Gold Theme Overrides */
+.bg-slate-950, .bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-900\/75, .bg-slate-900\/60, .bg-slate-950\/90, .bg-slate-950\/85, .bg-slate-950\/80 {
+  background-color: #FFFFFF !important;
+}
+.bg-slate-800, .bg-slate-800\/90, .bg-slate-800\/70 {
+  background-color: #FEF9C3 !important;
+  color: #92400E !important;
 }
 .glass-panel {
-background: rgba(18, 26, 47, 0.78);
-backdrop-filter: blur(16px);
--webkit-backdrop-filter: blur(16px);
-border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(16px);
+  border: 1.5px solid #E5C158 !important;
+  box-shadow: 0 10px 30px -10px rgba(180, 130, 20, 0.14) !important;
 }
 .glass-card {
-background: linear-gradient(145deg, rgba(27, 38, 66, 0.65), rgba(11, 16, 30, 0.85));
-border: 1px solid rgba(255, 255, 255, 0.09);
-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(145deg, #FFFFFF, #FFFDF7) !important;
+  border: 1.5px solid #E5C158 !important;
+  box-shadow: 0 4px 16px -4px rgba(180, 130, 20, 0.12) !important;
+  transition: all 0.2s ease;
 }
 .glass-card:hover {
-border-color: rgba(225, 29, 72, 0.45);
-box-shadow: 0 10px 30px -10px rgba(225, 29, 72, 0.2);
+  border-color: #B45309 !important;
+  box-shadow: 0 10px 25px -5px rgba(180, 130, 20, 0.25) !important;
 }
-.huawei-gradient {
-background: linear-gradient(135deg, #E11D48 0%, #BE123C 50%, #F59E0B 100%);
+.huawei-gradient, .bg-rose-600, .bg-cyan-600, .bg-emerald-600, .bg-purple-600, .bg-blue-600 {
+  background: linear-gradient(135deg, #9A6F0B 0%, #B45309 50%, #D97706 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid #92400E !important;
 }
-.apex-border-glow {
-box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.35), 0 8px 25px -5px rgba(225, 29, 72, 0.25);
+/* Gold Typography & High-Accuracy Readability on White */
+.text-white, .text-slate-100, .text-slate-200 {
+  color: #78350F !important;
+}
+.text-slate-300, .text-slate-400, .text-slate-500 {
+  color: #92400E !important;
+}
+.text-rose-400, .text-rose-300, .text-cyan-400, .text-cyan-300, .text-amber-400, .text-amber-300, .text-emerald-400, .text-emerald-300, .text-purple-400, .text-purple-300, .text-yellow-400, .text-yellow-300 {
+  color: #B45309 !important;
+  font-weight: 700 !important;
+}
+.border-slate-800, .border-slate-800\/80, .border-slate-800\/70, .border-slate-700, .border-cyan-500\/30, .border-rose-500\/30, .border-amber-500\/30, .border-emerald-500\/30 {
+  border-color: #E5C158 !important;
+}
+input, select, textarea {
+  background-color: #FFFDF9 !important;
+  color: #451A03 !important;
+  border: 1.5px solid #D4AF37 !important;
+  font-weight: 600 !important;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #B45309 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18) !important;
+  outline: none !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #B48A3E !important;
+}
+#posEntryLockScreen {
+  background: radial-gradient(circle at 50% 20%, #FFFBEB 0%, #FFFFFF 70%) !important;
 }
 .scan-pulse {
-animation: scanPulse 2s infinite;
+  animation: scanPulse 2s infinite;
 }
 @keyframes scanPulse {
-0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5); }
-50% { box-shadow: 0 0 0 8px rgba(6, 182, 212, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(217, 119, 6, 0); }
+}
+/* BULLETPROOF PRINT ENGINE: Prints full invoice clearly on A4 or 80mm Thermal */
+#dedicatedPrintContainer {
+  display: none;
 }
 @media print {
-body * { visibility: hidden !important; }
-#printableInvoiceArea, #printableInvoiceArea * { visibility: visible !important; }
-#printableInvoiceArea {
-position: absolute !important;
-left: 0 !important;
-top: 0 !important;
-width: 100% !important;
-background: #ffffff !important;
-color: #000000 !important;
-padding: 0 !important;
-margin: 0 !important;
-box-shadow: none !important;
-}
-.no-print { display: none !important; }
+  @page { margin: 8mm; }
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  header, nav, footer, #posEntryLockScreen, #securityGateModal, #confirmPurgeModal, #googleLensConfirmModal, #firebaseSetupModal, #toastContainer, .no-print {
+    display: none !important;
+  }
+  main {
+    display: none !important;
+  }
+  #dedicatedPrintContainer {
+    display: block !important;
+    width: 100% !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    padding: 12px !important;
+    border: 2px solid #B45309 !important;
+  }
+  #dedicatedPrintContainer * {
+    visibility: visible !important;
+    color: #000000 !important;
+  }
 }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #060911; }
-::-webkit-scrollbar-thumb { background: #1B2642; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #E11D48; }
+::-webkit-scrollbar-track { background: #FFFDF7; }
+::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-rose-600 selection:text-white">
@@ -286,7 +337,7 @@ Station Rd, Opp. Urdu Ghar Shadi Khana, Khammam 507001 • Ph: <span class="text
 </div>
 </div>
 </section>
-<main class="max-w-[1600px] w-full mx-auto px-4 py-4 flex-1 no-print">
+<main class="max-w-[1600px] w-full mx-auto px-4 py-4 flex-1">
 <section id="tab-scanner" class="tab-panel space-y-4">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 <div class="lg:col-span-7 glass-panel rounded-2xl p-5 space-y-4">
@@ -1209,6 +1260,7 @@ This action will first download your complete multi-sheet Microsoft Excel backup
 </div>
 </div>
 <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none no-print"></div>
+<div id="dedicatedPrintContainer"></div>
 <footer class="border-t border-slate-800/80 py-3 px-4 text-center text-[11px] text-slate-400 no-print">
 <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2">
 <span><strong>CELL PLANET</strong> • Station Rd, Opp. Urdu Ghar Shadi Khana, Lenin Nagar, Braman Bazar, Balaji Nagar, Khammam, Telangana 507001 • Ph: 08899469999 • GSTIN: 36ACVPK3564C1ZE</span>
@@ -1785,7 +1837,7 @@ if (imei2Raw) existingInQueue.imei2 = imei2Raw.trim();
 renderQueuedImeis();
 return;
 }
-queuedBulkImeis.unshift({
+queuedBulkImeis.push({
 imei1: cleanImei,
 imei2: (imei2Raw || "").trim() || (cleanImei.length === 15 ? (cleanImei.slice(0, 14) + ((Number(cleanImei.slice(-1)) + 1) % 10)) : ""),
 color: selectedColor,
@@ -1802,10 +1854,12 @@ container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Scan B
 return;
 }
 container.innerHTML = queuedBulkImeis.map(function (item, idx) {
+const seqNum = idx + 1;
 return '<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs">' +
-'<div>' +
-'<span class="font-mono font-bold text-cyan-300">IMEI: ' + item.imei1 + '</span>' +
-'<span class="ml-2 px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">' + item.variant + ' • ' + item.color + '</span>' +
+'<div class="flex items-center gap-2">' +
+'<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-black">#' + seqNum + '</span>' +
+'<span class="font-mono font-bold text-cyan-300">IMEI 1: ' + item.imei1 + (item.imei2 ? ' | IMEI 2: ' + item.imei2 : '') + '</span>' +
+'<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px] font-bold">' + item.variant + ' • ' + item.color + '</span>' +
 '</div>' +
 '<button type="button" data-remove-queue="' + idx + '" class="text-rose-400 hover:text-rose-300 font-bold px-2">✕</button>' +
 '</div>';
@@ -1944,6 +1998,9 @@ document.getElementById("invSgstAmount").textContent = "₹" + totals.sgst.toFix
 document.getElementById("invDiscountAmount").textContent = "- " + formatINR(totals.discount);
 document.getElementById("invExchangeAmount").textContent = "- " + formatINR(totals.exchange);
 document.getElementById("invGrandTotal").textContent = formatINR(totals.grandTotal);
+const srcInv = document.getElementById("printableInvoiceArea");
+const destPr = document.getElementById("dedicatedPrintContainer");
+if (srcInv && destPr) destPr.innerHTML = srcInv.innerHTML;
 }
 function renderSavedDraftBills() {
 const container = document.getElementById("savedDraftsListContainer");
@@ -2338,6 +2395,36 @@ document.getElementById("globalPhoneSearchInput").value = "";
 queuedBulkImeis = [];
 renderQueuedImeis();
 showToast("Scanner reset for next box.", "success");
+});
+// Strict 1 -> 2 -> 3 Barcode Scan Gun Sequence with Auto-Advance on Enter
+document.getElementById("scanBarcode1Ean").addEventListener("keydown", function (e) {
+if (e.key === "Enter") {
+e.preventDefault();
+detectPhoneFromBarcodesOrQuery(this.value, document.getElementById("scanBarcode2Imei1").value, document.getElementById("scanBarcode3Imei2").value, "");
+document.getElementById("scanBarcode2Imei1").focus();
+showToast("✓ Scan 1 (Model Code) read! Now scan Barcode 2 (IMEI 1).", "success");
+}
+});
+document.getElementById("scanBarcode2Imei1").addEventListener("keydown", function (e) {
+if (e.key === "Enter") {
+e.preventDefault();
+detectPhoneFromBarcodesOrQuery(document.getElementById("scanBarcode1Ean").value, this.value, document.getElementById("scanBarcode3Imei2").value, "");
+document.getElementById("scanBarcode3Imei2").focus();
+showToast("✓ Scan 2 (IMEI 1) read! Scan Barcode 3 (IMEI 2) or press Enter to queue.", "success");
+}
+});
+document.getElementById("scanBarcode3Imei2").addEventListener("keydown", function (e) {
+if (e.key === "Enter") {
+e.preventDefault();
+const im1 = document.getElementById("scanBarcode2Imei1").value.trim();
+if (im1) {
+queueImeiForStockIn(im1, this.value.trim());
+document.getElementById("scanBarcode2Imei1").value = "";
+this.value = "";
+document.getElementById("rapidGunImeiInput").focus();
+showToast("✓ Box 3-Barcodes queued in sequence! Scan remaining IMEIs or click Commit Stock.", "success");
+}
+}
 });
 ["scanBarcode1Ean", "scanBarcode2Imei1"].forEach(function (id) {
 document.getElementById(id).addEventListener("change", function () {
@@ -2849,8 +2936,7 @@ canvas.width = video.videoWidth;
 canvas.height = video.videoHeight;
 canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
 const frameDataUrl = canvas.toDataURL("image/jpeg", 0.92);
-currentUploadedPhotoDataUrl = frameDataUrl;
-document.getElementById("stockProductPhotoPreview").src = frameDataUrl;
+// Barcode frame is only used for decoding numbers into stock, never uploaded as product photo
 stopLiveCameraStream();
 processBoxImageWithRealOcrAndBarcodes(frameDataUrl, "");
 } else {
@@ -3020,9 +3106,9 @@ const file = e.target.files && e.target.files[0];
 if (!file) return;
 const reader = new FileReader();
 reader.onload = function (ev) {
-currentUploadedPhotoDataUrl = ev.target.result;
-document.getElementById("stockProductPhotoPreview").src = currentUploadedPhotoDataUrl;
-processBoxImageWithRealOcrAndBarcodes(currentUploadedPhotoDataUrl, file.name || "");
+// IMPORTANT: Box barcode scan ONLY extracts IMEI/Model numbers to save stock — it does NOT upload the IMEI sticker image as a product photo!
+const tempBarcodeScanDataUrl = ev.target.result;
+processBoxImageWithRealOcrAndBarcodes(tempBarcodeScanDataUrl, file.name || "");
 };
 reader.readAsDataURL(file);
 });
@@ -3267,6 +3353,12 @@ saveStateAndSyncFirebase("Finalized Bill " + activeBillDraft.invoiceNo);
 showToast("✅ Bill #" + activeBillDraft.invoiceNo + " Cleared! Stock marked SOLD & synced to Firebase.", "success");
 });
 document.getElementById("btnPrintInvoiceNow").addEventListener("click", function () {
+updatePrintableInvoicePreview();
+const srcInvoice = document.getElementById("printableInvoiceArea");
+const destPrint = document.getElementById("dedicatedPrintContainer");
+if (srcInvoice && destPrint) {
+destPrint.innerHTML = srcInvoice.innerHTML;
+}
 window.print();
 });
 document.getElementById("inventoryTableBody").addEventListener("change", function (e) {
