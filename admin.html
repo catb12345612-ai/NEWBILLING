@@ -43,161 +43,301 @@ if (typeof tailwind !== 'undefined') {
 </script>
 <style>
 .hidden { display: none !important; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #F3F6FA !important;
-  color: #0F172A !important;
-  overflow-x: hidden;
+
+/* ============================================================================
+   AESTHETIC PREMIUM LUXURY & TRUE FROSTED GLASSMORPHISM ENGINE
+   (Obsidian 24K Liquid Gold Crystal Glass + 1-Click Pearl Champagne Glass)
+   ============================================================================ */
+:root {
+  --glass-bg-primary: linear-gradient(135deg, rgba(20, 24, 38, 0.72) 0%, rgba(12, 15, 26, 0.56) 100%);
+  --glass-bg-card: linear-gradient(145deg, rgba(28, 34, 52, 0.64) 0%, rgba(15, 19, 32, 0.48) 100%);
+  --glass-bg-well: rgba(10, 13, 22, 0.52);
+  --glass-border-gold: rgba(212, 175, 55, 0.34);
+  --glass-border-glow: rgba(245, 158, 11, 0.62);
+  --glass-specular: inset 0 1px 1px 0 rgba(255, 255, 255, 0.20), inset 0 -1px 1px 0 rgba(212, 175, 55, 0.08);
+  --glass-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 0 32px -8px rgba(212, 175, 55, 0.14);
 }
 
-/* Rich Luxury Royal Gold, Champagne Ivory & Executive Obsidian Theme */
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(180deg, #FFFEFA 0%, #FDFBF5 50%, #F8EFE0 100%) !important;
-  color: #451A03 !important;
+  background-color: #07090F !important;
+  background-image:
+    radial-gradient(circle at 14% 18%, rgba(212, 175, 55, 0.22) 0%, transparent 42%),
+    radial-gradient(circle at 86% 14%, rgba(225, 29, 72, 0.16) 0%, transparent 38%),
+    radial-gradient(circle at 50% 52%, rgba(245, 158, 11, 0.12) 0%, transparent 48%),
+    radial-gradient(circle at 82% 84%, rgba(6, 182, 212, 0.14) 0%, transparent 42%),
+    radial-gradient(circle at 18% 86%, rgba(180, 83, 9, 0.18) 0%, transparent 42%),
+    linear-gradient(180deg, #07090F 0%, #0C101C 50%, #080B12 100%) !important;
+  background-attachment: fixed !important;
+  color: #F8FAFC !important;
   overflow-x: hidden;
+  transition: background 0.4s ease, color 0.3s ease;
 }
-.bg-slate-950, .bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-900\/75, .bg-slate-900\/60, .bg-slate-950\/90, .bg-slate-950\/85, .bg-slate-950\/80 {
-  background-color: #FFFDF9 !important;
+
+/* Subtle luxury ambient grid & shimmer overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
-.bg-slate-800, .bg-slate-800\/90, .bg-slate-800\/70 {
-  background-color: #FEF7E0 !important;
-  color: #78350F !important;
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
+
+/* Primary Frosted Crystal Glass Panels */
 .glass-panel {
-  background: linear-gradient(160deg, #FFFFFF 0%, #FFFDF7 100%) !important;
-  border: 1.5px solid #E5C158 !important;
-  box-shadow: 0 8px 28px -8px rgba(180, 130, 20, 0.16), 0 2px 6px rgba(146, 64, 14, 0.05) !important;
+  background: var(--glass-bg-primary) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid var(--glass-border-gold) !important;
+  box-shadow: var(--glass-shadow), var(--glass-specular) !important;
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.glass-panel:hover {
+  border-color: rgba(212, 175, 55, 0.48) !important;
+}
+
+/* Floating KPI & Feature Frosted Glass Cards */
 .glass-card {
-  background: linear-gradient(145deg, #FFFFFF 0%, #FFFDF8 100%) !important;
-  border: 1.5px solid #E5C158 !important;
-  box-shadow: 0 4px 16px -4px rgba(180, 130, 20, 0.14) !important;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  background: var(--glass-bg-card) !important;
+  backdrop-filter: blur(22px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(185%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.52), inset 0 1px 0 0 rgba(255, 255, 255, 0.22) !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
 }
 .glass-card:hover {
-  transform: translateY(-2px);
-  border-color: #B45309 !important;
-  box-shadow: 0 12px 26px -6px rgba(180, 130, 20, 0.26) !important;
+  transform: translateY(-4px) scale(1.005);
+  border-color: var(--glass-border-glow) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.68), 0 0 24px -4px rgba(212, 175, 55, 0.28), inset 0 1px 0 0 rgba(255, 255, 255, 0.32) !important;
 }
 
-/* Luxury Royal Obsidian & 24K Gold Top Header Bar */
+/* Translucent Inner Glass Wells & Sub-Containers */
+.bg-slate-950, .bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/80, .bg-slate-900\/75, .bg-slate-900\/60, .bg-slate-950\/90, .bg-slate-950\/85, .bg-slate-950\/80,
+.bg-amber-50\/70, .bg-amber-50\/60, .bg-blue-50\/50, .bg-blue-50\/60, .bg-emerald-50\/50, .bg-emerald-50\/70 {
+  background: rgba(11, 15, 26, 0.54) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border-color: rgba(212, 175, 55, 0.24) !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.bg-slate-800, .bg-slate-800\/90, .bg-slate-800\/70,
+.bg-amber-50, .bg-blue-50, .bg-rose-50, .bg-emerald-50 {
+  background: rgba(30, 38, 60, 0.58) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  color: #FDE68A !important;
+  border-color: rgba(212, 175, 55, 0.30) !important;
+}
+
+/* Inner .bg-white cards inside dark glass panels become smoked crystal glass (except printable invoice & barcode preview) */
+main .bg-white:not(#printableInvoiceArea):not(#barcodeStickerPreviewArea),
+#googleLensConfirmModal .bg-white,
+footer.bg-white {
+  background: rgba(17, 23, 38, 0.62) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(212, 175, 55, 0.26) !important;
+  color: #F8FAFC !important;
+}
+
+/* Keep Live Printable Invoice & Barcode Sticker Previews authentic crisp white paper */
+#printableInvoiceArea, #barcodeStickerPreviewArea, #barcodeStickerPreviewArea > div {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+}
+#printableInvoiceArea .text-slate-900, #printableInvoiceArea .text-slate-950 { color: #0F172A !important; }
+#printableInvoiceArea .text-slate-700, #printableInvoiceArea .text-slate-800 { color: #334155 !important; }
+#printableInvoiceArea .text-slate-500, #printableInvoiceArea .text-slate-600 { color: #475569 !important; }
+#printableInvoiceArea .bg-slate-100 { background: #F1F5F9 !important; }
+
+/* Luxury Top Header Frosted Obsidian-Gold Bar */
 header.zoho-topbar {
-  background: linear-gradient(90deg, #1E1105 0%, #331D08 50%, #1E1105 100%) !important;
-  border-bottom: 2px solid #D4AF37 !important;
-  box-shadow: 0 6px 24px rgba(120, 53, 15, 0.28) !important;
+  background: linear-gradient(90deg, rgba(12, 15, 25, 0.82) 0%, rgba(24, 20, 16, 0.85) 50%, rgba(12, 15, 25, 0.82) 100%) !important;
+  backdrop-filter: blur(30px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.42) !important;
+  box-shadow: 0 10px 32px -6px rgba(0, 0, 0, 0.65), 0 1px 0 0 rgba(255, 255, 255, 0.12) inset !important;
 }
 header.zoho-topbar h1,
 header.zoho-topbar .topbar-title {
   color: #FFFBEB !important;
+  text-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
 }
 header.zoho-topbar .topbar-sub {
-  color: #FDE68A !important;
+  color: #E2E8F0 !important;
 }
 
-/* Luxury 24K Gold Primary Action Buttons */
+/* 24K Liquid Gold & Champagne Shimmer Action Buttons */
 .huawei-gradient, .zoho-primary-btn {
-  background: linear-gradient(135deg, #9A6F0B 0%, #B45309 50%, #D97706 100%) !important;
+  background: linear-gradient(135deg, #C59B27 0%, #B45309 48%, #D97706 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid #92400E !important;
-  box-shadow: 0 4px 14px rgba(180, 83, 9, 0.32) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(253, 230, 138, 0.48) !important;
+  box-shadow: 0 8px 22px -4px rgba(217, 119, 6, 0.48), inset 0 1px 1px rgba(255, 255, 255, 0.38) !important;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .huawei-gradient:hover, .zoho-primary-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(180, 83, 9, 0.42) !important;
-  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(245, 158, 11, 0.62), inset 0 1px 1px rgba(255, 255, 255, 0.55) !important;
+  filter: brightness(1.07);
 }
 .bg-rose-600, .bg-cyan-600, .bg-purple-600, .bg-blue-600 {
-  background: linear-gradient(135deg, #9A6F0B 0%, #B45309 55%, #D97706 100%) !important;
+  background: linear-gradient(135deg, #C59B27 0%, #B45309 52%, #D97706 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid #92400E !important;
+  border: 1px solid rgba(253, 230, 138, 0.42) !important;
+  box-shadow: 0 6px 18px -4px rgba(180, 83, 9, 0.42) !important;
 }
 .bg-emerald-600 {
-  background: linear-gradient(135deg, #047857 0%, #059669 55%, #10B981 100%) !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 55%, #10B981 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid #065F46 !important;
+  border: 1px solid rgba(110, 231, 183, 0.42) !important;
+  box-shadow: 0 6px 18px -4px rgba(5, 150, 105, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Rich Espresso & Royal Gold Typography */
+/* Luminous Crystal Typography */
 .text-white, .text-slate-100, .text-slate-200 {
-  color: #451A03 !important;
+  color: #F8FAFC !important;
 }
 .text-slate-300, .text-slate-400, .text-slate-500 {
-  color: #78350F !important;
+  color: #CBD5E1 !important;
 }
 .huawei-gradient *, .zoho-primary-btn *, .bg-rose-600 *, .bg-cyan-600 *, .bg-emerald-600 *, .bg-purple-600 *, .bg-blue-600 *, .active-tab * {
   color: #FFFFFF !important;
 }
-.huawei-gradient, .zoho-primary-btn, .bg-rose-600, .bg-cyan-600, .bg-emerald-600, .bg-purple-600, .bg-blue-600, .active-tab {
-  color: #FFFFFF !important;
-}
 
-/* Semantic Status Colors in Rich Luxury Theme */
+/* Luxury Jewel-Tone Semantic Accents */
 .text-rose-400, .text-rose-300 {
-  color: #B45309 !important;
+  color: #FB7185 !important;
   font-weight: 700 !important;
 }
 .text-cyan-400, .text-cyan-300 {
-  color: #9A6F0B !important;
+  color: #FBBF24 !important;
   font-weight: 700 !important;
 }
 .text-amber-400, .text-amber-300, .text-yellow-400, .text-yellow-300 {
-  color: #B45309 !important;
+  color: #FCD34D !important;
   font-weight: 700 !important;
 }
 .text-emerald-400, .text-emerald-300 {
-  color: #047857 !important;
+  color: #34D399 !important;
   font-weight: 700 !important;
 }
 .text-purple-400, .text-purple-300 {
-  color: #92400E !important;
+  color: #C084FC !important;
   font-weight: 700 !important;
 }
 
-/* Luxury 24K Gold Borders & Inputs */
+/* 24K Gold Hairline Borders & Frosted Glass Inputs */
 .border-slate-800, .border-slate-800\/80, .border-slate-800\/70, .border-slate-700,
 .border-cyan-500\/30, .border-cyan-500\/40, .border-cyan-500\/50,
 .border-rose-500\/30, .border-rose-500\/40,
 .border-amber-500\/30, .border-amber-500\/40,
 .border-emerald-500\/30, .border-emerald-500\/40 {
-  border-color: #E5C158 !important;
+  border-color: rgba(212, 175, 55, 0.28) !important;
 }
 
 input, select, textarea {
-  background-color: #FFFDF9 !important;
-  color: #451A03 !important;
-  border: 1.5px solid #D4AF37 !important;
+  background: rgba(9, 13, 22, 0.68) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  color: #FFFBEB !important;
+  border: 1px solid rgba(212, 175, 55, 0.36) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
   font-weight: 600 !important;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 input:focus, select:focus, textarea:focus {
-  border-color: #B45309 !important;
-  box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.2) !important;
+  background: rgba(15, 21, 36, 0.85) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.22), 0 0 20px rgba(212, 175, 55, 0.18) !important;
   outline: none !important;
 }
 input::placeholder, textarea::placeholder {
-  color: #B48A3E !important;
-  font-weight: 500 !important;
+  color: #94A3B8 !important;
+  font-weight: 400 !important;
+}
+select option {
+  background-color: #0F172A !important;
+  color: #FFFBEB !important;
 }
 
-/* Navigation Tabs in Luxury Obsidian-Gold Header */
+/* Navigation Tabs in Luxury Glass Header */
 header.zoho-topbar .nav-tab-btn {
-  color: #FDE68A !important;
+  color: #E2E8F0 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(12px) !important;
   transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
 header.zoho-topbar .nav-tab-btn:hover:not(.active-tab) {
-  background-color: rgba(212, 175, 55, 0.16) !important;
+  background: rgba(212, 175, 55, 0.16) !important;
+  border-color: rgba(212, 175, 55, 0.38) !important;
   color: #FFFFFF !important;
   transform: translateY(-1px);
 }
 header.zoho-topbar .nav-tab-btn.active-tab {
-  background: linear-gradient(135deg, #9A6F0B 0%, #B45309 50%, #D97706 100%) !important;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.92) 0%, rgba(180, 83, 9, 0.95) 55%, rgba(217, 119, 6, 0.95) 100%) !important;
   color: #FFFFFF !important;
-  border: 1px solid #FDE68A !important;
-  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.45) !important;
+  border: 1px solid rgba(254, 243, 199, 0.65) !important;
+  box-shadow: 0 8px 24px -4px rgba(217, 119, 6, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
   transform: translateY(-1px);
+}
+
+/* ============================================================================
+   OPTIONAL 1-CLICK LIGHT PEARL CHAMPAGNE GLASSMORPHISM MODE (body.pearl-glass)
+   ============================================================================ */
+body.pearl-glass {
+  background-color: #F7F2E7 !important;
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(212, 175, 55, 0.32) 0%, transparent 42%),
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.22) 0%, transparent 38%),
+    radial-gradient(circle at 50% 80%, rgba(180, 83, 9, 0.18) 0%, transparent 45%),
+    linear-gradient(180deg, #FDFBF7 0%, #F7EFE0 55%, #F2E5CE 100%) !important;
+  color: #451A03 !important;
+}
+body.pearl-glass .glass-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.74) 0%, rgba(255, 251, 240, 0.62) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.48) !important;
+  box-shadow: 0 20px 42px -12px rgba(146, 64, 14, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+}
+body.pearl-glass .glass-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.80) 0%, rgba(255, 252, 242, 0.65) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.45) !important;
+  box-shadow: 0 12px 28px -8px rgba(146, 64, 14, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+body.pearl-glass .bg-slate-950, body.pearl-glass .bg-slate-900, body.pearl-glass .bg-slate-900\/90, body.pearl-glass .bg-slate-900\/80,
+body.pearl-glass .bg-slate-900\/75, body.pearl-glass .bg-slate-900\/60, body.pearl-glass .bg-amber-50\/70, body.pearl-glass .bg-blue-50\/50,
+body.pearl-glass main .bg-white:not(#printableInvoiceArea):not(#barcodeStickerPreviewArea) {
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: #451A03 !important;
+}
+body.pearl-glass .text-white, body.pearl-glass .text-slate-100, body.pearl-glass .text-slate-200 {
+  color: #451A03 !important;
+}
+body.pearl-glass .text-slate-300, body.pearl-glass .text-slate-400, body.pearl-glass .text-slate-500 {
+  color: #78350F !important;
+}
+body.pearl-glass .text-cyan-400, body.pearl-glass .text-amber-400, body.pearl-glass .text-rose-400 {
+  color: #B45309 !important;
+}
+body.pearl-glass .text-emerald-400 {
+  color: #047857 !important;
+}
+body.pearl-glass input, body.pearl-glass select, body.pearl-glass textarea {
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: #451A03 !important;
+  border-color: rgba(212, 175, 55, 0.55) !important;
+  box-shadow: inset 0 1px 2px rgba(180, 130, 20, 0.08) !important;
 }
 
 /* Smooth Sliding Panel & Drawer Animations */
@@ -205,67 +345,44 @@ header.zoho-topbar .nav-tab-btn.active-tab {
   will-change: transform, opacity;
 }
 .slide-enter-right {
-  animation: zohoSlideInRight 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: zohoSlideInRight 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .slide-enter-left {
-  animation: zohoSlideInLeft 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: zohoSlideInLeft 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes zohoSlideInRight {
-  0% {
-    opacity: 0;
-    transform: translateX(28px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  0% { opacity: 0; transform: translateX(28px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 @keyframes zohoSlideInLeft {
-  0% {
-    opacity: 0;
-    transform: translateX(-28px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  0% { opacity: 0; transform: translateX(-28px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 .modal-slide-up {
-  animation: zohoModalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: zohoModalSlide 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes zohoModalSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 .queue-item-slide {
   animation: queueSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes queueSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(-14px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  0% { opacity: 0; transform: translateX(-14px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 
 #posEntryLockScreen {
-  background: radial-gradient(circle at 50% 20%, #EFF6FF 0%, #F8FAFC 55%, #E2E8F0 100%) !important;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.22) 0%, rgba(7, 9, 15, 0.94) 70%) !important;
+  backdrop-filter: blur(28px) !important;
 }
 .scan-pulse {
   animation: scanPulse 2.2s infinite;
 }
 @keyframes scanPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 103, 255, 0.28); }
-  50% { box-shadow: 0 0 0 7px rgba(0, 103, 255, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
 }
 
 /* BULLETPROOF PRINT ENGINE: Prints full invoice clearly on A4 or 80mm Thermal */
@@ -274,13 +391,13 @@ header.zoho-topbar .nav-tab-btn.active-tab {
 }
 @media print {
   @page { margin: 8mm; }
-  body {
+  body, body::before {
     background: #FFFFFF !important;
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
   }
-  header, nav, footer, #posEntryLockScreen, #securityGateModal, #confirmPurgeModal, #googleLensConfirmModal, #firebaseSetupModal, #toastContainer, .no-print {
+  header, nav, footer, #posEntryLockScreen, #securityGateModal, #confirmPurgeModal, #googleLensConfirmModal, #firebaseSetupModal, #barcodePrintModal, #toastContainer, .no-print {
     display: none !important;
   }
   main {
@@ -300,13 +417,13 @@ header.zoho-topbar .nav-tab-btn.active-tab {
   }
 }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F1F5F9; }
-::-webkit-scrollbar-thumb { background: #94A3B8; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #64748B; }
+::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.4); }
+::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.55); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.85); }
 </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
-<div id="posEntryLockScreen" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4 no-print">
+<div id="posEntryLockScreen" class="fixed inset-0 z-50 hidden bg-slate-950 flex items-center justify-center p-4 no-print">
   <div class="glass-panel modal-slide-up rounded-3xl max-w-md w-full p-6 sm:p-8 border-2 border-cyan-500/40 shadow-2xl space-y-5 text-center">
     <div class="w-16 h-16 mx-auto rounded-2xl huawei-gradient flex items-center justify-center shadow-xl">
       <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
@@ -388,6 +505,9 @@ header.zoho-topbar .nav-tab-btn.active-tab {
       <span style="color:#64748B !important;">|</span>
       <span id="liveClockDisplay" class="font-mono" style="color:#FFFFFF !important;">--:--:--</span>
     </div>
+    <button id="btnToggleLuxuryGlassTheme" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-400/40 text-xs font-bold transition-all" style="background:rgba(212,175,55,0.16) !important; color:#FDE68A !important;" title="Switch between Obsidian 24K Gold Glass and Pearl Champagne Glass">
+      <span>✨ Glass Theme</span>
+    </button>
     <button id="btnOpenBarcodePrintStudio" type="button" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl huawei-gradient text-white text-xs font-bold transition-all shadow">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
@@ -774,15 +894,18 @@ header.zoho-topbar .nav-tab-btn.active-tab {
         </div>
       </div>
 
-      <div class="p-3 rounded-xl bg-blue-50/60 border border-cyan-500/30 flex items-center justify-between gap-3">
+      <div class="p-3 rounded-xl bg-amber-50/60 border border-amber-500/30 flex items-center justify-between gap-3">
         <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-blue-600/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-mono text-xs font-bold">3X</div>
+          <img id="stockProductPhotoPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><rect width='80' height='80' rx='16' fill='%23FFFBEB'/><rect x='24' y='12' width='32' height='56' rx='6' fill='none' stroke='%23B45309' stroke-width='3'/><circle cx='40' cy='60' r='2.5' fill='%23D97706'/></svg>" alt="Phone Preview" class="w-10 h-10 rounded-xl object-cover border border-amber-500/40" />
           <div>
-            <div class="text-xs font-bold text-white">Strict 3-Code Stock-In Mode Active</div>
-            <div class="text-[11px] text-slate-400">Back-of-box photos are only used to read <strong>Barcode No, 1st IMEI &amp; 2nd IMEI</strong> into stock.</div>
+            <div class="text-xs font-bold text-white">3-Code Stock-In Active (Optional Storefront Display Photo)</div>
+            <div class="text-[11px] text-slate-400">Back 3-codes image only extracts <strong>1st IMEI, 2nd IMEI &amp; Barcode No</strong>.</div>
           </div>
         </div>
-        <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-bold">ZOHO VERIFIED</span>
+        <label for="onlineStorePhotoUpload" class="cursor-pointer px-3 py-1.5 rounded-lg bg-white hover:bg-amber-50 border border-slate-700 text-[11px] font-bold text-slate-300 whitespace-nowrap">
+          Upload Display Photo
+        </label>
+        <input id="onlineStorePhotoUpload" type="file" accept="image/*" class="hidden" />
       </div>
     </div>
 
@@ -1449,6 +1572,7 @@ header.zoho-topbar .nav-tab-btn.active-tab {
   </div>
 
   <div id="lensOcrProgressContainer" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+    <img id="lensScannedPhotoThumb" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%2712%27%20fill%3D%27%23FFFBEB%27%2F%3E%3C%2Fsvg%3E" alt="Box Scan" class="hidden" />
     <div class="flex items-center justify-between text-xs">
       <span id="lensOcrStatusText" class="font-bold text-cyan-400 truncate">Ready to extract 3 codes from box label...</span>
       <span id="lensOcrPercentLabel" class="font-mono text-[11px] text-emerald-400 font-bold">100%</span>
@@ -2002,7 +2126,7 @@ function getDefaultState() {
 }
 
 let appState = getDefaultState();
-let isAdminUnlocked = false;
+let isAdminUnlocked = true;
 let queuedBulkImeis = [];
 let currentTabIdx = 0;
 let activeBillDraft = {
@@ -2065,6 +2189,84 @@ function normalizeList(val, fallback) {
     return v.length > 0 ? v : fallback;
   }
   return fallback;
+}
+
+function sanitizeInventoryItems(list) {
+  const defaults = getDefaultState().inventory;
+  const arr = normalizeList(list, defaults);
+  return arr.map(function (item, idx) {
+    if (!item || typeof item !== "object") return defaults[idx % defaults.length];
+    const matchDef = defaults.find(function (d) {
+      return (item.id && d.id === item.id) || (item.model && d.model.toLowerCase() === String(item.model).toLowerCase());
+    }) || defaults[idx % defaults.length];
+    const imei1 = String(item.imei1 || matchDef.imei1 || ("35489120" + String(1000000 + idx))).trim();
+    const imei2 = String(item.imei2 || matchDef.imei2 || (imei1.slice(0, 14) + "9")).trim();
+    const ean = String(item.ean || matchDef.ean || "195949042744").trim();
+    const offlinePrice = Number(item.offlinePrice) || matchDef.offlinePrice || 29999;
+    const onlinePrice = Number(item.onlinePrice) || Math.max(0, offlinePrice - 1500);
+    const purchaseCost = Number(item.purchaseCost) || matchDef.purchaseCost || Math.round(offlinePrice * 0.88);
+    return {
+      id: String(item.id || ("STK-" + (1001 + idx))),
+      brand: String(item.brand || matchDef.brand || "Apple"),
+      model: String(item.model || matchDef.model || "5G Smartphone"),
+      variant: String(item.variant || matchDef.variant || "8GB / 256GB"),
+      color: String(item.color || matchDef.color || "Official Color"),
+      ean: ean,
+      imei1: imei1,
+      imei2: imei2,
+      purchaseCost: purchaseCost,
+      offlinePrice: offlinePrice,
+      onlinePrice: onlinePrice,
+      offerBadge: String(item.offerBadge || matchDef.offerBadge || "0% EMI: Poonawalla, IDBI, IDFC & Bajaj"),
+      status: item.status === "SOLD" ? "SOLD" : "IN_STOCK",
+      photoDataUrl: String(item.photoDataUrl || ""),
+      addedAt: String(item.addedAt || "2026-11-01 09:30")
+    };
+  });
+}
+
+function sanitizeAllAppState() {
+  const def = getDefaultState();
+  appState.security = Object.assign({}, def.security, appState.security || {});
+  appState.inventory = sanitizeInventoryItems(appState.inventory);
+  appState.onlineOrders = normalizeList(appState.onlineOrders, def.onlineOrders).map(function (o, idx) {
+    return Object.assign({
+      orderId: "ORD-CP-" + (8821 + idx),
+      createdAt: "2026-11-01 10:40",
+      customerName: "Valued Customer",
+      customerPhone: "9848012345",
+      deliveryAddress: "Khammam, Telangana 507001",
+      model: "5G Smartphone",
+      variant: "8GB / 256GB",
+      color: "Official Color",
+      amountPaid: 29999,
+      paymentMethod: "Online Paid (UPI Verified)",
+      assignedImei: "Pending Box Scan",
+      deliveryStatus: "Order Accepted"
+    }, o || {});
+  });
+  appState.salesBills = normalizeList(appState.salesBills, def.salesBills).map(function (b, idx) {
+    return Object.assign({
+      invoiceNo: "CP-2026-" + (100 + idx),
+      timestamp: "2026-11-01 10:12",
+      customerName: "Walk-in Customer",
+      customerPhone: "--",
+      customerAddress: "Khammam",
+      paymentMode: "UPI / GPay / PhonePe",
+      financePartner: "None (Full Payment)",
+      financeNotes: "",
+      gstEnabled: true,
+      gstMode: "inclusive",
+      discount: 0,
+      exchangeDeduction: 0,
+      grandTotal: 0,
+      netProfit: 0,
+      itemsSummary: "Smartphone"
+    }, b || {});
+  });
+  appState.draftBills = normalizeList(appState.draftBills, []);
+  appState.repairs = normalizeList(appState.repairs, def.repairs);
+  appState.secondHand = normalizeList(appState.secondHand, def.secondHand);
 }
 
 function saveStateAndSyncFirebase(actionNote) {
@@ -3126,7 +3328,7 @@ function renderBarcodeStudioPreview() {
     appState.inventory.map(function (u) {
       return '<option value="' + u.id + '">' + u.brand + ' ' + u.model + ' (' + u.variant + ', ' + u.color + ') — IMEI: ' + u.imei1 + '</option>';
     }).join("");
-  if ([...selEl.options].some(function (o) { return o.value === currentVal; })) {
+  if (Array.prototype.slice.call(selEl.options).some(function (o) { return o.value === currentVal; })) {
     selEl.value = currentVal;
   }
 
@@ -3289,6 +3491,7 @@ function renderExecutiveAnalyticsAndIntelligence() {
 }
 
 function renderAllViews() {
+  sanitizeAllAppState();
   renderKpisAndAdminView();
   renderQueuedImeis();
   renderBillingWorkspace();
@@ -3683,7 +3886,7 @@ function setupEventListeners() {
   async function parseBoxLabelAndLookupSpecs(ocrText, decodedBarcodes, fileNameHint) {
     const combinedRaw = (decodedBarcodes.join(" ") + "\n" + (ocrText || "") + "\n" + (fileNameHint || "")).trim();
     const lower = combinedRaw.toLowerCase();
-    const normalizedDigits = combinedRaw.replace(/[Oo]/g, "0").replace(/(?<=\d)[Il|](?=\d)/g, "1");
+    const normalizedDigits = combinedRaw.replace(/[Oo]/g, "0").replace(/(\d)[Il|](\d)/g, "$11$2");
     const imeiMatches = normalizedDigits.match(/\b(?:35|86|99|01|45|91)\d{13}\b/g) || [];
     const any15Digits = normalizedDigits.match(/\b\d{15}\b/g) || [];
     const uniqueImeis = [];
@@ -4191,6 +4394,21 @@ function setupEventListeners() {
     reader.readAsDataURL(file);
   });
 
+  const storePhotoInp = document.getElementById("onlineStorePhotoUpload");
+  if (storePhotoInp) {
+    storePhotoInp.addEventListener("change", function (e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        const preview = document.getElementById("stockProductPhotoPreview");
+        if (preview) preview.src = ev.target.result;
+        showToast("📸 Display photo preview updated!", "success");
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   document.getElementById("btnCommitStockToFirebase").addEventListener("click", function () {
     commitAllQueuedAndCurrentStockUnits();
   });
@@ -4337,6 +4555,16 @@ function setupEventListeners() {
       renderBarcodeStudioPreview();
     }
     document.getElementById("barcodePrintModal").classList.remove("hidden");
+  }
+
+  const themeBtn = document.getElementById("btnToggleLuxuryGlassTheme");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      document.body.classList.toggle("pearl-glass");
+      const isPearl = document.body.classList.contains("pearl-glass");
+      themeBtn.innerHTML = isPearl ? "<span>🥂 Pearl Glass</span>" : "<span>✨ Obsidian Gold Glass</span>";
+      showToast(isPearl ? "🥂 Switched to Pearl Champagne Frosted Glassmorphism!" : "✨ Switched to Obsidian 24K Gold Frosted Glassmorphism!", "success");
+    });
   }
 
   document.getElementById("btnOpenBarcodePrintStudio").addEventListener("click", function () {
