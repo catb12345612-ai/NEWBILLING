@@ -26,12 +26,6 @@ if (typeof tailwind !== 'undefined') {
 </script>
 <style>
 .hidden { display: none !important; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #F3F6FA !important;
-  color: #0F172A !important;
-  overflow-x: hidden;
-}
 
 /* Rich Luxury Royal Gold & Champagne Ivory Storefront Theme */
 body {
@@ -162,10 +156,10 @@ input:focus, select:focus, textarea:focus {
 
   <nav class="flex items-center gap-1.5 overflow-x-auto">
     <button type="button" data-store-view="view-shop" data-view-idx="0" class="store-nav-btn px-4 py-1.5 rounded-full text-xs font-bold huawei-cta text-white transition-all">
-      📱 Shop Flagships
+      📱 Shop Flagships (<span id="headerTotalStockBadge" style="color:#FFFFFF !important;">14</span> Units)
     </button>
     <button type="button" data-store-view="view-tracker" data-view-idx="1" class="store-nav-btn px-4 py-1.5 rounded-full text-xs font-bold transition-all" style="color:#CBD5E1 !important; background:rgba(255,255,255,0.08) !important;">
-      🚚 Track Live Order (<span id="headerOrderCount" style="color:#FFFFFF !important;">2</span>)
+      🚚 Track Live Order (<span id="headerOrderCount" style="color:#FFFFFF !important;">0</span>)
     </button>
     <button type="button" data-store-view="view-reviews" data-view-idx="2" class="store-nav-btn px-4 py-1.5 rounded-full text-xs font-bold transition-all" style="color:#FCD34D !important; background:rgba(245,158,11,0.16) !important; border:1px solid rgba(252,211,77,0.35) !important;">
       ⭐ 1-Click Google Review
@@ -174,7 +168,7 @@ input:focus, select:focus, textarea:focus {
 
   <div class="hidden lg:flex items-center gap-2 text-[11px] font-mono px-3 py-1 rounded-full" style="background:rgba(16,185,129,0.16) !important; border:1px solid rgba(110,231,183,0.35) !important; color:#6EE7B7 !important;">
     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-    <span id="storeCloudSyncLabel" style="color:#6EE7B7 !important;">Live Rates Synced (cellplanet-536a6)</span>
+    <span id="storeCloudSyncLabel" style="color:#6EE7B7 !important;">Live Rates &amp; Qty Synced (cellplanet-536a6)</span>
   </div>
 </div>
 </header>
@@ -191,7 +185,7 @@ input:focus, select:focus, textarea:focus {
           Experience Tomorrow’s Flagships at <span class="text-cyan-400">Cell Planet Khammam</span>
         </h1>
         <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-          Live Zoho POS synchronized online rates, instant Bajaj Finserv / IDFC 0% EMI options, and 100% genuine sealed-box smartphones delivered straight from our Station Road showroom (opposite Urdu Ghar Shadi Khana, Khammam 507001).
+          Live Zoho POS synchronized online rates, real-time stock quantities per model, instant Bajaj Finserv / IDFC / Poonawalla / IDBI 0% EMI options, and 100% genuine sealed-box smartphones delivered straight from our Station Road showroom (opposite Urdu Ghar Shadi Khana, Khammam 507001).
         </p>
         <div class="flex flex-wrap items-center gap-3 pt-2">
           <button id="btnHeroTrackOrder" type="button" class="px-5 py-2.5 rounded-full huawei-cta text-white text-xs font-extrabold shadow-lg">
@@ -205,11 +199,11 @@ input:focus, select:focus, textarea:focus {
       </div>
       <div class="lg:col-span-4 apple-glass rounded-2xl p-4 space-y-2.5 border border-cyan-500/30">
         <div class="text-[11px] font-mono uppercase text-cyan-400">LIVE SHOWROOM PROMISE</div>
-        <div class="text-sm font-bold text-white">100% Online Payment Protection</div>
+        <div class="text-sm font-bold text-white">100% Online Payment &amp; Privacy Protection</div>
         <ul class="text-xs text-slate-300 space-y-1.5">
-          <li>✓ Instant Order Accepted &amp; Box IMEI Assigned</li>
+          <li>✓ Instant Order Alert Sent to Showroom POS</li>
+          <li>✓ Private Sealed Box (IMEI Protected Until Delivery)</li>
           <li>✓ Real-time Packing &amp; Delivery Status Tracking</li>
-          <li>✓ Zero-Down-Payment Finance &amp; Exchange Available</li>
           <li>✓ Direct Support: <strong class="text-white font-mono">08899469999</strong></li>
         </ul>
       </div>
@@ -227,9 +221,15 @@ input:focus, select:focus, textarea:focus {
       <button type="button" data-brand="Pre-Owned" class="brand-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-300 border border-slate-800 hover:border-blue-400">Certified Second-Hand</button>
     </div>
     <div class="flex flex-wrap items-center gap-2">
-      <input id="storeSearchInput" type="text" placeholder="Search model, color, storage..." class="px-4 py-2 rounded-full text-xs w-64" />
+      <button id="btnClearBrandAndSearchFilter" type="button" class="px-3.5 py-2 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-500/40 text-xs font-bold text-amber-400">
+        ✕ Clear Brand / Reset Filter
+      </button>
+      <input id="storeSearchInput" type="text" placeholder="Search model, color, storage..." class="px-4 py-2 rounded-full text-xs w-60" />
     </div>
   </div>
+
+  <!-- Live Brand & Model Stock Quantity Pills -->
+  <div id="storeBrandStockCounterBar" class="flex flex-wrap gap-2"></div>
 
   <div id="storeProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 </section>
@@ -239,11 +239,14 @@ input:focus, select:focus, textarea:focus {
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
       <div>
         <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-400">REAL-TIME CELL PLANET DISPATCH TRACKER</span>
-        <h2 class="text-xl font-black text-white">Track Your Online Mobile Order &amp; Delivery Status</h2>
-        <p class="text-xs text-slate-400">Synchronized live with the Cell Planet Zoho POS Dispatch Counter (`cellplanet-536a6`).</p>
+        <h2 class="text-xl font-black text-white">Track Your Online Mobile Order &amp; Live Delivery Status</h2>
+        <p class="text-xs text-slate-400">Synchronized live with the Cell Planet Zoho POS Dispatch Counter (`cellplanet-536a6`). For customer security, device IMEI numbers are never displayed online.</p>
       </div>
-      <div class="flex gap-2">
-        <input id="orderTrackSearchInput" type="text" placeholder="Search Order ID or Mobile No..." class="px-4 py-2 rounded-xl text-xs font-mono w-60" />
+      <div class="flex flex-wrap items-center gap-2">
+        <input id="orderTrackSearchInput" type="text" placeholder="Search Order ID or Mobile No..." class="px-4 py-2 rounded-xl text-xs font-mono w-56" />
+        <button id="btnCustomerClearOrders" type="button" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-300">
+          🧹 Clear Order History
+        </button>
       </div>
     </div>
     <div id="customerOrdersTrackerList" class="space-y-4"></div>
@@ -320,10 +323,10 @@ input:focus, select:focus, textarea:focus {
     </div>
 
     <div class="space-y-3 text-xs">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3 rounded-2xl bg-slate-900/90 border border-slate-800">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-2xl bg-slate-900/90 border border-slate-800">
         <div>
-          <label for="chkSelectVariant" class="block text-[11px] text-cyan-400 font-bold mb-1">Select RAM / Storage Variant</label>
-          <select id="chkSelectVariant" class="w-full px-3 py-1.5 rounded-xl font-mono">
+          <label for="chkSelectVariant" class="block text-[11px] text-cyan-400 font-bold mb-1">RAM / Storage</label>
+          <select id="chkSelectVariant" class="w-full px-2.5 py-1.5 rounded-xl font-mono">
             <option value="8GB / 256GB">8GB / 256GB</option>
             <option value="12GB / 256GB">12GB / 256GB</option>
             <option value="16GB / 512GB">16GB / 512GB</option>
@@ -331,14 +334,18 @@ input:focus, select:focus, textarea:focus {
           </select>
         </div>
         <div>
-          <label for="chkSelectColor" class="block text-[11px] text-rose-400 font-bold mb-1">Select Official Box Color</label>
-          <select id="chkSelectColor" class="w-full px-3 py-1.5 rounded-xl">
+          <label for="chkSelectColor" class="block text-[11px] text-rose-400 font-bold mb-1">Box Color</label>
+          <select id="chkSelectColor" class="w-full px-2.5 py-1.5 rounded-xl">
             <option value="Natural Titanium">Natural Titanium</option>
             <option value="Desert Titanium">Desert Titanium</option>
             <option value="Obsidian Black">Obsidian Black</option>
             <option value="Chanson Green">Chanson Green</option>
             <option value="Sunset Orange">Sunset Orange</option>
           </select>
+        </div>
+        <div>
+          <label for="chkOrderQtyInput" class="block text-[11px] text-emerald-400 font-bold mb-1">Order Quantity</label>
+          <input id="chkOrderQtyInput" type="number" min="1" max="10" value="1" class="w-full px-2.5 py-1.5 rounded-xl font-mono text-center font-black" />
         </div>
       </div>
 
@@ -380,7 +387,7 @@ input:focus, select:focus, textarea:focus {
     <div class="flex items-center justify-end gap-2 pt-2">
       <button id="btnCancelCheckout" type="button" class="px-4 py-2.5 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Cancel</button>
       <button id="btnConfirmOnlinePaymentOrder" type="button" class="px-6 py-2.5 rounded-xl huawei-cta text-xs font-black text-white shadow-lg">
-        ✅ Complete Online Payment &amp; Place Order
+        🔊✅ Complete Online Payment &amp; Place Order
       </button>
     </div>
   </div>
@@ -412,7 +419,9 @@ const firebaseConfig = {
   measurementId: "G-SYD4FLW716"
 };
 const GOOGLE_REVIEW_URL = "https://search.google.com/local/reviews?placeid=ChIJFxR6ddJZNDoR3SZrd7hOq0c&q=Cell+Planet,+Station+Road,+Urdu+Ghar+Shadi+Khana,+Lenin+Nagar,+Braman+Bazar,+Balaji+Nagar,+Khammam,+Telangana&authuser=0&hl=en&gl=IN";
-const STORAGE_KEY = "CELL_PLANET_ENTERPRISE_STATE_V4";
+const STORAGE_KEY = "CELL_PLANET_ENTERPRISE_STATE_V5";
+const LEGACY_KEY = "CELL_PLANET_ENTERPRISE_STATE_V4";
+
 const DEFAULT_CATALOG = [
   {
     id: "STK-1001",
@@ -420,6 +429,8 @@ const DEFAULT_CATALOG = [
     model: "iPhone 16 Pro Max 5G",
     variant: "8GB / 256GB",
     color: "Natural Titanium",
+    qty: 3,
+    purchaseCost: 126500,
     offlinePrice: 139900,
     onlinePrice: 137900,
     offerBadge: "₹5,000 Instant Cashback + 0% Bajaj EMI",
@@ -432,6 +443,8 @@ const DEFAULT_CATALOG = [
     model: "Galaxy S24 Ultra 5G (Galaxy AI)",
     variant: "12GB / 256GB",
     color: "Titanium Gray",
+    qty: 2,
+    purchaseCost: 108000,
     offlinePrice: 121999,
     onlinePrice: 119999,
     offerBadge: "Free Galaxy Buds + 0% Finance",
@@ -444,6 +457,8 @@ const DEFAULT_CATALOG = [
     model: "Huawei Pura 70 Ultra XMAGE Edition",
     variant: "16GB / 512GB",
     color: "Chanson Green",
+    qty: 2,
+    purchaseCost: 102000,
     offlinePrice: 116999,
     onlinePrice: 114999,
     offerBadge: "XMAGE Flagship + Free Watch Fit",
@@ -456,6 +471,8 @@ const DEFAULT_CATALOG = [
     model: "Vivo X100 Pro 5G (ZEISS APO Telephoto)",
     variant: "16GB / 512GB",
     color: "Sunset Orange",
+    qty: 4,
+    purchaseCost: 76500,
     offlinePrice: 88999,
     onlinePrice: 86999,
     offerBadge: "ZEISS Portrait Master + ₹4,000 Exchange Bonus",
@@ -468,6 +485,8 @@ const DEFAULT_CATALOG = [
     model: "OnePlus 12 5G (Hasselblad Camera)",
     variant: "12GB / 256GB",
     color: "Flowy Emerald",
+    qty: 3,
+    purchaseCost: 55000,
     offlinePrice: 63999,
     onlinePrice: 61999,
     offerBadge: "100W SUPERVOOC + Easy Paper Finance",
@@ -475,43 +494,48 @@ const DEFAULT_CATALOG = [
     photoDataUrl: ""
   }
 ];
-const DEFAULT_ORDERS = [
-  {
-    orderId: "ORD-CP-8821",
-    createdAt: "2026-11-01 10:40",
-    customerName: "Srinivas Rao",
-    customerPhone: "9440188234",
-    deliveryAddress: "H.No 4-2-118, Mamillagudem, Near Bus Stand, Khammam 507001",
-    model: "iPhone 16 Pro Max 5G",
-    variant: "8GB / 256GB",
-    color: "Natural Titanium",
-    amountPaid: 137900,
-    paymentMethod: "Online Paid (UPI Verified • Ref #430589120411)",
-    assignedImei: "Pending Box Scan",
-    deliveryStatus: "Order Accepted"
-  },
-  {
-    orderId: "ORD-CP-8822",
-    createdAt: "2026-11-01 10:52",
-    customerName: "Ayesha Siddiqui",
-    customerPhone: "9000451290",
-    deliveryAddress: "Flat 302, Royal Residency, Lenin Nagar, Khammam 507001",
-    model: "OnePlus 12 5G (Hasselblad Camera)",
-    variant: "12GB / 256GB",
-    color: "Flowy Emerald",
-    amountPaid: 61999,
-    paymentMethod: "Online Paid (HDFC Card Verified • Ref #998120341)",
-    assignedImei: "867530914482716",
-    deliveryStatus: "Packing"
-  }
-];
+
+// CLEAN ONLINE ORDERS BY DEFAULT FOR CUSTOMERS (Empty array, no pre-filled customer orders!)
 let storeState = {
   inventory: DEFAULT_CATALOG,
-  onlineOrders: DEFAULT_ORDERS
+  onlineOrders: []
 };
 let selectedBrand = "ALL";
 let selectedCheckoutProduct = null;
 let currentViewIdx = 0;
+
+function playCustomerOrderThankYouSound(customerName) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99, 1046.50].forEach(function (freq, idx) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.11);
+        gain.gain.exponentialRampToValueAtTime(0.24, now + idx * 0.11 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.34);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.11);
+        osc.stop(now + idx * 0.11 + 0.35);
+      });
+    }
+  } catch (e) {}
+  try {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(
+        "Thank you " + (customerName || "valued customer") + " for your online order at Cell Planet Khammam! Our dispatch desk has been alerted."
+      );
+      utter.rate = 1.02;
+      window.speechSynthesis.speak(utter);
+    }
+  } catch (e) {}
+}
 
 function formatINR(n) {
   return "₹" + (Number(n) || 0).toLocaleString("en-IN");
@@ -535,16 +559,23 @@ function normalizeArray(val, fallback) {
   }
   return fallback;
 }
+function cleanLegacyDefaultOrders(orders) {
+  const arr = normalizeArray(orders, []);
+  return arr.filter(function (o) {
+    return o && o.orderId !== "ORD-CP-8821" && o.orderId !== "ORD-CP-8822";
+  });
+}
+
 function loadStoreState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && parsed.inventory) {
-        storeState.inventory = normalizeArray(parsed.inventory, DEFAULT_CATALOG);
+      if (parsed && Array.isArray(parsed.inventory)) {
+        storeState.inventory = parsed.inventory;
       }
-      if (parsed && parsed.onlineOrders) {
-        storeState.onlineOrders = normalizeArray(parsed.onlineOrders, DEFAULT_ORDERS);
+      if (parsed && parsed.onlineOrders !== undefined) {
+        storeState.onlineOrders = cleanLegacyDefaultOrders(parsed.onlineOrders);
       }
     }
   } catch (err) {
@@ -554,11 +585,12 @@ function loadStoreState() {
     fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json")
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (cloudData) {
-        if (cloudData && cloudData.inventory) {
-          const cloudInv = normalizeArray(cloudData.inventory, []);
-          if (cloudInv.length > 0) storeState.inventory = cloudInv;
-          if (cloudData.onlineOrders) {
-            storeState.onlineOrders = normalizeArray(cloudData.onlineOrders, storeState.onlineOrders);
+        if (cloudData) {
+          if (cloudData.inventory !== undefined) {
+            storeState.inventory = Array.isArray(cloudData.inventory) ? cloudData.inventory : normalizeArray(cloudData.inventory, storeState.inventory);
+          }
+          if (cloudData.onlineOrders !== undefined) {
+            storeState.onlineOrders = cleanLegacyDefaultOrders(cloudData.onlineOrders);
           }
           renderProductCatalog();
           renderOrderTracker();
@@ -575,16 +607,31 @@ try {
 if (cpStoreChannel) {
   cpStoreChannel.onmessage = function (ev) {
     if (ev.data && ev.data.type === "POS_STATE_UPDATE") {
-      if (ev.data.inventory) storeState.inventory = normalizeArray(ev.data.inventory, storeState.inventory);
-      if (ev.data.onlineOrders) storeState.onlineOrders = normalizeArray(ev.data.onlineOrders, storeState.onlineOrders);
+      if (ev.data.inventory !== undefined) storeState.inventory = Array.isArray(ev.data.inventory) ? ev.data.inventory : normalizeArray(ev.data.inventory, storeState.inventory);
+      if (ev.data.onlineOrders !== undefined) storeState.onlineOrders = cleanLegacyDefaultOrders(ev.data.onlineOrders);
       renderProductCatalog();
       renderOrderTracker();
-      showStoreToast("⚡ Live prices, stock & delivery status synced from Cell Planet Zoho POS!");
+      showStoreToast("⚡ Live prices, stock quantities & delivery status synced from Cell Planet POS!");
     }
   };
 }
 
-function saveStoreStateAndSync() {
+// Instant Cross-Tab Storage Event Listener
+window.addEventListener("storage", function (ev) {
+  if (ev.key === STORAGE_KEY && ev.newValue) {
+    try {
+      const parsed = JSON.parse(ev.newValue);
+      if (parsed) {
+        if (parsed.inventory !== undefined) storeState.inventory = Array.isArray(parsed.inventory) ? parsed.inventory : [];
+        if (parsed.onlineOrders !== undefined) storeState.onlineOrders = cleanLegacyDefaultOrders(parsed.onlineOrders);
+        renderProductCatalog();
+        renderOrderTracker();
+      }
+    } catch (e) {}
+  }
+});
+
+function saveStoreStateAndSync(isNewOrderAlarm) {
   try {
     const existingRaw = localStorage.getItem(STORAGE_KEY);
     const merged = existingRaw ? JSON.parse(existingRaw) : {};
@@ -595,8 +642,9 @@ function saveStoreStateAndSync() {
   if (cpStoreChannel) {
     try {
       cpStoreChannel.postMessage({
-        type: "STORE_ORDER_UPDATE",
-        onlineOrders: storeState.onlineOrders
+        type: isNewOrderAlarm ? "NEW_ONLINE_ORDER_ALARM" : "STORE_ORDER_UPDATE",
+        onlineOrders: storeState.onlineOrders,
+        inventory: storeState.inventory
       });
     } catch (e) {}
   }
@@ -610,7 +658,7 @@ function saveStoreStateAndSync() {
     } catch (e) {}
   }
   fetch(firebaseConfig.databaseURL + "/cellplanet_pos_state.json", {
-    method: "PUT",
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       updatedAt: new Date().toISOString(),
@@ -642,29 +690,69 @@ function getPhoneVisualSvg(brandRaw, colorNameRaw) {
 function renderProductCatalog() {
   const searchVal = (document.getElementById("storeSearchInput").value || "").toLowerCase();
   const grid = document.getElementById("storeProductGrid");
-  const available = normalizeArray(storeState.inventory, DEFAULT_CATALOG).filter(function (item) {
+  const invArray = Array.isArray(storeState.inventory) ? storeState.inventory : DEFAULT_CATALOG;
+
+  // Compute Brand & Total Stock Quantity
+  const brandQtyMap = {};
+  let totalAvailableUnits = 0;
+  invArray.forEach(function (item) {
+    if (!item || item.status === "SOLD") return;
+    const q = item.qty !== undefined ? Number(item.qty) : 1;
+    if (q <= 0) return;
+    const b = item.brand || "Other";
+    brandQtyMap[b] = (brandQtyMap[b] || 0) + q;
+    totalAvailableUnits += q;
+  });
+
+  const hdrStockBadge = document.getElementById("headerTotalStockBadge");
+  if (hdrStockBadge) hdrStockBadge.textContent = totalAvailableUnits;
+
+  const brandBar = document.getElementById("storeBrandStockCounterBar");
+  if (brandBar) {
+    const bKeys = Object.keys(brandQtyMap);
+    brandBar.innerHTML = bKeys.map(function (b) {
+      return '<span class="px-3 py-1 rounded-full bg-white border border-slate-800 text-[11px] font-bold text-slate-300">' +
+        b + ' In Stock: <strong class="text-emerald-400 font-mono">' + brandQtyMap[b] + ' Units</strong>' +
+      '</span>';
+    }).join("");
+  }
+
+  const available = invArray.filter(function (item) {
     if (!item || item.status === "SOLD") return false;
+    const q = item.qty !== undefined ? Number(item.qty) : 1;
+    if (q <= 0) return false;
     const bName = String(item.brand || "");
     if (selectedBrand !== "ALL" && bName.toLowerCase() !== selectedBrand.toLowerCase()) return false;
     if (!searchVal) return true;
     return (bName + " " + (item.model || "") + " " + (item.color || "") + " " + (item.variant || "")).toLowerCase().indexOf(searchVal) !== -1;
   });
+
   if (available.length === 0) {
-    grid.innerHTML = '<div class="col-span-full p-8 rounded-3xl bg-white border border-slate-800 text-center text-sm text-slate-400">No matching smartphones in filter. Try selecting "All Brands".</div>';
+    grid.innerHTML = '<div class="col-span-full p-8 rounded-3xl bg-white border border-slate-800 text-center space-y-2">' +
+      '<div class="text-sm font-bold text-white">No smartphones matching current filter.</div>' +
+      '<p class="text-xs text-slate-400">Click "✕ Clear Brand / Reset Filter" above to view all available models.</p>' +
+    '</div>';
     return;
   }
+
+  // NOTE: Customer Storefront NEVER exposes IMEI numbers!
   grid.innerHTML = available.map(function (item) {
-    const imgSrc = getPhoneVisualSvg(item.brand, item.color);
+    const imgSrc = item.photoDataUrl || getPhoneVisualSvg(item.brand, item.color);
     const savings = Math.max(0, (Number(item.offlinePrice) || 0) - (Number(item.onlinePrice) || 0));
+    const unitQty = item.qty !== undefined ? Number(item.qty) : 1;
     return '<div class="product-card rounded-3xl p-5 flex flex-col justify-between space-y-4">' +
       '<div class="space-y-3">' +
         '<div class="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 h-48 flex items-center justify-center">' +
           '<img src="' + imgSrc + '" alt="' + item.model + '" class="w-full h-full object-cover" />' +
           '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/95 border border-slate-300 text-[10px] font-mono font-bold text-cyan-400 shadow-sm">' + item.brand + ' • ' + item.variant + '</span>' +
+          '<span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-white/95 border border-emerald-500/40 text-[10px] font-mono font-extrabold text-emerald-400 shadow-sm">📦 ' + unitQty + ' Units in Stock</span>' +
           (savings > 0 ? '<span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-rose-600 text-white text-[10px] font-extrabold shadow-sm">Save ' + formatINR(savings) + ' Online</span>' : '') +
         '</div>' +
         '<div>' +
-          '<div class="text-[11px] font-mono text-rose-400">' + item.color + '</div>' +
+          '<div class="flex items-center justify-between text-[11px] font-mono">' +
+            '<span class="text-rose-400">' + item.color + '</span>' +
+            '<span class="text-emerald-400">✓ Sealed Box • Official Warranty</span>' +
+          '</div>' +
           '<h3 class="text-base font-extrabold text-white mt-0.5">' + item.brand + ' ' + item.model + '</h3>' +
           '<div class="mt-2 inline-block px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-500/30 text-[11px] text-emerald-400 font-semibold">🎁 ' + (item.offerBadge || "0% Bajaj Finserv & IDFC EMI Available") + '</div>' +
         '</div>' +
@@ -691,6 +779,16 @@ function renderOrderTracker() {
     if (!q) return true;
     return (o.orderId + " " + o.customerName + " " + o.customerPhone + " " + o.model).toLowerCase().indexOf(q) !== -1;
   });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="p-8 rounded-2xl bg-slate-900/90 border border-slate-800 text-center space-y-2">' +
+      '<div class="text-sm font-bold text-white">No Online Orders Placed Yet</div>' +
+      '<p class="text-xs text-slate-400">Browse the Flagship Shop and click "Buy Online Now" on any smartphone to place a live order and track its dispatch stages in real time.</p>' +
+    '</div>';
+    return;
+  }
+
+  // PRIVACY ENFORCEMENT: Never render IMEI numbers to the customer on the online order tracker!
   container.innerHTML = filtered.map(function (ord) {
     const currentIdx = Math.max(0, stages.indexOf(ord.deliveryStatus));
     const stepsHtml = stages.map(function (st, idx) {
@@ -718,7 +816,7 @@ function renderOrderTracker() {
       '<div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-slate-300 pt-1">' +
         '<div><strong>Customer:</strong> ' + ord.customerName + ' (' + ord.customerPhone + ')</div>' +
         '<div><strong>Delivery Address:</strong> ' + ord.deliveryAddress + '</div>' +
-        '<div class="font-mono text-cyan-400"><strong>Box IMEI:</strong> ' + ord.assignedImei + '</div>' +
+        '<div class="font-mono text-emerald-400"><strong>🔒 Box Security:</strong> Verified Sealed Pack (IMEI Protected on Store Invoice)</div>' +
       '</div>' +
     '</div>';
   }).join("");
@@ -739,7 +837,7 @@ function renderStoreReviews() {
     ],
     delivery: [
       "Ordered online from Cell Planet Khammam and got express same-day home delivery! Loved tracking my order live from Packing to Delivered.",
-      "Super seamless online payment and instant box IMEI allocation from Cell Planet Khammam (08899469999). Genuine Apple-store level experience!",
+      "Super seamless online payment and instant sealed box dispatch from Cell Planet Khammam (08899469999). Genuine Apple-store level experience!",
       "Fastest smartphone delivery in Khammam! Sealed box delivered right to my doorstep with official GST bill."
     ],
     repair: [
@@ -840,6 +938,27 @@ function setupStoreEvents() {
     renderProductCatalog();
   });
 
+  document.getElementById("btnClearBrandAndSearchFilter").addEventListener("click", function () {
+    selectedBrand = "ALL";
+    document.getElementById("storeSearchInput").value = "";
+    document.querySelectorAll("#brandFilterButtons .brand-pill").forEach(function (b) {
+      if (b.getAttribute("data-brand") === "ALL") {
+        b.className = "brand-pill px-3.5 py-1.5 rounded-full text-xs font-bold bg-rose-600 text-white";
+      } else {
+        b.className = "brand-pill px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-300 border border-slate-800 hover:border-blue-400";
+      }
+    });
+    renderProductCatalog();
+    showStoreToast("✓ Reset brand & search filters — showing all in-stock models!");
+  });
+
+  document.getElementById("btnCustomerClearOrders").addEventListener("click", function () {
+    storeState.onlineOrders = [];
+    saveStoreStateAndSync(false);
+    renderOrderTracker();
+    showStoreToast("🧹 Cleared online order history!");
+  });
+
   document.getElementById("storeSearchInput").addEventListener("input", renderProductCatalog);
   document.getElementById("orderTrackSearchInput").addEventListener("input", renderOrderTracker);
 
@@ -850,8 +969,15 @@ function setupStoreEvents() {
     const prod = storeState.inventory.find(function (p) { return p.id === id; });
     if (!prod) return;
     selectedCheckoutProduct = prod;
+    const maxAvail = Math.max(1, Number(prod.qty) || 1);
     document.getElementById("checkoutModalModelTitle").textContent = prod.brand + " " + prod.model;
-    document.getElementById("checkoutModalPriceSubtitle").textContent = "Online Exclusive Rate: " + formatINR(prod.onlinePrice) + " • " + (prod.offerBadge || "");
+    document.getElementById("checkoutModalPriceSubtitle").textContent =
+      "Online Exclusive Rate: " + formatINR(prod.onlinePrice) + " • Available Stock: " + maxAvail + " Units";
+    const qtyInput = document.getElementById("chkOrderQtyInput");
+    if (qtyInput) {
+      qtyInput.value = "1";
+      qtyInput.max = String(maxAvail);
+    }
     const varSel = document.getElementById("chkSelectVariant");
     const colSel = document.getElementById("chkSelectColor");
     if (varSel && prod.variant) {
@@ -881,6 +1007,7 @@ function setupStoreEvents() {
     const name = document.getElementById("chkCustName").value.trim();
     const phone = document.getElementById("chkCustPhone").value.trim();
     const addr = document.getElementById("chkCustAddress").value.trim();
+    const orderQty = Math.max(1, Number(document.getElementById("chkOrderQtyInput").value) || 1);
     const customFin = (document.getElementById("chkCustomFinanceName") ? document.getElementById("chkCustomFinanceName").value.trim() : "");
     const payMethod = customFin ? ("Finance Approved (" + customFin + ")") : document.getElementById("chkOnlinePaymentMethod").value;
     const utr = document.getElementById("chkPaymentUtrRef").value.trim() || ("UTR" + Math.floor(100000000 + Math.random() * 899999999));
@@ -888,26 +1015,43 @@ function setupStoreEvents() {
       showStoreToast("Please fill in your Name, Mobile Number, and Delivery Address.");
       return;
     }
+
+    const totalPaid = (Number(selectedCheckoutProduct.onlinePrice) || 0) * orderQty;
+    const totalCost = (Number(selectedCheckoutProduct.purchaseCost) || Math.round((Number(selectedCheckoutProduct.onlinePrice) || 0) * 0.88)) * orderQty;
     const newOrderId = "ORD-CP-" + Math.floor(1000 + Math.random() * 8999);
+
+    // Decrement Stock Quantity in storeState.inventory
+    const invItem = storeState.inventory.find(function (p) { return p.id === selectedCheckoutProduct.id; });
+    if (invItem) {
+      const nextQ = Math.max(0, (Number(invItem.qty) || 1) - orderQty);
+      invItem.qty = nextQ;
+      if (nextQ <= 0) invItem.status = "SOLD";
+    }
+
     storeState.onlineOrders.unshift({
       orderId: newOrderId,
       createdAt: new Date().toLocaleString("en-IN"),
       customerName: name,
       customerPhone: phone,
       deliveryAddress: addr,
-      model: selectedCheckoutProduct.brand + " " + selectedCheckoutProduct.model,
+      model: selectedCheckoutProduct.brand + " " + selectedCheckoutProduct.model + (orderQty > 1 ? (" (x" + orderQty + ")") : ""),
       variant: document.getElementById("chkSelectVariant").value || selectedCheckoutProduct.variant,
       color: document.getElementById("chkSelectColor").value || selectedCheckoutProduct.color,
-      amountPaid: selectedCheckoutProduct.onlinePrice,
+      qty: orderQty,
+      amountPaid: totalPaid,
+      purchaseCost: totalCost,
       paymentMethod: payMethod + " • Ref #" + utr,
       assignedImei: selectedCheckoutProduct.imei1 || "Assigned at Packing",
       deliveryStatus: "Order Accepted"
     });
-    saveStoreStateAndSync();
+
+    playCustomerOrderThankYouSound(name);
+    saveStoreStateAndSync(true);
     document.getElementById("onlineCheckoutModal").classList.add("hidden");
+    renderProductCatalog();
     renderOrderTracker();
     switchView("view-tracker", 1);
-    showStoreToast("🎉 Order " + newOrderId + " Confirmed! Track your live delivery status below.");
+    showStoreToast("🎉🔊 Order " + newOrderId + " Confirmed! Showroom Alarm Triggered & Live Tracking Active.");
   });
 
   document.getElementById("storeReviewTopic").addEventListener("change", renderStoreReviews);
@@ -947,8 +1091,8 @@ function initStoreFirebaseSdk() {
       storeFbRef.on("value", function (snap) {
         const cloud = snap.val();
         if (cloud) {
-          if (cloud.inventory) storeState.inventory = normalizeArray(cloud.inventory, storeState.inventory);
-          if (cloud.onlineOrders) storeState.onlineOrders = normalizeArray(cloud.onlineOrders, storeState.onlineOrders);
+          if (cloud.inventory !== undefined) storeState.inventory = Array.isArray(cloud.inventory) ? cloud.inventory : normalizeArray(cloud.inventory, storeState.inventory);
+          if (cloud.onlineOrders !== undefined) storeState.onlineOrders = cleanLegacyDefaultOrders(cloud.onlineOrders);
           renderProductCatalog();
           renderOrderTracker();
           const lbl = document.getElementById("storeCloudSyncLabel");
@@ -968,7 +1112,7 @@ function bootCustomerStore() {
   renderProductCatalog();
   renderOrderTracker();
   renderStoreReviews();
-  setInterval(loadStoreState, 4000);
+  setInterval(loadStoreState, 3500);
 }
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", bootCustomerStore);
